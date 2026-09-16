@@ -91,11 +91,10 @@ export function Dock({ apps, windows, activeId, onOpen, onLauncher }) {
           <button
             key={a.id}
             className={`dock-btn${isActive ? ' active' : ''}`}
-            style={{ background: a.color }}
             onClick={() => onOpen(a.id)}
             title={a.title}
           >
-            {a.icon}
+            <AppIcon app={a} size={40} />
             {running && <span className="run-dot" />}
             <span className="tip">{a.title}</span>
           </button>
