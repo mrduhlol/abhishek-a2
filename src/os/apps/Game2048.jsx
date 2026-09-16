@@ -96,13 +96,19 @@ export function Game2048() {
 
   return (
     <div className="app">
-      <h2>2048</h2>
-      <p className="dim">Arrow keys, WASD, swipe, or buttons. Merge tiles to reach 2048.</p>
+      <div className="app-head">
+        <div>
+          <h2>2048</h2>
+          <p className="dim">Merge tiles to reach 2048. Keys, swipe, or buttons.</p>
+        </div>
+        <button className="btn" onClick={reset}>New Game</button>
+      </div>
       <div className="g2048-score">
         <div className="card"><small className="dim">SCORE</small><b>{score}</b></div>
         <div className="card"><small className="dim">BEST</small><b>{best}</b></div>
         <div className="card"><small className="dim">STATUS</small><b style={{ fontSize: 14 }}>{status === 'playing' ? 'Playing' : status === 'won' ? 'Won' : 'Game over'}</b></div>
       </div>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
       <div
         className="g2048-board"
         onTouchStart={(e) => setTouch({ x: e.touches[0].clientX, y: e.touches[0].clientY })}
@@ -129,16 +135,18 @@ export function Game2048() {
           </div>
         ))}
       </div>
+      </div>
       <div className="g2048-ctrl">
         <span /><button onClick={() => doMove('up')}>▲</button><span />
         <button onClick={() => doMove('left')}>◀</button>
         <button onClick={() => doMove('down')}>▼</button>
         <button onClick={() => doMove('right')}>▶</button>
       </div>
-      <div className="row" style={{ marginTop: 12 }}>
-        <button className="btn" onClick={reset}>New game</button>
-        {status !== 'playing' && <button className="btn ghost" onClick={() => setStatus('playing')}>Continue</button>}
-      </div>
+      {status !== 'playing' && (
+        <div className="row" style={{ marginTop: 12, justifyContent: 'center' }}>
+          <button className="btn ghost" onClick={() => setStatus('playing')}>Continue</button>
+        </div>
+      )}
     </div>
   );
 }
