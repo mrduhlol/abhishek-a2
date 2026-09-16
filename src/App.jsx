@@ -10,11 +10,11 @@ import { Minesweeper } from './os/apps/Minesweeper.jsx';
 import { Game2048 } from './os/apps/Game2048.jsx';
 
 const APPS = [
-  { id: 'about', title: 'About Me', desc: 'who is abhi?', icon: '🧑‍💻', color: 'linear-gradient(135deg,#7c5cff,#22d3ee)', w: 480, h: 520 },
-  { id: 'gallery', title: 'Gallery', desc: 'photos of me', icon: '🖼️', color: 'linear-gradient(135deg,#f472b6,#f59e0b)', w: 560, h: 480 },
-  { id: 'mines', title: 'Minesweeper', desc: 'classic game', icon: '💣', color: 'linear-gradient(135deg,#34d399,#22d3ee)', w: 460, h: 560 },
-  { id: 'g2048', title: '2048', desc: 'slide & merge', icon: '🔢', color: 'linear-gradient(135deg,#f59e0b,#ef4444)', w: 440, h: 600 },
-  { id: 'terminal', title: 'Terminal', desc: 'zsh lite', icon: '💻', color: 'linear-gradient(135deg,#111827,#374151)', w: 560, h: 400 },
+  { id: 'about', title: 'About Me', desc: 'Profile and background', icon: 'A', color: 'linear-gradient(135deg,#3b4a6b,#222c44)', w: 480, h: 520 },
+  { id: 'gallery', title: 'Gallery', desc: 'Photo collection', icon: 'G', color: 'linear-gradient(135deg,#3b4a6b,#222c44)', w: 560, h: 480 },
+  { id: 'mines', title: 'Minesweeper', desc: 'Logic game', icon: 'M', color: 'linear-gradient(135deg,#3b4a6b,#222c44)', w: 460, h: 560 },
+  { id: 'g2048', title: '2048', desc: 'Number puzzle', icon: '2', color: 'linear-gradient(135deg,#3b4a6b,#222c44)', w: 440, h: 600 },
+  { id: 'terminal', title: 'Terminal', desc: 'Command line', icon: 'T', color: 'linear-gradient(135deg,#1a2133,#0d1220)', w: 560, h: 400 },
 ];
 
 let zid = 10;
@@ -102,7 +102,7 @@ export default function App() {
         </div>
 
         <WidgetClock />
-        <div className="hint">abhiOS 1.0 • drag windows • ⏎ Activities to search • right-click flags in mines</div>
+        <div className="hint">abhiOS 1.0 — drag windows to move, double-click icons to open</div>
 
         {sorted.map((w) => (
           <Window

@@ -84,7 +84,7 @@ button { font-family: inherit; }
 .dicon:hover { background: rgba(255,255,255,0.08); border-color: var(--line); }
 .dicon .glyph {
   width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
-  font-size: 22px; box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+  font-size: 19px; font-weight: 700; box-shadow: 0 8px 24px rgba(0,0,0,0.45);
 }
 .dicon small { color: var(--dim); font-size: 10.5px; }
 
@@ -97,7 +97,7 @@ button { font-family: inherit; }
 }
 .dock-btn {
   width: 46px; height: 46px; border-radius: 13px; border: 1px solid transparent;
-  font-size: 21px; cursor: pointer; background: transparent; color: white;
+  font-size: 19px; font-weight: 700; cursor: pointer; background: transparent; color: white;
   display: flex; align-items: center; justify-content: center; position: relative;
   transition: transform 0.12s;
 }
@@ -204,8 +204,8 @@ button { font-family: inherit; }
   width: 84px; height: 84px; border-radius: 24px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
   font-size: 34px; font-weight: 800;
-  background: linear-gradient(135deg, #7c5cff, #22d3ee 55%, #f472b6);
-  box-shadow: 0 10px 30px rgba(124,92,255,0.4);
+  background: linear-gradient(135deg, #475569, #0f172a);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 .skills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
 .term {

@@ -2,12 +2,12 @@ import { useState } from 'react';
 
 // Placeholder gallery — swap `src` with your own photos in /public later
 const PHOTOS = [
-  { src: 'https://picsum.photos/seed/abhi1/600/600', cap: 'me • 01' },
-  { src: 'https://picsum.photos/seed/abhi2/600/600', cap: 'me • 02' },
-  { src: 'https://picsum.photos/seed/abhi3/600/600', cap: 'me • 03' },
-  { src: 'https://picsum.photos/seed/abhi4/600/600', cap: ' setup vibes' },
-  { src: 'https://picsum.photos/seed/abhi5/600/600', cap: 'trip dump' },
-  { src: 'https://picsum.photos/seed/abhi6/600/600', cap: 'random fav' },
+  { src: 'https://picsum.photos/seed/abhi1/600/600', cap: 'Portrait 01' },
+  { src: 'https://picsum.photos/seed/abhi2/600/600', cap: 'Portrait 02' },
+  { src: 'https://picsum.photos/seed/abhi3/600/600', cap: 'Portrait 03' },
+  { src: 'https://picsum.photos/seed/abhi4/600/600', cap: 'Workspace' },
+  { src: 'https://picsum.photos/seed/abhi5/600/600', cap: 'Travel' },
+  { src: 'https://picsum.photos/seed/abhi6/600/600', cap: 'Collection' },
 ];
 
 export function Gallery() {
@@ -31,7 +31,7 @@ export function Gallery() {
         <div className="lightbox" onClick={() => setSel(null)}>
           <img src={sel.src} alt={sel.cap} />
           <div>{sel.cap}</div>
-          <button className="btn ghost" onClick={() => setSel(null)}>Close ✕</button>
+          <button className="btn ghost" onClick={() => setSel(null)}>Close</button>
         </div>
       )}
     </div>

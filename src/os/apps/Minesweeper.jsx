@@ -129,13 +129,13 @@ export function Minesweeper() {
 
   return (
     <div className="app">
-      <h2>💣 Minesweeper</h2>
-      <p className="dim">Left-click to reveal • right-click to flag • clear all safe cells to win.</p>
+      <h2>Minesweeper</h2>
+      <p className="dim">Left-click to reveal, right-click to flag. Clear all safe cells to win.</p>
       <div className="ms-bar">
-        <span className="card" style={{ padding: '6px 12px' }}>⏱ {secs}s</span>
-        <span className="card" style={{ padding: '6px 12px' }}>🚩 {MINES - flags}</span>
-        <span className="card" style={{ padding: '6px 12px' }}>{over === 'win' ? '🏆 You win!' : over === 'boom' ? '💥 Boom!' : `🟩 ${opened} open`}</span>
-        <button className="btn" onClick={() => reset()}>↻ Restart</button>
+        <span className="card" style={{ padding: '6px 12px' }}>Time {secs}s</span>
+        <span className="card" style={{ padding: '6px 12px' }}>Mines left {MINES - flags}</span>
+        <span className="card" style={{ padding: '6px 12px' }}>{over === 'win' ? 'You win' : over === 'boom' ? 'Game over' : `${opened} opened`}</span>
+        <button className="btn" onClick={() => reset()}>Restart</button>
       </div>
       <div className="row" style={{ marginBottom: 10 }}>
         {['easy', 'medium', 'hard'].map((d) => (
@@ -150,7 +150,7 @@ export function Minesweeper() {
             onClick={() => reveal(i)}
             onContextMenu={(e) => toggleFlag(e, i)}
           >
-            {!c.open ? (c.flag ? '🚩' : '') : c.mine ? '💥' : c.n > 0 ? <span style={{ color: COLORS[c.n] }}>{c.n}</span> : ''}
+            {!c.open ? (c.flag ? 'F' : '') : c.mine ? '●' : c.n > 0 ? <span style={{ color: COLORS[c.n] }}>{c.n}</span> : ''}
           </button>
         ))}
       </div>

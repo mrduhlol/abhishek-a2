@@ -5,7 +5,7 @@ export const PROFILE = {
   role: 'Creative Developer & Student',
   location: 'India • UTC+5:30',
   bio: "Hey! I'm Abhishek. I build playful web stuff, love Linux ricing, football, and late-night code sessions. This is my tiny OS — open the apps from the dock, play a game, and check the gallery.",
-  skills: ['React', 'JavaScript', 'Python', 'Linux', 'UI Design', 'Football ⚽'],
+  skills: ['React', 'JavaScript', 'Python', 'Linux', 'UI Design'],
   links: [
     { label: 'GitHub', url: 'https://github.com/' },
     { label: 'Instagram', url: 'https://instagram.com/' },

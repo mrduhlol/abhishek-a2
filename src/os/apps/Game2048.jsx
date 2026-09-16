@@ -96,12 +96,12 @@ export function Game2048() {
 
   return (
     <div className="app">
-      <h2>🔢 2048</h2>
-      <p className="dim">Arrow keys / WASD / swipe / buttons — merge to 2048!</p>
+      <h2>2048</h2>
+      <p className="dim">Arrow keys, WASD, swipe, or buttons. Merge tiles to reach 2048.</p>
       <div className="g2048-score">
         <div className="card"><small className="dim">SCORE</small><b>{score}</b></div>
         <div className="card"><small className="dim">BEST</small><b>{best}</b></div>
-        <div className="card"><small className="dim">STATUS</small><b style={{ fontSize: 14 }}>{status === 'playing' ? '▶ playing' : status === 'won' ? '🏆 won!' : '💀 over'}</b></div>
+        <div className="card"><small className="dim">STATUS</small><b style={{ fontSize: 14 }}>{status === 'playing' ? 'Playing' : status === 'won' ? 'Won' : 'Game over'}</b></div>
       </div>
       <div
         className="g2048-board"
@@ -136,7 +136,7 @@ export function Game2048() {
         <button onClick={() => doMove('right')}>▶</button>
       </div>
       <div className="row" style={{ marginTop: 12 }}>
-        <button className="btn" onClick={reset}>↻ New game</button>
+        <button className="btn" onClick={reset}>New game</button>
         {status !== 'playing' && <button className="btn ghost" onClick={() => setStatus('playing')}>Continue</button>}
       </div>
     </div>

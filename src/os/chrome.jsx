@@ -14,7 +14,7 @@ export function TopBar({ onLauncher }) {
       <div className="brand"><span className="dot" /> abhiOS</div>
       <button className="activities" onClick={onLauncher}>◉ Activities</button>
       <div className="spacer" />
-      <div className="tray"><span>🔊</span><span>📶</span><span>🔋 92%</span></div>
+      <div className="tray"><span>Sound</span><span>WiFi</span><span>Battery 92%</span></div>
       <div className="clock">{date} &nbsp;{time}</div>
     </div>
   );
@@ -53,7 +53,7 @@ export function Launcher({ apps, onOpen, onClose, query, setQuery }) {
         <input
           autoFocus
           className="launcher-search"
-          placeholder="Search apps… (try 'game', 'photo', 'about')"
+          placeholder="Search applications"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => {

@@ -36,7 +36,7 @@ export function Terminal({ onOpen }) {
         setLines([]);
         break;
       case 'sudo':
-        print('[sudo] nice try 😄 — you already have root vibes here.', '#fbbf24');
+        print('permission denied: this is a demo shell.', '#fbbf24');
         break;
       default:
         print(`command not found: ${c} — try 'help'`, '#f87171');
