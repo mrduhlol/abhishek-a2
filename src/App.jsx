@@ -46,7 +46,7 @@ export default function App() {
       const id = winSeq++;
       const win = {
         id, appId, title: app.title, icon: app.icon,
-        x: Math.max(90, (vw - ww) / 2 + off), y: Math.max(10, 60 + off),
+        x: Math.max(110, (vw - ww) / 2 + off), y: Math.max(10, 60 + off),
         w: ww, h: wh, z: zid, minimized: false, maximized: window.innerWidth < 720,
       };
       setActiveId(id);
