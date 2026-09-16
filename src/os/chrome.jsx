@@ -129,7 +129,7 @@ export function Launcher({ apps, onOpen, onClose, query, setQuery }) {
         <div className="launcher-grid">
           {list.map((a) => (
             <button key={a.id} className="launch-app" onClick={() => onOpen(a.id)}>
-              <span className="g" style={{ background: a.color }}>{a.icon}</span>
+              <AppIcon app={a} size={56} />
               {a.title}
             </button>
           ))}
