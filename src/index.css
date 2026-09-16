@@ -270,6 +270,45 @@ button { font-family: inherit; }
 }
 .g2048-ctrl button:hover { background: #4f4b47; }
 
+/* settings-style rows (About) */
+.app-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+.app-head h2 { margin: 0; }
+.app-head p { margin: 2px 0 0; }
+.set-label { font-size: 12px; font-weight: 700; color: var(--dim); margin: 16px 2px 6px; }
+.set-card {
+  background: rgba(255,255,255,0.045); border: 1px solid var(--line);
+  border-radius: 8px; overflow: hidden;
+}
+.set-row {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 10px 14px;
+}
+.set-row + .set-row, .set-card .set-row + .set-row { border-top: 1px solid var(--line); }
+.set-row .k { color: var(--dim); font-size: 13px; }
+.set-row .v { font-size: 13px; text-align: right; }
+.set-row.link { text-decoration: none; color: var(--txt); }
+.set-row.link:hover { background: rgba(255,255,255,0.05); }
+.set-row .chev { color: var(--dim); font-size: 18px; }
+
+/* segmented control (Minesweeper difficulty) */
+.seg { display: inline-flex; background: #1c1b1a; border: 1px solid #000; border-radius: 8px; padding: 3px; gap: 2px; }
+.seg button {
+  border: none; background: transparent; color: var(--dim); font-size: 13px; font-weight: 600;
+  padding: 6px 16px; border-radius: 6px; cursor: pointer;
+}
+.seg button:hover { color: var(--txt); }
+.seg button.on { background: #4a4642; color: #fff; }
+
+/* image viewer (Gallery) */
+.viewer-top { display: flex; align-items: center; gap: 16px; font-size: 14px; }
+.viewer-main { display: flex; align-items: center; gap: 14px; }
+.viewer-main img { max-width: min(560px, 70vw); max-height: 62vh; border-radius: 8px; border: 1px solid #444; }
+.vnav {
+  width: 40px; height: 56px; border-radius: 8px; border: 1px solid #55534f;
+  background: rgba(255,255,255,0.08); color: #fff; font-size: 24px; cursor: pointer; flex-shrink: 0;
+}
+.vnav:hover { background: rgba(255,255,255,0.18); }
+
 @media (max-width: 720px) {
   .dock { left: 50%; top: auto; bottom: 10px; transform: translateX(-50%); flex-direction: row; }
   .dock-sep { width: 1px; height: auto; margin: 8px 5px; }
