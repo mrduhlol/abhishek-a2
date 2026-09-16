@@ -6,21 +6,20 @@ export function TopBar({ onLauncher }) {
     const i = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(i);
   }, []);
-  const date = now.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
-  const time = now.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+  const text = now.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })
+    + '  ' + now.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
 
   return (
     <div className="topbar">
-      <div className="brand"><span className="dot" /> abhiOS</div>
-      <button className="activities" onClick={onLauncher}>◉ Activities</button>
+      <button className="activities" onClick={onLauncher}>Activities</button>
+      <div className="clock" onClick={onLauncher}>{text}</div>
       <div className="spacer" />
-      <div className="tray"><span>Sound</span><span>WiFi</span><span>Battery 92%</span></div>
-      <div className="clock">{date} &nbsp;{time}</div>
+      <div className="tray"><span>▂▄▆</span><span>♪</span><span>92%</span><span>⏻</span></div>
     </div>
   );
 }
 
-export function Dock({ apps, windows, activeId, onOpen }) {
+export function Dock({ apps, windows, activeId, onOpen, onLauncher }) {
   return (
     <div className="dock">
       {apps.map((a) => {
@@ -40,6 +39,11 @@ export function Dock({ apps, windows, activeId, onOpen }) {
           </button>
         );
       })}
+      <div className="dock-sep" />
+      <button className="dock-btn show-apps" style={{ background: '#3a3733' }} onClick={onLauncher} title="Show Applications">
+        <span className="grid9"><i /><i /><i /><i /><i /><i /><i /><i /><i /></span>
+        <span className="tip">Show Applications</span>
+      </button>
     </div>
   );
 }
@@ -53,7 +57,7 @@ export function Launcher({ apps, onOpen, onClose, query, setQuery }) {
         <input
           autoFocus
           className="launcher-search"
-          placeholder="Search applications"
+          placeholder="Type to search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => {
@@ -64,28 +68,13 @@ export function Launcher({ apps, onOpen, onClose, query, setQuery }) {
         <div className="launcher-grid">
           {list.map((a) => (
             <button key={a.id} className="launch-app" onClick={() => onOpen(a.id)}>
-              <span className="g">{a.icon}</span>
+              <span className="g" style={{ background: a.color }}>{a.icon}</span>
               {a.title}
-              <small>{a.desc}</small>
             </button>
           ))}
         </div>
-        {list.length === 0 && <div className="dim" style={{ marginTop: 16, textAlign: 'center' }}>No apps match “{query}”</div>}
+        {list.length === 0 && <div className="dim" style={{ marginTop: 16 }}>No results for “{query}”</div>}
       </div>
-    </div>
-  );
-}
-
-export function WidgetClock() {
-  const [now, setNow] = useState(new Date());
-  useEffect(() => {
-    const i = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(i);
-  }, []);
-  return (
-    <div className="widget-clock">
-      <div className="time">{now.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</div>
-      <div className="date">{now.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}</div>
     </div>
   );
 }

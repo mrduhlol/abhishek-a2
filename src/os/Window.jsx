@@ -6,13 +6,10 @@ export default function Window({ win, active, onFocus, onClose, onMin, onMax, on
   const startDrag = (e) => {
     if (win.maximized || e.target.closest('.wbtn')) return;
     onFocus();
-    drag.current = { sx: e.clientX, sy: e.clientY, x: win.x, y: win.y, moved: false };
+    drag.current = { sx: e.clientX, sy: e.clientY, x: win.x, y: win.y };
     const move = (ev) => {
       if (!drag.current) return;
-      const dx = ev.clientX - drag.current.sx;
-      const dy = ev.clientY - drag.current.sy;
-      if (Math.abs(dx) + Math.abs(dy) > 3) drag.current.moved = true;
-      onMove(win.id, drag.current.x + dx, drag.current.y + dy);
+      onMove(win.id, drag.current.x + ev.clientX - drag.current.sx, drag.current.y + ev.clientY - drag.current.sy);
     };
     const up = () => {
       drag.current = null;
@@ -27,7 +24,7 @@ export default function Window({ win, active, onFocus, onClose, onMin, onMax, on
     e.stopPropagation();
     onFocus();
     const s = { sx: e.clientX, sy: e.clientY, w: win.w, h: win.h };
-    const move = (ev) => onResize(win.id, Math.max(300, s.w + ev.clientX - s.sx), Math.max(220, s.h + ev.clientY - s.sy));
+    const move = (ev) => onResize(win.id, Math.max(320, s.w + ev.clientX - s.sx), Math.max(240, s.h + ev.clientY - s.sy));
     const up = () => {
       window.removeEventListener('mousemove', move);
       window.removeEventListener('mouseup', up);
@@ -49,11 +46,13 @@ export default function Window({ win, active, onFocus, onClose, onMin, onMax, on
       onMouseDown={onFocus}
     >
       <div className="titlebar" onMouseDown={startDrag} onDoubleClick={() => onMax(win.id)}>
-        <span style={{ fontSize: 15 }}>{win.icon}</span>
-        <div className="t">{win.title} <span>— abhiOS</span></div>
-        <button className="wbtn" onClick={() => onMin(win.id)} title="Minimize">─</button>
-        <button className="wbtn" onClick={() => onMax(win.id)} title="Maximize">{win.maximized ? '❐' : '□'}</button>
-        <button className="wbtn close" onClick={() => onClose(win.id)} title="Close">✕</button>
+        <div className="t-spacer" />
+        <div className="t-title">{win.title}</div>
+        <div className="wcontrols">
+          <button className="wbtn" onClick={() => onMin(win.id)} title="Minimize">–</button>
+          <button className="wbtn" onClick={() => onMax(win.id)} title={win.maximized ? 'Restore' : 'Maximize'}>{win.maximized ? '❐' : '▢'}</button>
+          <button className="wbtn close" onClick={() => onClose(win.id)} title="Close">✕</button>
+        </div>
       </div>
       <div className="win-body">{children}</div>
       {!win.maximized && <div className="resize-handle" onMouseDown={startResize} />}
