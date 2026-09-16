@@ -166,10 +166,6 @@ button { font-family: inherit; }
   font-size: 13px; font-weight: 400;
 }
 .launch-app:hover { background: rgba(255,255,255,0.1); }
-.launch-app .g {
-  width: 56px; height: 56px; border-radius: 14px; font-size: 24px; font-weight: 700;
-  display: flex; align-items: center; justify-content: center;
-}
 .launch-app small { color: var(--dim); font-size: 11px; }
 
 /* ---------- apps shared ---------- */
