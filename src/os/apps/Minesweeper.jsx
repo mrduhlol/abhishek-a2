@@ -129,19 +129,26 @@ export function Minesweeper() {
 
   return (
     <div className="app">
-      <h2>Minesweeper</h2>
-      <p className="dim">Left-click to reveal, right-click to flag. Clear all safe cells to win.</p>
-      <div className="ms-bar">
-        <span className="card" style={{ padding: '6px 12px' }}>Time {secs}s</span>
-        <span className="card" style={{ padding: '6px 12px' }}>Mines left {MINES - flags}</span>
-        <span className="card" style={{ padding: '6px 12px' }}>{over === 'win' ? 'You win' : over === 'boom' ? 'Game over' : `${opened} opened`}</span>
-        <button className="btn" onClick={() => reset()}>Restart</button>
+      <div className="app-head">
+        <div>
+          <h2>Minesweeper</h2>
+          <p className="dim">Left-click to reveal, right-click to flag.</p>
+        </div>
+        <button className="btn" onClick={() => reset()}>New Game</button>
       </div>
-      <div className="row" style={{ marginBottom: 10 }}>
+      <div className="seg" style={{ marginBottom: 12 }}>
         {['easy', 'medium', 'hard'].map((d) => (
-          <button key={d} className={`btn${diff === d ? '' : ' ghost'}`} onClick={() => reset(d)}>{d}</button>
+          <button key={d} className={diff === d ? 'on' : ''} onClick={() => reset(d)}>
+            {d[0].toUpperCase() + d.slice(1)}
+          </button>
         ))}
       </div>
+      <div className="g2048-score">
+        <div className="card"><small className="dim">TIME</small><b>{secs}s</b></div>
+        <div className="card"><small className="dim">MINES LEFT</small><b>{MINES - flags}</b></div>
+        <div className="card"><small className="dim">STATUS</small><b style={{ fontSize: 14 }}>{over === 'win' ? 'Won' : over === 'boom' ? 'Game over' : `${opened} opened`}</b></div>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
       <div className="ms-board" style={{ gridTemplateColumns: `repeat(${N}, 1fr)` }} onContextMenu={(e) => e.preventDefault()}>
         {cells.map((c, i) => (
           <button
@@ -153,6 +160,7 @@ export function Minesweeper() {
             {!c.open ? (c.flag ? 'F' : '') : c.mine ? '●' : c.n > 0 ? <span style={{ color: COLORS[c.n] }}>{c.n}</span> : ''}
           </button>
         ))}
+      </div>
       </div>
     </div>
   );
