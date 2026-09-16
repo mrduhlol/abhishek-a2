@@ -1,16 +1,82 @@
-# React + Vite
+# abhiOS — About Me, OS-style 🖥️
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A fake **custom Linux-style operating system** that runs in your browser — built with **React + Vite**.
+It has a boot screen, draggable windows, a dock, an app launcher, an animated wallpaper,
+an About Me app, a photo gallery, and two playable games: **Minesweeper** and **2048**.
 
-Currently, two official plugins are available:
+## ✨ What's inside
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| App | What it does |
+|---|---|
+| 🧑‍💻 About Me | Placeholder bio, skills, socials — make it yours |
+| 🖼️ Gallery | Photo grid with lightbox — drop in your own pics |
+| 💣 Minesweeper | Full game: 3 difficulties, flags, timer, flood-fill |
+| 🔢 2048 | Slide & merge with keyboard, swipe, buttons + best score |
+| 💻 Terminal | Fake `zsh-lite` with `help`, `neofetch`, `open <app>` |
 
-## React Compiler
+**OS chrome:** boot sequence, animated aurora + starfield canvas wallpaper,
+top bar with live clock, left dock with running indicators, fullscreen app launcher,
+drag / focus / minimize / maximize / resize window manager, mobile-responsive layout.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Run it
 
-## Expanding the Oxlint configuration
+```bash
+npm install
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Then open the printed `http://127.0.0.1:<port>/` in your browser.
+
+Build for production:
+
+```bash
+npm run build
+npm run preview
+```
+
+## 🛠️ Tech
+
+- React 19 + Vite (no extra dependencies)
+- Canvas-animated wallpaper (aurora blobs, stars, particles, grid floor)
+- Pure CSS glassmorphism Linux-style desktop
+
+## 📁 Project layout
+
+```
+src/
+  App.jsx            # OS manager: windows, dock, launcher state
+  main.jsx           # entry
+  index.css          # whole OS theme
+  os/
+    Wallpaper.jsx    # animated canvas wallpaper
+    BootScreen.jsx   # boot log + progress
+    Window.jsx       # draggable / resizable window
+    chrome.jsx       # TopBar, Dock, Launcher, WidgetClock
+    apps/
+      AboutMe.jsx    # ← edit PROFILE here for your real info
+      Gallery.jsx    # ← point PHOTOS at your own images
+      Minesweeper.jsx
+      Game2048.jsx
+      Terminal.jsx
+```
+
+## 📝 Make it yours
+
+1. **About Me** — edit `PROFILE` in `src/os/apps/AboutMe.jsx`
+   (name, role, bio, skills, links).
+2. **Gallery** — put photos in `public/photos/` (e.g. `you1.jpg`),
+   then update `PHOTOS` in `src/os/apps/Gallery.jsx` to `/photos/you1.jpg` etc.
+3. **Wallpaper colors** — tweak `blobs` in `src/os/Wallpaper.jsx`.
+4. **Title** — change `<title>` in `index.html`.
+
+## 📜 Scripts
+
+| Command | Purpose |
+|---|---|
+| `npm run dev` | Start dev server with HMR |
+| `npm run build` | Production build to `dist/` |
+| `npm run preview` | Preview the production build |
+| `npm run lint` | Lint with Oxlint |
+
+---
+Built with 💜 as a portfolio you can *play* with.
