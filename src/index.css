@@ -90,22 +90,24 @@ button { font-family: inherit; }
   padding: 14px 0 12px;
 }
 .dock-btn {
-  width: 48px; height: 48px; border-radius: 12px; border: none;
+  width: 44px; height: 44px; border-radius: 12px; border: none;
   font-size: 19px; font-weight: 700; cursor: pointer; color: white;
   display: flex; align-items: center; justify-content: center; position: relative;
+  background: transparent; padding: 0; margin: 5px 0;
 }
-.dock-btn:hover { filter: brightness(1.15); }
-.dock-btn.active { box-shadow: inset 0 0 0 2px rgba(255,255,255,0.35); }
+.dock-btn:hover { background: rgba(255,255,255,0.1); }
 .dock-btn .run-dot {
-  position: absolute; bottom: 1px; width: 6px; height: 6px; border-radius: 50%; background: var(--acc);
+  position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+  width: 6px; height: 6px; border-radius: 50%; background: var(--acc);
 }
 .dock-btn .tip {
-  position: absolute; left: 58px; top: 50%; transform: translateY(-50%);
+  position: absolute; left: 76px; top: 50%; transform: translateY(-50%);
   background: #111; border: 1px solid #444; padding: 4px 10px; border-radius: 6px;
   font-size: 12px; font-weight: 400; white-space: nowrap; display: none; pointer-events: none;
 }
 .dock-btn:hover .tip { display: block; }
-.dock-sep { height: 1px; background: #3a3733; margin: 5px 8px; }
+.dock-sep { height: 1px; width: 36px; background: #3a3733; margin: 6px 0; }
+.show-apps { margin-top: auto; }
 .show-apps .grid9 { display: grid; grid-template-columns: repeat(3, 6px); gap: 3px; }
 .show-apps .grid9 i { width: 6px; height: 6px; border-radius: 50%; background: #fff; display: block; }
 
@@ -310,8 +312,15 @@ button { font-family: inherit; }
 .vnav:hover { background: rgba(255,255,255,0.18); }
 
 @media (max-width: 720px) {
-  .dock { left: 50%; top: auto; bottom: 10px; transform: translateX(-50%); flex-direction: row; }
-  .dock-sep { width: 1px; height: auto; margin: 8px 5px; }
+  .dock {
+    left: 50%; right: auto; top: auto; bottom: 10px; transform: translateX(-50%);
+    width: auto; flex-direction: row; align-items: center;
+    border: 1px solid #33302c; border-radius: 16px; padding: 6px 8px;
+  }
+  .dock-btn { margin: 0 3px; }
+  .dock-btn .run-dot { bottom: 0; }
+  .show-apps { margin-top: 0; }
+  .dock-sep { width: 1px; height: 28px; margin: 0 6px; }
   .dock-btn .tip { display: none !important; }
   .ms-cell { width: 28px; height: 28px; }
 }
