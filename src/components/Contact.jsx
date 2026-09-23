@@ -53,7 +53,7 @@ export default function Contact() {
           ))}
         </h2>
 
-        <div className="mt-12 border-t border-white/[0.08] md:mt-16">
+        <div className="mt-12 border-t border-line md:mt-16">
           {LINKS.map((l, i) => (
             <motion.div
               key={l.label}
@@ -67,16 +67,16 @@ export default function Contact() {
                   href={l.href}
                   target={l.href.startsWith("http") ? "_blank" : undefined}
                   rel={l.href.startsWith("http") ? "noreferrer" : undefined}
-                  className="group flex items-center justify-between gap-4 border-b border-white/[0.08] py-6 md:py-8"
+                  className="group flex items-center justify-between gap-4 border-b border-line py-6 md:py-8"
                 >
                   <span className="display-tight text-3xl transition-transform duration-500 group-hover:translate-x-2 md:text-5xl">
                     {l.label}
                   </span>
                   <span className="flex items-center gap-4">
-                    <span className="hidden font-mono text-xs text-white/35 sm:block">{l.note}</span>
+                    <span className="hidden font-mono text-xs text-muted sm:block">{l.note}</span>
                     <span
                       aria-hidden="true"
-                      className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 transition-all duration-300 group-hover:border-white/50 group-hover:bg-white group-hover:text-black"
+                      className="flex h-11 w-11 items-center justify-center rounded-full border border-line transition-all duration-300 group-hover:border-ink/40 group-hover:bg-btn group-hover:text-btnink"
                     >
                       ↗
                     </span>

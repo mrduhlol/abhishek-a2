@@ -43,13 +43,26 @@ export default function ParticleField({ className = "" }) {
     resize();
     window.addEventListener("resize", resize);
 
+    // Star tint follows the theme (icy slate on Glacier, starlight on void).
+    const tint = { rgb: "200, 214, 255", dim: 1 };
+    const syncTint = () => {
+      if (document.documentElement.dataset.theme === "glacier") {
+        tint.rgb = "35, 70, 135";
+        tint.dim = 0.75;
+      } else {
+        tint.rgb = "200, 214, 255";
+        tint.dim = 1;
+      }
+    };
+    syncTint();
+
     const draw = () => {
       ctx.clearRect(0, 0, w, h);
       for (const p of parts) {
         const twinkle = 0.7 + 0.3 * Math.sin(p.tw);
         ctx.beginPath();
         ctx.arc(p.x * w, p.y * h, p.r * dpr, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(200, 214, 255, ${(p.a * twinkle).toFixed(3)})`;
+        ctx.fillStyle = `rgba(${tint.rgb}, ${(p.a * twinkle * tint.dim).toFixed(3)})`;
         ctx.fill();
       }
     };
@@ -80,6 +93,7 @@ export default function ParticleField({ className = "" }) {
       }
     };
     document.addEventListener("visibilitychange", onVis);
+    window.addEventListener("aa:theme", syncTint);
 
     // Pause when hero is offscreen.
     const obs = new IntersectionObserver(
@@ -101,6 +115,7 @@ export default function ParticleField({ className = "" }) {
       running = false;
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
+      window.removeEventListener("aa:theme", syncTint);
       document.removeEventListener("visibilitychange", onVis);
       obs.disconnect();
     };

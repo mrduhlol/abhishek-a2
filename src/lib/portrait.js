@@ -32,13 +32,13 @@ export const PORTRAIT = {
 
   // ---- tunables ----
   // Max pupil travel as a fraction of portrait width/height
-  // (~3px / ~2px at 640px display width — subtle by design)
-  MAX_PUPIL_X: 0.005,
-  MAX_PUPIL_Y: 0.0038,
+  // (~4px / ~3px at 640px display width — noticeable yet believable)
+  MAX_PUPIL_X: 0.006,
+  MAX_PUPIL_Y: 0.0045,
   // Gaze easing per rAF tick (0..1, higher = snappier, never snaps)
   EYE_TRACKING_SMOOTHNESS: 0.16,
   // Cursor distance (px) at which the gaze reaches full deflection
-  GAZE_FULL_DIST: 420,
+  GAZE_FULL_DIST: 380,
   // Blink scheduler bounds (ms)
   BLINK_MIN_INTERVAL: 3000,
   BLINK_MAX_INTERVAL: 6000,
