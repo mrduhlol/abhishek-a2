@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
 import { PORTRAIT } from '../lib/portrait.js';
 
-// Gaze + proximity tracking. Zero React state — a single rAF loop writes
-// transforms straight to refs. Both eyes share one vector (no cartoon wobble).
-//
-// frameRef: portrait frame | eyeRefs: [leftPatch, rightPatch]
-// liveRef:  { current: bool } — flipped true once the entrance completes
-// reduce:   prefers-reduced-motion — disables everything
-export function useEyeTracking(frameRef, eyeRefs, liveRef, reduce) {
+// Pupil-only gaze. The portrait, frame, glasses and lids never move —
+// only the iris-texture layers translate, clamped to an elliptical radius
+// (MAX_PUPIL_X / MAX_PUPIL_Y) so travel stays anatomically believable.
+// Zero React state: one rAF loop writes transforms straight to refs.
+// Touch pointers are ignored (no reliable hover); blinking still runs.
+export function useEyeTracking(frameRef, irisRefs, liveRef, reduce) {
   useEffect(() => {
     if (reduce) return;
     const frame = frameRef.current;
@@ -17,10 +16,10 @@ export function useEyeTracking(frameRef, eyeRefs, liveRef, reduce) {
     const gaze = { x: 0, y: 0 }; // smoothed, px at current frame width
     let visible = true;
     let raf = 0;
-    let lastGazeAttr = '';
+    let lastAttr = '';
 
     const onMove = (e) => {
-      // Touch drags also steer the gaze; harmless and cheap.
+      if (e.pointerType === 'touch') return;
       pointer.x = e.clientX;
       pointer.y = e.clientY;
       pointer.inside = true;
@@ -31,7 +30,6 @@ export function useEyeTracking(frameRef, eyeRefs, liveRef, reduce) {
 
     const obs = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
-      if (visible && liveRef.current && !raf) raf = requestAnimationFrame(tick);
     });
     obs.observe(frame);
     const onVis = () => {
@@ -40,17 +38,17 @@ export function useEyeTracking(frameRef, eyeRefs, liveRef, reduce) {
 
     const tick = () => {
       raf = 0;
-      // Always reschedule first: the loop must never die, even if a frame
-      // is skipped while hidden, offscreen or pre-entrance.
+      // Always reschedule first: the loop must never die.
       raf = requestAnimationFrame(tick);
       if (!liveRef.current || !visible || document.hidden) return;
 
       const r = frame.getBoundingClientRect();
       const W = r.width || 1;
+      const H = r.height || 1;
 
-      // Gaze origin: midpoint between the pupils, in screen space.
-      const ex = r.left + ((PORTRAIT.eyes.left.x + PORTRAIT.eyes.right.x) / 2) * W;
-      const ey = r.top + PORTRAIT.eyes.left.y * (r.height || W / (PORTRAIT.aspectW / PORTRAIT.aspectH));
+      // Gaze origin: midpoint between the irises, in screen space.
+      const ex = r.left + ((PORTRAIT.eyes.left.iris.x + PORTRAIT.eyes.right.iris.x) / 2) * W;
+      const ey = r.top + ((PORTRAIT.eyes.left.iris.y + PORTRAIT.eyes.right.iris.y) / 2) * H;
 
       let tx = 0;
       let ty = 0;
@@ -58,47 +56,33 @@ export function useEyeTracking(frameRef, eyeRefs, liveRef, reduce) {
         const dx = pointer.x - ex;
         const dy = pointer.y - ey;
         const dist = Math.hypot(dx, dy) || 1;
-        const mag = PORTRAIT.MAX_EYE_OFFSET * W * Math.min(1, dist / PORTRAIT.GAZE_FULL_DIST);
-        tx = (dx / dist) * mag;
-        ty = (dy / dist) * mag * PORTRAIT.EYE_Y_DAMP;
+        const reach = Math.min(1, dist / PORTRAIT.GAZE_FULL_DIST);
+        // Elliptical clamp: independent X/Y maxima, eased by distance.
+        let nx = (dx / dist) * reach;
+        let ny = (dy / dist) * reach;
+        const flat = Math.hypot(nx, ny);
+        if (flat > 1) {
+          nx /= flat;
+          ny /= flat;
+        }
+        tx = nx * PORTRAIT.MAX_PUPIL_X * W;
+        ty = ny * PORTRAIT.MAX_PUPIL_Y * H;
       }
-      const k = PORTRAIT.GAZE_LERP;
+      const k = PORTRAIT.EYE_TRACKING_SMOOTHNESS;
       gaze.x += (tx - gaze.x) * k;
       gaze.y += (ty - gaze.y) * k;
       if (Math.abs(gaze.x) < 0.02) gaze.x = 0;
       if (Math.abs(gaze.y) < 0.02) gaze.y = 0;
 
-      const gx = gaze.x.toFixed(2);
-      const gy = gaze.y.toFixed(2);
-      for (const ref of eyeRefs) {
-        if (ref.current) ref.current.style.transform = `translate3d(${gx}px, ${gy}px, 0)`;
+      const t = `translate3d(${gaze.x.toFixed(2)}px, ${gaze.y.toFixed(2)}px, 0)`;
+      for (const ref of irisRefs) {
+        if (ref.current) ref.current.style.transform = t;
       }
-
-      // Proximity: drift + breathe toward a nearby cursor, else settle home.
-      let fx = 0;
-      let fy = 0;
-      let s = 1;
-      if (pointer.inside) {
-        const cx = r.left + r.width / 2;
-        const cy = r.top + r.height / 2;
-        const pdx = pointer.x - cx;
-        const pdy = pointer.y - cy;
-        const pdist = Math.hypot(pdx, pdy);
-        const near = Math.max(r.width, r.height) * 1.1;
-        if (pdist < near) {
-          const pull = 1 - pdist / near; // 0 far -> 1 on top
-          fx = pdx * PORTRAIT.PARALLAX_STRENGTH * pull * 4;
-          fy = pdy * PORTRAIT.PARALLAX_STRENGTH * pull * 4;
-          s = 1 + (PORTRAIT.PORTRAIT_SCALE - 1) * pull;
-        }
-      }
-      frame.style.transform =
-        `translate3d(${fx.toFixed(2)}px, ${fy.toFixed(2)}px, 0) scale(${s.toFixed(4)})`;
 
       // Test hook: readable gaze state for automated checks.
-      const attr = `${gx},${gy}`;
-      if (attr !== lastGazeAttr) {
-        lastGazeAttr = attr;
+      const attr = `${gaze.x.toFixed(2)},${gaze.y.toFixed(2)}`;
+      if (attr !== lastAttr) {
+        lastAttr = attr;
         frame.setAttribute('data-gaze', attr);
       }
     };
