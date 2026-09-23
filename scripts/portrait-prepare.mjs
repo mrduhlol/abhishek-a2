@@ -14,10 +14,13 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = process.env.PORTRAIT_ROOT || join(dirname(fileURLToPath(import.meta.url)), '..');
-const SRC = join(ROOT, 'assets-src', 'portrait-dark-source.png');
 const args = process.argv.slice(2);
-const outDirIdx = args.indexOf('--out-dir');
-const OUT_DIR = outDirIdx >= 0 ? args[outDirIdx + 1] : join(process.env.TEMP || '/tmp', 'portrait-work');
+const flag = (name, fallback) => {
+  const i = args.indexOf(name);
+  return i >= 0 ? args[i + 1] : fallback;
+};
+const SRC = join(ROOT, 'assets-src', flag('--src', 'portrait-dark-source.png'));
+const OUT_DIR = flag('--out-dir', join(process.env.TEMP || '/tmp', 'portrait-work'));
 mkdirSync(OUT_DIR, { recursive: true });
 
 const OUT_W = 1024;
@@ -25,12 +28,12 @@ const OUT_W = 1024;
 // See eyes-check.png to verify; adjust here if the photo changes.
 const EYES = {
   left: {
-    open: { x: 0.45, y: 0.331, w: 0.052, h: 0.042 },
-    iris: { x: 0.45, y: 0.333 },
+    open: { x: 0.447, y: 0.33, w: 0.05, h: 0.044 },
+    iris: { x: 0.447, y: 0.33 },
   },
   right: {
-    open: { x: 0.58, y: 0.331, w: 0.05, h: 0.04 },
-    iris: { x: 0.58, y: 0.332 },
+    open: { x: 0.58, y: 0.329, w: 0.052, h: 0.044 },
+    iris: { x: 0.58, y: 0.328 },
   },
 };
 
