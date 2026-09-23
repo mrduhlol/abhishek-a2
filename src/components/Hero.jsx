@@ -83,6 +83,7 @@ export default function Hero() {
               })}
           className="relative mx-auto mt-6 w-[min(88vw,430px)] shrink-0 sm:w-[430px] lg:w-[460px] xl:w-[500px]"
         >
+          <div className="portrait-stage" aria-hidden="true" />
           {/* faint technical geometry behind the portrait */}
           <motion.svg
             viewBox="0 0 400 400"

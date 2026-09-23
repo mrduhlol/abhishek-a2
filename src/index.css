@@ -299,6 +299,25 @@ body {
   opacity: 1;
 }
 
+/* Glacier only: a dark stage aura so the dark-studio photo melts into the
+   light page instead of reading as a pasted rectangle. Invisible in void. */
+.portrait-stage {
+  position: absolute;
+  inset: -8% -16%;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 56% 56% at 50% 45%,
+    rgba(8, 12, 26, 0.94) 0%,
+    rgba(8, 12, 26, 0.6) 46%,
+    transparent 72%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+[data-theme="glacier"] .portrait-stage {
+  opacity: 1;
+}
+
 /* whisper of atmospheric color behind the subject */
 .portrait-glow {
   position: absolute;
