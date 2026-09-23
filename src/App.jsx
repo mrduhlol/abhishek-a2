@@ -31,12 +31,12 @@ export default function App() {
         <Hero />
         <Statement />
         <div className="mx-auto max-w-6xl px-5 md:px-8" aria-hidden="true">
-          <div className="h-px bg-white/[0.06]" />
+          <div className="h-px bg-line" />
         </div>
         <About />
         <Projects />
         <div className="mx-auto max-w-6xl px-5 md:px-8" aria-hidden="true">
-          <div className="h-px bg-white/[0.06]" />
+          <div className="h-px bg-line" />
         </div>
         <Skills />
         <Journey />
