@@ -40,7 +40,7 @@ export default function Navbar() {
           aria-label="Primary"
           className="mx-auto flex h-[68px] max-w-6xl items-center justify-between px-5 md:px-8"
         >
-          <a href="#top" className="text-[13px] font-700 font-bold tracking-[0.28em] text-white">
+          <a href="#top" className="text-[13px] font-bold tracking-[0.28em] text-white">
             ABHISHEK&nbsp;A.
           </a>
 
