@@ -6,8 +6,8 @@ import ScrollIndicator from './ScrollIndicator.jsx';
 import SocialLinks from './SocialLinks.jsx';
 import { HeroLeft, HeroRight, HeroExploring } from './HeroInfo.jsx';
 
-// Reference composition:
-//   label -> name -> subtitle -> [info | portrait | info] -> [03 | scroll | 04] -> footer
+// Composition: label -> portrait -> name (overlapping the chest) ->
+// subtitle -> [info | info] -> [03 | scroll | 04] -> footer.
 // The portrait never moves after entrance; only pupils + lids are alive.
 export default function Hero() {
   const sectionRef = useRef(null);
@@ -45,13 +45,13 @@ export default function Hero() {
       className="relative overflow-hidden"
       aria-label="Intro"
     >
-      {/* deep base + whisper radial glow, per reference */}
+      {/* deep base + whisper radial glow */}
       <motion.div
         {...(reduce ? {} : { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 1 } })}
         className="absolute inset-0"
         aria-hidden="true"
       >
-        <div className="absolute inset-0 bg-[#05060A]" />
+        <div className="absolute inset-0 bg-page" />
         <div
           className="absolute inset-0"
           style={{
@@ -67,22 +67,50 @@ export default function Hero() {
         {/* top label */}
         <motion.p
           {...rise(0.15)}
-          className="text-center font-mono text-[11px] tracking-[0.42em] text-white/40"
+          className="text-center font-mono text-[11px] tracking-[0.42em] text-muted"
         >
           BUILD • BREAK • LEARN • REPEAT
         </motion.p>
 
-        {/* name — the largest element, never behind the portrait */}
-        <div className="mt-5 overflow-hidden">
+        {/* portrait — large, seamless, the centerpiece */}
+        <motion.div
+          {...(reduce
+            ? {}
+            : {
+                initial: { opacity: 0, scale: 0.985 },
+                animate: { opacity: 1, scale: 1 },
+                transition: { duration: 1, delay: 0.35, ease: [0.22, 1, 0.36, 1] },
+              })}
+          className="relative mx-auto mt-6 w-[min(88vw,430px)] shrink-0 sm:w-[430px] lg:w-[460px] xl:w-[500px]"
+        >
+          {/* faint technical geometry behind the portrait */}
+          <motion.svg
+            viewBox="0 0 400 400"
+            aria-hidden="true"
+            style={reduce ? undefined : { y: ringsY }}
+            className="absolute left-1/2 top-1/2 w-[135%] max-w-none -translate-x-1/2 -translate-y-1/2 opacity-60"
+          >
+            <circle cx="200" cy="200" r="150" fill="none" style={{ stroke: 'var(--color-grid)' }} />
+            <circle cx="200" cy="200" r="118" fill="none" style={{ stroke: 'var(--color-grid)' }} strokeDasharray="2 7" />
+            <circle cx="200" cy="200" r="182" fill="none" stroke="rgba(139,92,246,0.10)" />
+            <circle cx="200" cy="50" r="2.5" fill="rgba(91,140,255,0.7)" />
+            <circle cx="352" cy="200" r="2" style={{ fill: 'var(--color-ink)' }} fillOpacity="0.4" />
+            <circle cx="48" cy="200" r="2" style={{ fill: 'var(--color-ink)' }} fillOpacity="0.25" />
+          </motion.svg>
+          <InteractivePortrait liveRef={liveRef} scopeRef={sectionRef} className="relative" />
+        </motion.div>
+
+        {/* name — overlapping the upper chest, never the face */}
+        <div className="relative z-10 -mt-14 text-center sm:-mt-[4.5rem] lg:-mt-24 xl:-mt-28">
           <motion.h1
             {...(reduce
               ? {}
               : {
                   initial: { opacity: 0, y: 44, filter: 'blur(10px)' },
                   animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
-                  transition: { duration: 1, delay: 0.25, ease: [0.22, 1, 0.36, 1] },
+                  transition: { duration: 1, delay: 0.55, ease: [0.22, 1, 0.36, 1] },
                 })}
-            className="display-tight text-center text-[clamp(3rem,9vw,6.5rem)] text-white"
+            className="display-tight text-ink text-[clamp(2.5rem,8vw,4.5rem)]"
             style={{
               textShadow:
                 '0 0 28px rgba(91,140,255,0.35), 0 0 80px rgba(139,92,246,0.22)',
@@ -91,65 +119,36 @@ export default function Hero() {
             ABHISHEK A.
           </motion.h1>
         </div>
-        <motion.p {...rise(0.45)} className="mt-3 text-center text-[13px] font-medium tracking-[0.34em] text-[#8B8FA3]">
+        <motion.p {...rise(0.75)} className="mt-3 text-center text-[13px] font-medium tracking-[0.34em] text-muted">
           CSE — CYBERSECURITY
         </motion.p>
 
-        {/* middle: info | portrait | info */}
-        <div className="mt-8 flex flex-col items-center gap-10 md:mt-4 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-6">
+        {/* info panels */}
+        <div className="mt-12 flex flex-col items-center gap-10 lg:grid lg:grid-cols-2 lg:items-start lg:gap-6">
           <motion.div
-            {...rise(0.8, -24)}
-            className="order-3 flex w-full justify-center lg:order-1 lg:justify-end"
+            {...rise(0.9, -24)}
+            className="order-2 flex w-full justify-center lg:order-1 lg:justify-end lg:pr-10"
           >
             <HeroLeft />
           </motion.div>
-
           <motion.div
-            {...(reduce
-              ? {}
-              : {
-                  initial: { opacity: 0, scale: 0.985 },
-                  animate: { opacity: 1, scale: 1 },
-                  transition: { duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] },
-                })}
-            className="relative order-1 w-[min(74vw,340px)] shrink-0 sm:w-[340px] lg:order-2 lg:w-[320px] xl:w-[350px]"
-          >
-            {/* faint technical geometry behind the portrait */}
-            <motion.svg
-              viewBox="0 0 400 400"
-              aria-hidden="true"
-              style={reduce ? undefined : { y: ringsY }}
-              className="absolute left-1/2 top-1/2 w-[135%] max-w-none -translate-x-1/2 -translate-y-1/2 opacity-60"
-            >
-              <circle cx="200" cy="200" r="150" fill="none" stroke="rgba(255,255,255,0.06)" />
-              <circle cx="200" cy="200" r="118" fill="none" stroke="rgba(255,255,255,0.05)" strokeDasharray="2 7" />
-              <circle cx="200" cy="200" r="182" fill="none" stroke="rgba(139,92,246,0.10)" />
-              <circle cx="200" cy="50" r="2.5" fill="rgba(91,140,255,0.7)" />
-              <circle cx="352" cy="200" r="2" fill="rgba(255,255,255,0.4)" />
-              <circle cx="48" cy="200" r="2" fill="rgba(255,255,255,0.25)" />
-            </motion.svg>
-            <InteractivePortrait liveRef={liveRef} scopeRef={sectionRef} className="relative" />
-          </motion.div>
-
-          <motion.div
-            {...rise(0.9, 24)}
-            className="order-2 flex w-full justify-center lg:order-3 lg:justify-start"
+            {...rise(1.0, 24)}
+            className="order-1 flex w-full justify-center lg:order-2 lg:justify-start lg:pl-10"
           >
             <HeroRight />
           </motion.div>
+        </div>
 
-          {/* lower row */}
-          <motion.div {...rise(1.0)} className="order-4 flex w-full justify-center lg:justify-end">
+        {/* lower row */}
+        <div className="mt-12 flex flex-col items-center gap-10 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-start">
+          <motion.div {...rise(1.05)} className="order-1 flex w-full justify-center lg:justify-end lg:pr-10">
             <HeroExploring />
           </motion.div>
-          <div className="order-6 flex w-full justify-center lg:order-5 lg:col-start-2 lg:row-start-2">
+          <div className="order-3 flex w-full justify-center lg:order-2">
             <ScrollIndicator delay={1.25} />
           </div>
-          <motion.div
-            {...rise(1.1)}
-            className="order-5 w-full lg:order-6 lg:col-start-3 lg:row-start-2"
-          >
-            <p className="mb-3 font-mono text-[11px] tracking-[0.3em] text-white/45 lg:text-right">
+          <motion.div {...rise(1.1)} className="order-2 w-full lg:order-3 lg:pl-10">
+            <p className="mb-3 font-mono text-[11px] tracking-[0.3em] text-muted lg:text-right">
               04 — FIND ME ON
             </p>
             <div className="flex justify-start lg:justify-end">
@@ -161,7 +160,7 @@ export default function Hero() {
         {/* footer row */}
         <motion.div
           {...rise(1.2)}
-          className="mt-10 flex items-center justify-between border-t border-white/[0.06] pt-5 text-[12px] text-white/35"
+          className="mt-10 flex items-center justify-between border-t border-line pt-5 text-[12px] text-muted"
         >
           <p>Turning ideas into experiences.</p>
           <p>© 2026 Abhishek A.</p>
