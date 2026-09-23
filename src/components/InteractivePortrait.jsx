@@ -20,10 +20,21 @@ export default function InteractivePortrait({ liveRef, scopeRef, className = '' 
   useBlink([lidL, lidR], scopeRef ?? frameRef, liveRef, reduce);
 
   const { w: pw, h: ph } = PORTRAIT.patch;
-  const layers = [
-    { key: 'left', eye: PORTRAIT.eyes.left, patchRef: patchL, lidRef: lidL },
-    { key: 'right', eye: PORTRAIT.eyes.right, patchRef: patchR, lidRef: lidR },
-  ];
+  const box = (eye) => {
+    const left = eye.x - pw / 2;
+    const top = eye.y - ph / 2;
+    return {
+      style: {
+        left: `${(left * 100).toFixed(3)}%`,
+        top: `${(top * 100).toFixed(3)}%`,
+        width: `${(pw * 100).toFixed(3)}%`,
+        height: `${(ph * 100).toFixed(3)}%`,
+      },
+      bgPos: `${patchBgPos(left, pw)} ${patchBgPos(top, ph)}`,
+    };
+  };
+  const boxL = box(PORTRAIT.eyes.left);
+  const boxR = box(PORTRAIT.eyes.right);
 
   return (
     <div
@@ -45,48 +56,43 @@ export default function InteractivePortrait({ liveRef, scopeRef, className = '' 
         />
       </picture>
 
-      {layers.map(({ key, eye, patchRef }) => {
-        const left = eye.x - pw / 2;
-        const top = eye.y - ph / 2;
-        return (
-          <div
-            key={`patch-${key}`}
-            ref={patchRef}
-            aria-hidden="true"
-            data-eye={key}
-            className="eye-patch z-[2]"
-            style={{
-              left: `${(left * 100).toFixed(3)}%`,
-              top: `${(top * 100).toFixed(3)}%`,
-              width: `${(pw * 100).toFixed(3)}%`,
-              height: `${(ph * 100).toFixed(3)}%`,
-              backgroundImage: `url("${PORTRAIT.webp}")`,
-              backgroundSize: patchBgSize(pw, ph),
-              backgroundPosition: `${patchBgPos(left, pw)} ${patchBgPos(top, ph)}`,
-            }}
-          />
-        );
-      })}
+      <div
+        ref={patchL}
+        aria-hidden="true"
+        data-eye="left"
+        className="eye-patch z-[2]"
+        style={{
+          ...boxL.style,
+          backgroundImage: `url("${PORTRAIT.webp}")`,
+          backgroundSize: patchBgSize(pw, ph),
+          backgroundPosition: boxL.bgPos,
+        }}
+      />
+      <div
+        ref={patchR}
+        aria-hidden="true"
+        data-eye="right"
+        className="eye-patch z-[2]"
+        style={{
+          ...boxR.style,
+          backgroundImage: `url("${PORTRAIT.webp}")`,
+          backgroundSize: patchBgSize(pw, ph),
+          backgroundPosition: boxR.bgPos,
+        }}
+      />
 
-      {layers.map(({ key, eye, lidRef }) => {
-        const left = eye.x - pw / 2;
-        const top = eye.y - ph / 2;
-        return (
-          <div
-            key={`lid-${key}`}
-            ref={lidRef}
-            aria-hidden="true"
-            className="eye-lid z-[3]"
-            style={{
-              left: `${(left * 100).toFixed(3)}%`,
-              top: `${(top * 100).toFixed(3)}%`,
-              width: `${(pw * 100).toFixed(3)}%`,
-              height: `${(ph * 100).toFixed(3)}%`,
-              background: LID_TONE[key],
-            }}
-          />
-        );
-      })}
+      <div
+        ref={lidL}
+        aria-hidden="true"
+        className="eye-lid z-[3]"
+        style={{ ...boxL.style, background: LID_TONE.left }}
+      />
+      <div
+        ref={lidR}
+        aria-hidden="true"
+        className="eye-lid z-[3]"
+        style={{ ...boxR.style, background: LID_TONE.right }}
+      />
 
       <div className="portrait-melt z-[4]" aria-hidden="true" />
     </div>

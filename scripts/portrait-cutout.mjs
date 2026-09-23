@@ -151,7 +151,7 @@ ${[EYES.left, EYES.right].map((e) => `
   <line x1="${e.x * W}" y1="${e.y * H - 40}" x2="${e.x * W}" y2="${e.y * H + 40}" stroke="red" stroke-width="2"/>`).join('')}
 </svg>`;
 await sharp(SRC).composite([{ input: Buffer.from(svg), top: 0, left: 0 }]).png().toFile(join(OUT_DIR, 'eyes-check.png'));
-const nw = 1024, nh = Math.round((H / W) * nw);
+const nw = 1024;
 await sharp(rgba, { raw: { width: W, height: H, channels: 4 } })
   .resize({ width: nw })
   .flatten({ background: '#08090C' })
