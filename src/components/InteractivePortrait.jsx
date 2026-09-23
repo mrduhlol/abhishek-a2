@@ -1,40 +1,61 @@
 import { useRef } from 'react';
-import { useReducedMotion } from 'motion/react';
-import { PORTRAIT, patchBgPos, patchBgSize, LID_TONE } from '../lib/portrait.js';
-import { useEyeTracking } from '../hooks/useEyeTracking.js';
-import { useBlink } from '../hooks/useBlink.js';
+import { PORTRAIT, patchBgPos, patchBgSize, irisBox, LID_TONE } from '../lib/portrait.js';
+import EyeTracker from './EyeTracker.jsx';
+import BlinkController from './BlinkController.jsx';
 
-// Layered living portrait. The photograph itself is never altered —
-// gaze = feather-masked photo duplicates translated a few px,
-// blink = skin-toned lid strips swept by the compositor.
-// liveRef flips true once the hero entrance completes.
+// The photograph is the asset: base layer never moves, never scales.
+// Per eye, inside a static almond-clipped opening:
+//   cover — blurred copy of the local region melts the resting iris away
+//   iris  — crisp photo crop of the iris, the ONLY thing that translates
+//   lid   — skin-toned strip swept by the compositor for blinks
+function eyeGeometry(eye) {
+  const o = eye.open;
+  const tex = irisBox(eye);
+  const pct = (v) => `${(v * 100).toFixed(3)}%`;
+  const texLeftPct = ((tex.left - (o.x - o.w / 2)) / o.w) * 100;
+  const texTopPct = ((tex.top - (o.y - o.h / 2)) / o.h) * 100;
+  return {
+    outer: {
+      left: pct(o.x - o.w / 2),
+      top: pct(o.y - o.h / 2),
+      width: pct(o.w),
+      height: pct(o.h),
+    },
+    coverBg: {
+      backgroundImage: `url("${PORTRAIT.webp}")`,
+      backgroundSize: patchBgSize(o.w, o.h),
+      backgroundPosition: `${patchBgPos(o.x - o.w / 2, o.w)} ${patchBgPos(o.y - o.h / 2, o.h)}`,
+    },
+    texStyle: {
+      left: `${texLeftPct.toFixed(3)}%`,
+      top: `${texTopPct.toFixed(3)}%`,
+      width: `${((tex.w / o.w) * 100).toFixed(3)}%`,
+      height: `${((tex.h / o.h) * 100).toFixed(3)}%`,
+      backgroundImage: `url("${PORTRAIT.webp}")`,
+      backgroundSize: patchBgSize(tex.w, tex.h),
+      backgroundPosition: `${patchBgPos(tex.left, tex.w)} ${patchBgPos(tex.top, tex.h)}`,
+    },
+  };
+}
+
+function Eye({ eyeKey, irisRef, lidRef }) {
+  const g = eyeGeometry(PORTRAIT.eyes[eyeKey]);
+  return (
+    <div aria-hidden="true" className="eye-opening z-[2]" style={g.outer}>
+      <div className="eye-cover" style={g.coverBg} />
+      <div ref={irisRef} data-iris={eyeKey} className="eye-iris" style={g.texStyle} />
+      <div ref={lidRef} className="eye-lid" style={{ background: LID_TONE[eyeKey] }} />
+    </div>
+  );
+}
+
+// Refs live here so layers stay colocated; controllers own the loops.
 export default function InteractivePortrait({ liveRef, scopeRef, className = '' }) {
-  const reduce = useReducedMotion();
   const frameRef = useRef(null);
-  const patchL = useRef(null);
-  const patchR = useRef(null);
+  const irisL = useRef(null);
+  const irisR = useRef(null);
   const lidL = useRef(null);
   const lidR = useRef(null);
-
-  useEyeTracking(frameRef, [patchL, patchR], liveRef, reduce);
-  useBlink([lidL, lidR], scopeRef ?? frameRef, liveRef, reduce);
-
-  const { w: pw, h: ph } = PORTRAIT.patch;
-  const box = (eye) => {
-    const left = eye.x - pw / 2;
-    const top = eye.y - ph / 2;
-    return {
-      style: {
-        left: `${(left * 100).toFixed(3)}%`,
-        top: `${(top * 100).toFixed(3)}%`,
-        width: `${(pw * 100).toFixed(3)}%`,
-        height: `${(ph * 100).toFixed(3)}%`,
-      },
-      bgPos: `${patchBgPos(left, pw)} ${patchBgPos(top, ph)}`,
-    };
-  };
-  const boxL = box(PORTRAIT.eyes.left);
-  const boxR = box(PORTRAIT.eyes.right);
 
   return (
     <div
@@ -56,45 +77,13 @@ export default function InteractivePortrait({ liveRef, scopeRef, className = '' 
         />
       </picture>
 
-      <div
-        ref={patchL}
-        aria-hidden="true"
-        data-eye="left"
-        className="eye-patch z-[2]"
-        style={{
-          ...boxL.style,
-          backgroundImage: `url("${PORTRAIT.webp}")`,
-          backgroundSize: patchBgSize(pw, ph),
-          backgroundPosition: boxL.bgPos,
-        }}
-      />
-      <div
-        ref={patchR}
-        aria-hidden="true"
-        data-eye="right"
-        className="eye-patch z-[2]"
-        style={{
-          ...boxR.style,
-          backgroundImage: `url("${PORTRAIT.webp}")`,
-          backgroundSize: patchBgSize(pw, ph),
-          backgroundPosition: boxR.bgPos,
-        }}
-      />
-
-      <div
-        ref={lidL}
-        aria-hidden="true"
-        className="eye-lid z-[3]"
-        style={{ ...boxL.style, background: LID_TONE.left }}
-      />
-      <div
-        ref={lidR}
-        aria-hidden="true"
-        className="eye-lid z-[3]"
-        style={{ ...boxR.style, background: LID_TONE.right }}
-      />
+      <Eye eyeKey="left" irisRef={irisL} lidRef={lidL} />
+      <Eye eyeKey="right" irisRef={irisR} lidRef={lidR} />
 
       <div className="portrait-melt z-[4]" aria-hidden="true" />
+
+      <EyeTracker frameRef={frameRef} irisRefs={[irisL, irisR]} liveRef={liveRef} />
+      <BlinkController lidRefs={[lidL, lidR]} scopeRef={scopeRef ?? frameRef} liveRef={liveRef} />
     </div>
   );
 }

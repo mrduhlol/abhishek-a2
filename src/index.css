@@ -129,18 +129,32 @@ body {
   -webkit-user-drag: none;
   -webkit-touch-callout: none;
 }
-/* feather-masked duplicate of the photo showing one eye; translated by rAF */
-.eye-patch {
+/* static almond clip matching the eye opening; everything gaze-related
+   lives inside and can never spill onto lids, frames or skin */
+.eye-opening {
+  position: absolute;
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black 62%, transparent 82%);
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black 62%, transparent 82%);
+  pointer-events: none;
+}
+/* blurred copy of the local region: melts the resting iris into the
+   sclera so the moving iris never double-renders. static, caches once. */
+.eye-cover {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  filter: blur(6px) brightness(1.12) saturate(0.9);
+}
+/* crisp photo crop of the iris — the ONLY layer eye tracking translates */
+.eye-iris {
   position: absolute;
   background-repeat: no-repeat;
-  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black 50%, transparent 74%);
-  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black 50%, transparent 74%);
   will-change: transform;
-  pointer-events: none;
 }
 /* skin-toned lid strip; scaleY driven by the Web Animations API */
 .eye-lid {
   position: absolute;
+  inset: 0;
   transform: scaleY(0);
   transform-origin: 50% 0%;
   border-radius: 0 0 48% 48% / 0 0 90% 90%;
