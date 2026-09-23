@@ -174,6 +174,67 @@ body {
     #08090c 99%
   );
 }
+/* ---------- custom galaxy cursor (fine pointers only, JS-gated) ---------- */
+.has-custom-cursor,
+.has-custom-cursor * {
+  cursor: none !important;
+}
+.custom-cursor {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.cursor-arrow,
+.cursor-dot,
+.cursor-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform;
+}
+.cursor-arrow {
+  margin: -2px 0 0 -3px;
+  filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.65)) drop-shadow(0 0 18px rgba(91, 140, 255, 0.35));
+  transition: scale 0.25s ease;
+}
+.cursor-arrow svg {
+  display: block;
+  transition: transform 0.25s ease;
+}
+.cursor-arrow.cursor-hot svg {
+  transform: scale(1.45);
+}
+.cursor-arrow.cursor-press svg {
+  transform: scale(0.85);
+}
+.cursor-dot {
+  border-radius: 50%;
+  margin: -3px 0 0 -3px;
+  filter: blur(0.5px);
+  box-shadow: 0 0 8px currentColor;
+}
+.cursor-label {
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(20, 16, 40, 0.8);
+  border: 1px solid rgba(139, 92, 246, 0.45);
+  border-radius: 99px;
+  padding: 4px 10px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate3d(-100px, -100px, 0);
+  transition: opacity 0.25s ease;
+  box-shadow: 0 0 16px rgba(139, 92, 246, 0.35);
+}
+.cursor-label.cursor-label-on {
+  opacity: 1;
+}
+
 /* whisper of atmospheric color behind the subject */
 .portrait-glow {
   position: absolute;

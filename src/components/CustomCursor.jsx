@@ -106,7 +106,7 @@ export default function CustomCursor() {
             dotRefs.current[i] = el;
           }}
           className="cursor-dot"
-          style={{ width: d.size, height: d.size, opacity: d.opacity, background: d.color }}
+          style={{ width: d.size, height: d.size, opacity: d.opacity, background: d.color, color: d.color }}
         />
       ))}
       <div ref={arrowRef} className="cursor-arrow">
