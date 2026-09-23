@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from "motion/react";
 import MagneticButton from "./MagneticButton.jsx";
-import { EXPLORING } from "../data/portfolio.js";
+
+const PILLS = ["Cybersecurity", "AI", "Cloud", "Web Development", "Robotics"];
 
 const fade = (delay) => ({
   initial: { opacity: 0, x: 0, y: 18 },
@@ -102,12 +103,12 @@ export function HeroExploring() {
         CURRENTLY EXPLORING
       </p>
       <ul className="flex max-w-[280px] flex-wrap gap-2" aria-label="Currently exploring">
-        {EXPLORING.slice(0, 5).map((c) => (
+        {PILLS.map((p) => (
           <li
-            key={c.title}
+            key={p}
             className="rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-1.5 text-[12px] text-white/70 transition-colors duration-300 hover:border-[#5B8CFF]/40 hover:text-white"
           >
-            {c.title}
+            {p}
           </li>
         ))}
       </ul>
