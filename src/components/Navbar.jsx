@@ -5,15 +5,26 @@ import { useActiveSection } from "../hooks/useActiveSection.js";
 
 const IDS = ["top", "about", "projects", "skills", "journey", "contact"];
 
+const THEMES = { DARK: "void", LIGHT: "glacier" };
+
 function useTheme() {
-  const [theme, setTheme] = useState(
-    () => localStorage.getItem("aa-theme") || "void"
-  );
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem("aa-theme");
+    // Migrate the retired abyss variant; single source of truth lives here.
+    return saved === THEMES.LIGHT ? THEMES.LIGHT : THEMES.DARK;
+  });
   useEffect(() => {
-    document.documentElement.dataset.theme = theme;
+    const root = document.documentElement;
+    // Polished handoff: crossfade surfaces without animating layout.
+    root.classList.add("theme-switching");
+    const t = window.setTimeout(() => root.classList.remove("theme-switching"), 650);
+    if (theme === THEMES.DARK) delete root.dataset.theme;
+    else root.dataset.theme = theme;
     localStorage.setItem("aa-theme", theme);
+    window.dispatchEvent(new CustomEvent("aa:theme", { detail: theme }));
+    return () => window.clearTimeout(t);
   }, [theme]);
-  return [theme, () => setTheme((t) => (t === "void" ? "abyss" : "void"))];
+  return [theme, () => setTheme((t) => (t === THEMES.DARK ? THEMES.LIGHT : THEMES.DARK))];
 }
 
 export default function Navbar() {
@@ -44,7 +55,7 @@ export default function Navbar() {
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
         className={`fixed inset-x-0 top-0 z-[70] transition-all duration-500 ${
           scrolled
-            ? "border-b border-white/[0.08] bg-[#05060A]/75 backdrop-blur-xl"
+            ? "border-b border-line bg-page/80 backdrop-blur-xl"
             : "border-b border-transparent bg-transparent"
         }`}
       >
@@ -52,7 +63,7 @@ export default function Navbar() {
           aria-label="Primary"
           className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 md:px-8"
         >
-          <a href="#top" aria-label="Home" className="text-xl font-extrabold tracking-tight text-white">
+          <a href="#top" aria-label="Home" className="text-xl font-extrabold tracking-tight text-ink">
             A<span className="text-[#8B5CF6]">.</span>
           </a>
 
@@ -63,7 +74,7 @@ export default function Navbar() {
                   href={`#${l.id}`}
                   aria-current={active === l.id ? "true" : undefined}
                   className={`text-[13px] font-medium tracking-wide transition-colors duration-300 ${
-                    active === l.id ? "text-white" : "text-[#8B8FA3] hover:text-white"
+                    active === l.id ? "text-ink" : "text-muted hover:text-ink"
                   }`}
                 >
                   {l.label}
@@ -82,9 +93,9 @@ export default function Navbar() {
             <button
               type="button"
               onClick={toggleTheme}
-              aria-pressed={theme === "abyss"}
-              aria-label={theme === "void" ? "Switch to abyss theme" : "Switch to void theme"}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-white/70 transition-colors duration-300 hover:border-white/30 hover:text-white"
+              aria-pressed={theme === "glacier"}
+              aria-label={theme === "void" ? "Switch to Glacier light theme" : "Switch to dark theme"}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink/70 transition-colors duration-300 hover:border-ink/30 hover:text-ink"
             >
               {theme === "void" ? (
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -99,7 +110,7 @@ export default function Navbar() {
             </button>
             <a
               href="#contact"
-              className="rounded-full border border-white/15 px-5 py-2 text-[12px] font-bold tracking-[0.12em] text-white transition-colors duration-300 hover:border-[#8B5CF6]/60 hover:bg-[#8B5CF6]/10"
+              className="rounded-full border border-line px-5 py-2 text-[12px] font-bold tracking-[0.12em] text-ink transition-colors duration-300 hover:border-[#8B5CF6]/60 hover:bg-[#8B5CF6]/10"
             >
               LET&apos;S BUILD →
             </a>
@@ -110,21 +121,21 @@ export default function Navbar() {
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-label={open ? "Close menu" : "Open menu"}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 md:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-line md:hidden"
           >
             <span className="relative block h-3 w-4">
               <span
-                className={`absolute left-0 top-0 h-px w-4 bg-white transition-transform duration-300 ${
+                className={`absolute left-0 top-0 h-px w-4 bg-ink transition-transform duration-300 ${
                   open ? "translate-y-[5.5px] rotate-45" : ""
                 }`}
               />
               <span
-                className={`absolute left-0 top-[5.5px] h-px w-4 bg-white transition-opacity duration-300 ${
+                className={`absolute left-0 top-[5.5px] h-px w-4 bg-ink transition-opacity duration-300 ${
                   open ? "opacity-0" : "opacity-100"
                 }`}
               />
               <span
-                className={`absolute left-0 top-[11px] h-px w-4 bg-white transition-transform duration-300 ${
+                className={`absolute left-0 top-[11px] h-px w-4 bg-ink transition-transform duration-300 ${
                   open ? "-translate-y-[5.5px] -rotate-45" : ""
                 }`}
               />
@@ -140,7 +151,7 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35, ease: "easeOut" }}
-            className="fixed inset-0 z-[65] flex flex-col justify-center bg-[#05060A]/95 px-8 backdrop-blur-2xl md:hidden"
+            className="fixed inset-0 z-[65] flex flex-col justify-center bg-page/95 px-8 backdrop-blur-2xl md:hidden"
           >
             <ul className="space-y-2">
               {NAV_LINKS.map((l, i) => (
@@ -154,9 +165,9 @@ export default function Navbar() {
                   <a
                     href={`#${l.id}`}
                     onClick={() => setOpen(false)}
-                    className="display-tight block py-2 text-5xl text-white"
+                    className="display-tight block py-2 text-5xl text-ink"
                   >
-                    <span className="mr-4 align-middle text-sm font-normal tracking-widest text-white/30">
+                    <span className="mr-4 align-middle text-sm font-normal tracking-widest text-muted">
                       0{i + 1}
                     </span>
                     {l.label}
