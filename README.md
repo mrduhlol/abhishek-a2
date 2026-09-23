@@ -31,19 +31,25 @@ Pick a `motif` (`cards` | `transfer` | `terminal`) and an `accent` color.
 
 ## Living portrait hero
 
-The hero centers a background-removed cutout of `assets-src/portrait-source.png`.
-Regenerate it after replacing the photo:
+The hero centers `assets-src/portrait-dark-source.png` (dark-navy studio
+backdrop blends straight into the page — no keying). Regenerate web assets
+after replacing the photo:
 
 ```bash
 npm install --no-save sharp   # scratch dep, not committed (gitignored)
-node scripts/portrait-cutout.mjs --out-dir .tmp-portrait
+node scripts/portrait-prepare.mjs --out-dir .tmp-portrait
 ```
 
-Tune gaze/blink/parallax in `src/lib/portrait.js` (`MAX_EYE_OFFSET`,
-`BLINK_MIN_INTERVAL`, `BLINK_MAX_INTERVAL`, `PARALLAX_STRENGTH`,
-`PORTRAIT_SCALE`). Eye coordinates + lid tones are calibrated from the current
-photo — re-calibrate if the photo changes (the script prints skin samples and
-writes an `eyes-check.png` overlay).
+Tune gaze/blink in `src/lib/portrait.js` (`MAX_PUPIL_X`, `MAX_PUPIL_Y`,
+`EYE_TRACKING_SMOOTHNESS`, `BLINK_MIN_INTERVAL`, `BLINK_MAX_INTERVAL`).
+The face itself never moves — only photo-pixel iris overlays translate inside
+static almond eye-opening masks, and lid strips sweep for blinks. Eye geometry
++ lid tones are calibrated from the current photo; re-calibrate if it changes
+(the script writes an `eyes-check-dark.png` overlay plus tone samples).
+
+Isolated controllers: `EyeTracker.jsx` (rAF gaze loop, no re-renders),
+`BlinkController.jsx` (randomized WAAPI scheduler), `CustomCursor.jsx`
+(galaxy cursor + trail; fine pointers only).
 
 ## Structure
 
