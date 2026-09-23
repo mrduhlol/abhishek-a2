@@ -215,14 +215,16 @@ body {
   background-repeat: no-repeat;
   will-change: transform;
 }
-/* skin-toned lid strip; scaleY driven by the Web Animations API */
+/* full-eyelid strip covering the eye plus surrounding lid area; scaleY
+   driven by the Web Animations API. Feathered so no rectangular edge shows. */
 .eye-lid {
   position: absolute;
-  inset: 0;
   transform: scaleY(0);
   transform-origin: 50% 0%;
   border-radius: 0 0 48% 48% / 0 0 90% 90%;
   box-shadow: inset 0 4px 5px rgba(46, 18, 8, 0.5);
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black 80%, transparent 96%);
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black 80%, transparent 96%);
   will-change: transform;
   pointer-events: none;
 }

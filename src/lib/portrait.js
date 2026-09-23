@@ -31,14 +31,16 @@ export const PORTRAIT = {
   },
 
   // ---- tunables ----
-  // Max pupil travel as a fraction of portrait width/height
-  // (~4px / ~3px at 640px display width — noticeable yet believable)
-  MAX_PUPIL_X: 0.006,
-  MAX_PUPIL_Y: 0.0045,
+  // Max pupil travel as a fraction of portrait width/height. Calibrated so
+  // the iris edge just reaches the eye corner at full deflection (~8px / ~2px
+  // at 768px display width). Travel scales with cursor distance, so the
+  // further the cursor goes, the further the iris moves, up to this clamp.
+  MAX_PUPIL_X: 0.01,
+  MAX_PUPIL_Y: 0.004,
   // Gaze easing per rAF tick (0..1, higher = snappier, never snaps)
   EYE_TRACKING_SMOOTHNESS: 0.16,
   // Cursor distance (px) at which the gaze reaches full deflection
-  GAZE_FULL_DIST: 380,
+  GAZE_FULL_DIST: 650,
   // Blink scheduler bounds (ms)
   BLINK_MIN_INTERVAL: 3000,
   BLINK_MAX_INTERVAL: 6000,
@@ -63,6 +65,20 @@ export function irisBox(eye) {
   const hw = eye.open.w / 2 + PORTRAIT.MAX_PUPIL_X + 0.0012;
   const hh = eye.open.h / 2 + PORTRAIT.MAX_PUPIL_Y + 0.0012;
   return { left: eye.iris.x - hw, top: eye.iris.y - hh, w: hw * 2, h: hh * 2 };
+}
+
+// Full-eyelid blink box: wider + taller than the opening so the sweep reads
+// as a real lid closing, not a patch flicker. Centered on the eye.
+export function lidBox(eye) {
+  const o = eye.open;
+  const w = o.w * 1.3;
+  const h = o.h * 1.75;
+  return {
+    left: o.x - w / 2,
+    top: o.y - h / 2 - o.h * 0.15,
+    w,
+    h,
+  };
 }
 
 // Lid gradients, sampled from the photograph (scripts/portrait-prepare.mjs).

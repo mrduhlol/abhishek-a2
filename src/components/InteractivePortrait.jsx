@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { PORTRAIT, patchBgPos, patchBgSize, irisBox, LID_TONE } from '../lib/portrait.js';
+import { PORTRAIT, patchBgPos, patchBgSize, irisBox, lidBox, LID_TONE } from '../lib/portrait.js';
 import EyeTracker from './EyeTracker.jsx';
 import BlinkController from './BlinkController.jsx';
 
@@ -11,10 +11,17 @@ import BlinkController from './BlinkController.jsx';
 function eyeGeometry(eye) {
   const o = eye.open;
   const tex = irisBox(eye);
+  const lid = lidBox(eye);
   const pct = (v) => `${(v * 100).toFixed(3)}%`;
   const texLeftPct = ((tex.left - (o.x - o.w / 2)) / o.w) * 100;
   const texTopPct = ((tex.top - (o.y - o.h / 2)) / o.h) * 100;
   return {
+    lid: {
+      left: pct(lid.left),
+      top: pct(lid.top),
+      width: pct(lid.w),
+      height: pct(lid.h),
+    },
     outer: {
       left: pct(o.x - o.w / 2),
       top: pct(o.y - o.h / 2),
@@ -41,11 +48,18 @@ function eyeGeometry(eye) {
 function Eye({ eyeKey, irisRef, lidRef }) {
   const g = eyeGeometry(PORTRAIT.eyes[eyeKey]);
   return (
-    <div aria-hidden="true" className="eye-opening z-[2]" style={g.outer}>
-      <div className="eye-cover" style={g.coverBg} />
-      <div ref={irisRef} data-iris={eyeKey} className="eye-iris" style={g.texStyle} />
-      <div ref={lidRef} className="eye-lid" style={{ background: LID_TONE[eyeKey] }} />
-    </div>
+    <>
+      <div aria-hidden="true" className="eye-opening z-[2]" style={g.outer}>
+        <div className="eye-cover" style={g.coverBg} />
+        <div ref={irisRef} data-iris={eyeKey} className="eye-iris" style={g.texStyle} />
+      </div>
+      <div
+        ref={lidRef}
+        aria-hidden="true"
+        className="eye-lid z-[3]"
+        style={{ ...g.lid, background: LID_TONE[eyeKey] }}
+      />
+    </>
   );
 }
 

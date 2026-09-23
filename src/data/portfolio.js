@@ -13,9 +13,9 @@ export const NAV_LINKS = [
 export const SOCIALS = {
   github: "https://github.com/mrduhlol",
   githubHandle: "mrduhlol",
-  linkedin: "https://www.linkedin.com/",
-  email: "mailto:hello@abhishek.dev",
-  emailLabel: "hello@abhishek.dev",
+  linkedin: "https://www.linkedin.com/in/duhlol",
+  email: "mailto:abhishek.a2534@gmail.com",
+  emailLabel: "abhishek.a2534@gmail.com",
 };
 
 export const PROJECTS = [
