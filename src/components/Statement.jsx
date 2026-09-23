@@ -11,7 +11,7 @@ function ScrollLine({ children, progress, range, dim }) {
   return (
     <motion.span
       style={{ opacity, filter, y }}
-      className={`block ${dim ? "text-white/45" : ""}`}
+      className={`block ${dim ? "text-muted" : ""}`}
     >
       {children}
     </motion.span>
@@ -31,7 +31,7 @@ export default function Statement() {
           {reduce ? (
             <>
               <span className="block">{LINES[0]}</span>
-              <span className="block text-white/45">{LINES[1]}</span>
+              <span className="block text-muted">{LINES[1]}</span>
             </>
           ) : (
             <>

@@ -41,7 +41,7 @@ export default function SocialLinks() {
             href={l.href}
             aria-label={l.label}
             {...(l.external ? { target: "_blank", rel: "noreferrer" } : {})}
-            className="group flex h-10 w-10 items-center justify-center rounded-full border border-white/12 text-white/55 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#8B5CF6]/60 hover:text-white hover:shadow-[0_0_18px_rgba(139,92,246,0.35)]"
+            className="group flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink/60 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#8B5CF6]/60 hover:text-ink hover:shadow-[0_0_18px_rgba(139,92,246,0.35)]"
           >
             {ICONS[l.key]}
           </a>

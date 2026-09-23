@@ -13,8 +13,8 @@ export default function SectionHeading({ index, eyebrow, title, blurb }) {
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className="eyebrow mb-5 flex items-center gap-3"
       >
-        <span className="text-white/30">{index}</span>
-        <span className="h-px w-8 bg-white/15" aria-hidden="true" />
+        <span className="text-muted">{index}</span>
+        <span className="h-px w-8 bg-line" aria-hidden="true" />
         {eyebrow}
       </motion.p>
       <motion.h2
@@ -32,7 +32,7 @@ export default function SectionHeading({ index, eyebrow, title, blurb }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-5 max-w-xl text-base leading-relaxed text-[#9CA3AF] md:text-lg"
+          className="mt-5 max-w-xl text-base leading-relaxed text-muted md:text-lg"
         >
           {blurb}
         </motion.p>

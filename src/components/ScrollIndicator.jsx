@@ -16,11 +16,11 @@ export default function ScrollIndicator({ delay = 1.4 }) {
         aria-hidden="true"
         animate={reduce ? undefined : { y: [0, 6, 0], opacity: [0.5, 1, 0.5] }}
         transition={reduce ? undefined : { duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-        className="text-sm text-white/60"
+        className="text-sm text-ink/60"
       >
         ↓
       </motion.span>
-      <span className="font-mono text-[10px] tracking-[0.32em] text-white/45">
+      <span className="font-mono text-[10px] tracking-[0.32em] text-muted">
         SCROLL TO EXPLORE
       </span>
     </motion.a>
