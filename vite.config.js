@@ -3,8 +3,9 @@ import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
-// Served from a custom domain root via Cloudflare, so the base stays '/'.
+// Default '/' for custom-domain root (Cloudflare). Override with
+// SITE_BASE='/abhishek-a2/' only for subpath previews (GitHub Pages).
 export default defineConfig({
-  base: '/',
+  base: process.env.SITE_BASE || '/',
   plugins: [react(), tailwindcss()],
 })
