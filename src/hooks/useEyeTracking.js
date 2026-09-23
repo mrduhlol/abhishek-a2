@@ -40,6 +40,9 @@ export function useEyeTracking(frameRef, eyeRefs, liveRef, reduce) {
 
     const tick = () => {
       raf = 0;
+      // Always reschedule first: the loop must never die, even if a frame
+      // is skipped while hidden, offscreen or pre-entrance.
+      raf = requestAnimationFrame(tick);
       if (!liveRef.current || !visible || document.hidden) return;
 
       const r = frame.getBoundingClientRect();
@@ -98,8 +101,6 @@ export function useEyeTracking(frameRef, eyeRefs, liveRef, reduce) {
         lastGazeAttr = attr;
         frame.setAttribute('data-gaze', attr);
       }
-
-      raf = requestAnimationFrame(tick);
     };
 
     window.addEventListener('pointermove', onMove, { passive: true });
