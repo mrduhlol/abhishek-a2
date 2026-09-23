@@ -10,6 +10,7 @@ import GithubActivity from "./components/GithubActivity.jsx";
 import Contact from "./components/Contact.jsx";
 import Footer from "./components/Footer.jsx";
 import ScrollProgress from "./components/ScrollProgress.jsx";
+import CustomCursor from "./components/CustomCursor.jsx";
 import { useSmoothScroll } from "./hooks/useSmoothScroll.js";
 
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
         Skip to content
       </a>
       <ScrollProgress />
+      <CustomCursor />
       <Navbar />
       <main>
         <Hero />
