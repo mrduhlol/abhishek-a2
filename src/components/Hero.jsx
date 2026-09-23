@@ -81,7 +81,7 @@ export default function Hero() {
                 animate: { opacity: 1, scale: 1 },
                 transition: { duration: 1, delay: 0.35, ease: [0.22, 1, 0.36, 1] },
               })}
-          className="relative mx-auto mt-6 w-[min(88vw,430px)] shrink-0 sm:w-[430px] lg:w-[460px] xl:w-[500px]"
+          className="relative mx-auto mt-6 h-[min(72svh,66vw)] aspect-[1448/1086] w-auto shrink-0"
         >
           <div className="portrait-stage" aria-hidden="true" />
           {/* faint technical geometry behind the portrait */}
@@ -101,8 +101,9 @@ export default function Hero() {
           <InteractivePortrait liveRef={liveRef} scopeRef={sectionRef} className="relative" />
         </motion.div>
 
-        {/* name — overlapping the upper chest, never the face */}
-        <div className="relative z-10 -mt-14 text-center sm:-mt-[4.5rem] lg:-mt-24 xl:-mt-28">
+        {/* name — overlapping the upper chest, never the face.
+            Overlap ≈28% of portrait height, retuned per breakpoint. */}
+        <div className="relative z-10 -mt-[4.5rem] text-center sm:-mt-[7.5rem] lg:-mt-40 xl:-mt-44">
           <motion.h1
             {...(reduce
               ? {}

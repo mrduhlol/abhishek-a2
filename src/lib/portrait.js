@@ -21,12 +21,12 @@ export const PORTRAIT = {
   // Verify with: node scripts/portrait-prepare.mjs (writes eyes-check overlay)
   eyes: {
     left: {
-      open: { x: 0.45, y: 0.331, w: 0.052, h: 0.042 },
-      iris: { x: 0.45, y: 0.333 },
+      open: { x: 0.447, y: 0.33, w: 0.05, h: 0.044 },
+      iris: { x: 0.447, y: 0.33 },
     },
     right: {
-      open: { x: 0.58, y: 0.331, w: 0.05, h: 0.04 },
-      iris: { x: 0.58, y: 0.332 },
+      open: { x: 0.58, y: 0.329, w: 0.052, h: 0.044 },
+      iris: { x: 0.58, y: 0.328 },
     },
   },
 
@@ -67,6 +67,6 @@ export function irisBox(eye) {
 
 // Lid gradients, sampled from the photograph (scripts/portrait-prepare.mjs).
 export const LID_TONE = {
-  left: 'linear-gradient(180deg, #5f382b 0%, #986353 55%, #8a5a48 100%)',
-  right: 'linear-gradient(180deg, #5c372c 0%, #906253 55%, #845648 100%)',
+  left: 'linear-gradient(180deg, #6b3d2e 0%, #b87362 55%, #a56555 100%)',
+  right: 'linear-gradient(180deg, #683c2e 0%, #b66f61 55%, #a36252 100%)',
 };
