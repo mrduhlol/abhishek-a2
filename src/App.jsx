@@ -16,7 +16,7 @@ export default function App() {
   useSmoothScroll();
 
   return (
-    <div className="grain relative min-h-screen bg-[#08090C] text-[#F5F5F5]">
+    <div className="grain relative min-h-screen bg-[var(--page-bg)] text-[#F5F5F5] transition-colors duration-500">
       <a
         href="#about"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-white focus:px-5 focus:py-2 focus:text-sm focus:font-semibold focus:text-black"

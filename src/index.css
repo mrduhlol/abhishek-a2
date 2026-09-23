@@ -28,16 +28,23 @@ html.lenis body {
 
 :root {
   color-scheme: dark;
+  --page-bg: #08090c;
+}
+
+/* abyss: deep-navy alternate theme, toggled from the navbar */
+[data-theme="abyss"] {
+  --page-bg: #070b18;
 }
 
 body {
   margin: 0;
-  background: var(--color-void);
+  background: var(--page-bg);
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  transition: background-color 0.5s ease;
 }
 
 ::selection {
