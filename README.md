@@ -29,6 +29,22 @@ Pick a `motif` (`cards` | `transfer` | `terminal`) and an `accent` color.
 `useGithubRepos` at `https://api.github.com/users/mrduhlol/repos?sort=updated`
 (and optionally the events endpoint for activity). No stats are faked meanwhile.
 
+## Living portrait hero
+
+The hero centers a background-removed cutout of `assets-src/portrait-source.png`.
+Regenerate it after replacing the photo:
+
+```bash
+npm install --no-save sharp   # scratch dep, not committed (gitignored)
+node scripts/portrait-cutout.mjs --out-dir .tmp-portrait
+```
+
+Tune gaze/blink/parallax in `src/lib/portrait.js` (`MAX_EYE_OFFSET`,
+`BLINK_MIN_INTERVAL`, `BLINK_MAX_INTERVAL`, `PARALLAX_STRENGTH`,
+`PORTRAIT_SCALE`). Eye coordinates + lid tones are calibrated from the current
+photo — re-calibrate if the photo changes (the script prints skin samples and
+writes an `eyes-check.png` overlay).
+
 ## Structure
 
 - `src/data/portfolio.js` — all content (nav, projects, skills, journey, socials)
