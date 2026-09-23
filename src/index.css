@@ -2,11 +2,17 @@
 
 @theme {
   --color-void: #08090c;
+  --color-page: #08090c;
   --color-ink: #f5f5f5;
   --color-muted: #9ca3af;
+  --color-surface: #0b0d12;
+  --color-wash: rgba(255, 255, 255, 0.03);
+  --color-line: rgba(255, 255, 255, 0.08);
+  --color-grid: rgba(255, 255, 255, 0.045);
+  --color-btn: #ffffff;
+  --color-btnink: #000000;
   --color-accent: #5b8cff;
   --color-accent2: #8b5cf6;
-  --color-line: rgba(255, 255, 255, 0.08);
   --font-sans: "Inter", "Manrope", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Inter", "Manrope", ui-sans-serif, system-ui, sans-serif;
 }
@@ -31,9 +37,35 @@ html.lenis body {
   --page-bg: #08090c;
 }
 
-/* abyss: deep-navy alternate theme, toggled from the navbar */
-[data-theme="abyss"] {
-  --page-bg: #070b18;
+/* Glacier: icy light theme. Every themed utility (page/ink/muted/surface/
+   wash/line/grid/btn/btnink) resolves through these vars at runtime, so all
+   components follow with zero structural changes. */
+[data-theme="glacier"] {
+  color-scheme: light;
+  --page-bg: #edf2f9;
+  --color-page: #edf2f9;
+  --color-ink: #0c1830;
+  --color-muted: #54678a;
+  --color-surface: #ffffff;
+  --color-wash: rgba(13, 34, 77, 0.05);
+  --color-line: rgba(13, 34, 77, 0.12);
+  --color-grid: rgba(13, 34, 77, 0.08);
+  --color-btn: #0c1830;
+  --color-btnink: #ffffff;
+}
+
+/* Polished theme handoff: applied to <html> for ~600ms around the toggle so
+   surfaces crossfade without touching layout or hover timing. */
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition:
+    background-color 0.5s ease,
+    border-color 0.5s ease,
+    color 0.5s ease,
+    fill 0.5s ease,
+    stroke 0.5s ease,
+    box-shadow 0.5s ease !important;
 }
 
 body {
@@ -57,12 +89,15 @@ body {
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #08090c;
+  background: var(--page-bg);
 }
 ::-webkit-scrollbar-thumb {
   background: #23262e;
   border-radius: 8px;
-  border: 2px solid #08090c;
+  border: 2px solid var(--page-bg);
+}
+[data-theme="glacier"] ::-webkit-scrollbar-thumb {
+  background: #b9c6dd;
 }
 
 :focus-visible {
@@ -118,7 +153,15 @@ body {
     ellipse 90% 70% at 50% 38%,
     transparent 40%,
     rgba(8, 9, 12, 0.55) 78%,
-    #08090c 100%
+    var(--page-bg) 100%
+  );
+}
+[data-theme="glacier"] .vignette {
+  background: radial-gradient(
+    ellipse 90% 70% at 50% 38%,
+    transparent 52%,
+    rgba(190, 205, 230, 0.35) 82%,
+    rgba(237, 242, 249, 0.9) 100%
   );
 }
 
@@ -127,9 +170,23 @@ body {
 }
 
 /* ---------- living portrait layers ---------- */
+/* Seamless blend: opaque through the subject, feathered at the top sliver,
+   both sides and a deep bottom melt. Pure mask — no blur, face stays sharp. */
 .portrait-frame {
   position: relative;
   touch-action: pan-y;
+  -webkit-mask-image:
+    linear-gradient(to bottom, black 72%, transparent 97%),
+    linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 9%, black 100%);
+  -webkit-mask-composite: source-in;
+  -webkit-mask-repeat: no-repeat;
+  mask-image:
+    linear-gradient(to bottom, black 72%, transparent 97%),
+    linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 9%, black 100%);
+  mask-composite: intersect;
+  mask-repeat: no-repeat;
 }
 .portrait-frame img {
   user-select: none;
@@ -169,7 +226,7 @@ body {
   will-change: transform;
   pointer-events: none;
 }
-/* melts the shoulders into the page so the cutout never reads as pasted */
+/* melts the shoulders into the page so the portrait never reads as pasted */
 .portrait-melt {
   position: absolute;
   inset: 0;
@@ -177,8 +234,8 @@ body {
   background: linear-gradient(
     to bottom,
     transparent 68%,
-    rgba(8, 9, 12, 0.45) 86%,
-    #08090c 99%
+    color-mix(in srgb, var(--page-bg) 45%, transparent) 86%,
+    var(--page-bg) 99%
   );
 }
 /* ---------- custom galaxy cursor (fine pointers only, JS-gated) ---------- */
@@ -251,6 +308,18 @@ body {
     radial-gradient(ellipse 46% 38% at 62% 26%, rgba(91, 140, 255, 0.13), transparent 70%),
     radial-gradient(ellipse 40% 34% at 34% 66%, rgba(139, 92, 246, 0.1), transparent 70%);
   filter: blur(30px);
+}
+[data-theme="glacier"] .portrait-glow {
+  background:
+    radial-gradient(ellipse 52% 44% at 50% 42%, rgba(47, 107, 255, 0.16), transparent 70%),
+    radial-gradient(ellipse 60% 30% at 50% 88%, rgba(255, 255, 255, 0.9), transparent 75%);
+}
+/* glacier cursor label: light glass instead of dark glass */
+[data-theme="glacier"] .cursor-label {
+  color: rgba(12, 24, 48, 0.9);
+  background: rgba(255, 255, 255, 0.82);
+  border-color: rgba(47, 107, 255, 0.4);
+  box-shadow: 0 0 16px rgba(47, 107, 255, 0.25);
 }
 
 @media (prefers-reduced-motion: reduce) {
