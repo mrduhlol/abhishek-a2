@@ -109,7 +109,7 @@ export default function Hero() {
           CSE — Cybersecurity
         </motion.p>
 
-        <h1 className="display-tight text-balance text-[17vw] sm:text-7xl md:text-8xl lg:text-[7.5rem]">
+        <h1 className="display-tight text-balance text-[11vw] sm:text-7xl md:text-8xl lg:text-[7.5rem]">
           {["BUILDING", "DIGITAL", "EXPERIENCES."].map((line, i) => (
             <span key={line} className="block overflow-hidden pb-[0.06em]">
               <motion.span

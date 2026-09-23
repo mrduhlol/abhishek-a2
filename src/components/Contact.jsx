@@ -31,7 +31,7 @@ export default function Contact() {
         >
           07 — Contact
         </motion.p>
-        <h2 className="display-tight text-balance text-[15vw] sm:text-7xl md:text-8xl lg:text-[7rem]">
+        <h2 className="display-tight text-balance text-[10.5vw] sm:text-7xl md:text-8xl lg:text-[7rem]">
           {["LET'S BUILD", "SOMETHING", "INTERESTING."].map((line, i) => (
             <span key={line} className="block overflow-hidden pb-[0.05em]">
               <motion.span
