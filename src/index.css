@@ -119,6 +119,58 @@ body {
   mask-image: linear-gradient(to bottom, black 78%, transparent 100%);
 }
 
+/* ---------- living portrait layers ---------- */
+.portrait-frame {
+  position: relative;
+  touch-action: pan-y;
+}
+.portrait-frame img {
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+}
+/* feather-masked duplicate of the photo showing one eye; translated by rAF */
+.eye-patch {
+  position: absolute;
+  background-repeat: no-repeat;
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black 50%, transparent 74%);
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black 50%, transparent 74%);
+  will-change: transform;
+  pointer-events: none;
+}
+/* skin-toned lid strip; scaleY driven by the Web Animations API */
+.eye-lid {
+  position: absolute;
+  transform: scaleY(0);
+  transform-origin: 50% 0%;
+  border-radius: 0 0 48% 48% / 0 0 90% 90%;
+  box-shadow: inset 0 4px 5px rgba(46, 18, 8, 0.5);
+  will-change: transform;
+  pointer-events: none;
+}
+/* melts the shoulders into the page so the cutout never reads as pasted */
+.portrait-melt {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 68%,
+    rgba(8, 9, 12, 0.45) 86%,
+    #08090c 99%
+  );
+}
+/* whisper of atmospheric color behind the subject */
+.portrait-glow {
+  position: absolute;
+  inset: -14%;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 46% 38% at 62% 26%, rgba(91, 140, 255, 0.13), transparent 70%),
+    radial-gradient(ellipse 40% 34% at 34% 66%, rgba(139, 92, 246, 0.1), transparent 70%);
+  filter: blur(30px);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .grain::after {
     animation: none;
