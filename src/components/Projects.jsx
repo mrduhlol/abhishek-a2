@@ -20,7 +20,7 @@ export default function Projects() {
           ))}
         </div>
         <Reveal className="mt-12 text-center">
-          <p className="font-mono text-xs tracking-[0.2em] text-white/30 uppercase">
+          <p className="font-mono text-xs tracking-[0.2em] text-muted uppercase">
             More experiments brewing — check GitHub for the latest
           </p>
         </Reveal>
