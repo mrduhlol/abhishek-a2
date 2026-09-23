@@ -19,13 +19,14 @@ export function useBlink(lidRefs, scopeRef, liveRef, reduce) {
 
     const lids = () => lidRefs.map((r) => r.current).filter(Boolean);
 
+    // Close -> brief hold shut (reads as a real blink) -> reopen.
     const sweep = (duration) => {
       for (const el of lids()) {
         el.animate(
           [
             { transform: 'scaleY(0)' },
-            { transform: 'scaleY(1)', offset: 0.38 },
-            { transform: 'scaleY(1)', offset: 0.55 },
+            { transform: 'scaleY(1)', offset: 0.32 },
+            { transform: 'scaleY(1)', offset: 0.62 },
             { transform: 'scaleY(0)' },
           ],
           { duration, easing: 'ease-in-out' }

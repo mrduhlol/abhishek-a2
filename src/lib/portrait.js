@@ -32,11 +32,11 @@ export const PORTRAIT = {
 
   // ---- tunables ----
   // Max pupil travel as a fraction of portrait width/height. Calibrated so
-  // the iris edge just reaches the eye corner at full deflection (~8px / ~2px
+  // the iris edge just touches the eye corner at full deflection (~10px / ~3px
   // at 768px display width). Travel scales with cursor distance, so the
   // further the cursor goes, the further the iris moves, up to this clamp.
-  MAX_PUPIL_X: 0.01,
-  MAX_PUPIL_Y: 0.004,
+  MAX_PUPIL_X: 0.0125,
+  MAX_PUPIL_Y: 0.0055,
   // Gaze easing per rAF tick (0..1, higher = snappier, never snaps)
   EYE_TRACKING_SMOOTHNESS: 0.16,
   // Cursor distance (px) at which the gaze reaches full deflection
@@ -45,8 +45,8 @@ export const PORTRAIT = {
   BLINK_MIN_INTERVAL: 3000,
   BLINK_MAX_INTERVAL: 6000,
   // Blink durations (ms): normal close-open sweep, occasional long blink
-  BLINK_DURATION: 200,
-  BLINK_LONG_DURATION: 340,
+  BLINK_DURATION: 220,
+  BLINK_LONG_DURATION: 360,
 };
 
 // background-position % that renders the full photo 1:1 inside a sub-box.
@@ -82,7 +82,9 @@ export function lidBox(eye) {
 }
 
 // Lid gradients, sampled from the photograph (scripts/portrait-prepare.mjs).
+// The darker band at ~59% is the lash-line crease where closed lids meet,
+// so a full blink reads as a shut eye rather than a flat patch.
 export const LID_TONE = {
-  left: 'linear-gradient(180deg, #6b3d2e 0%, #b87362 55%, #a56555 100%)',
-  right: 'linear-gradient(180deg, #683c2e 0%, #b66f61 55%, #a36252 100%)',
+  left: 'linear-gradient(180deg, #6b3d2e 0%, #b87362 42%, #9c5f4e 55%, #4e2c24 59%, #7c4a3c 66%, #a56555 100%)',
+  right: 'linear-gradient(180deg, #683c2e 0%, #b66f61 42%, #985e4d 55%, #4c2b23 59%, #7a493b 66%, #a36252 100%)',
 };
