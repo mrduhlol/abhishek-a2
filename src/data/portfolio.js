@@ -2,6 +2,7 @@
 // Adding a project = append one object to PROJECTS. No UI changes needed.
 
 export const NAV_LINKS = [
+  { id: "top", label: "Home" },
   { id: "about", label: "About" },
   { id: "projects", label: "Projects" },
   { id: "skills", label: "Skills" },

@@ -3,11 +3,23 @@ import { AnimatePresence, motion } from "motion/react";
 import { NAV_LINKS } from "../data/portfolio.js";
 import { useActiveSection } from "../hooks/useActiveSection.js";
 
-const IDS = ["about", "projects", "skills", "journey", "contact"];
+const IDS = ["top", "about", "projects", "skills", "journey", "contact"];
+
+function useTheme() {
+  const [theme, setTheme] = useState(
+    () => localStorage.getItem("aa-theme") || "void"
+  );
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem("aa-theme", theme);
+  }, [theme]);
+  return [theme, () => setTheme((t) => (t === "void" ? "abyss" : "void"))];
+}
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [theme, toggleTheme] = useTheme();
   const active = useActiveSection(IDS);
 
   useEffect(() => {
@@ -29,35 +41,35 @@ export default function Navbar() {
       <motion.header
         initial={{ y: -64, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
         className={`fixed inset-x-0 top-0 z-[70] transition-all duration-500 ${
           scrolled
-            ? "border-b border-white/[0.08] bg-[#08090C]/70 backdrop-blur-xl"
+            ? "border-b border-white/[0.08] bg-[#05060A]/75 backdrop-blur-xl"
             : "border-b border-transparent bg-transparent"
         }`}
       >
         <nav
           aria-label="Primary"
-          className="mx-auto flex h-[68px] max-w-6xl items-center justify-between px-5 md:px-8"
+          className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 md:px-8"
         >
-          <a href="#top" className="text-[13px] font-bold tracking-[0.28em] text-white">
-            ABHISHEK&nbsp;A.
+          <a href="#top" aria-label="Home" className="text-xl font-extrabold tracking-tight text-white">
+            A<span className="text-[#8B5CF6]">.</span>
           </a>
 
-          <ul className="hidden items-center gap-8 md:flex">
+          <ul className="hidden items-center gap-7 md:flex">
             {NAV_LINKS.map((l) => (
               <li key={l.id}>
                 <a
                   href={`#${l.id}`}
                   aria-current={active === l.id ? "true" : undefined}
                   className={`text-[13px] font-medium tracking-wide transition-colors duration-300 ${
-                    active === l.id ? "text-white" : "text-[#9CA3AF] hover:text-white"
+                    active === l.id ? "text-white" : "text-[#8B8FA3] hover:text-white"
                   }`}
                 >
                   {l.label}
                   <span
                     aria-hidden="true"
-                    className={`mt-1 block h-px bg-white transition-transform duration-300 ${
+                    className={`mt-1 block h-px bg-gradient-to-r from-[#5B8CFF] to-[#8B5CF6] transition-transform duration-300 ${
                       active === l.id ? "scale-x-100" : "scale-x-0"
                     } origin-left`}
                   />
@@ -66,12 +78,30 @@ export default function Navbar() {
             ))}
           </ul>
 
-          <div className="hidden md:block">
+          <div className="hidden items-center gap-3 md:flex">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-pressed={theme === "abyss"}
+              aria-label={theme === "void" ? "Switch to abyss theme" : "Switch to void theme"}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-white/70 transition-colors duration-300 hover:border-white/30 hover:text-white"
+            >
+              {theme === "void" ? (
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z" />
+                </svg>
+              ) : (
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+                </svg>
+              )}
+            </button>
             <a
               href="#contact"
-              className="rounded-full border border-white/15 px-5 py-2 text-[13px] font-semibold text-white transition-colors duration-300 hover:border-white/35 hover:bg-white/5"
+              className="rounded-full border border-white/15 px-5 py-2 text-[12px] font-bold tracking-[0.12em] text-white transition-colors duration-300 hover:border-[#8B5CF6]/60 hover:bg-[#8B5CF6]/10"
             >
-              Contact
+              LET&apos;S BUILD →
             </a>
           </div>
 
@@ -110,7 +140,7 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35, ease: "easeOut" }}
-            className="fixed inset-0 z-[65] flex flex-col justify-center bg-[#08090C]/95 px-8 backdrop-blur-2xl md:hidden"
+            className="fixed inset-0 z-[65] flex flex-col justify-center bg-[#05060A]/95 px-8 backdrop-blur-2xl md:hidden"
           >
             <ul className="space-y-2">
               {NAV_LINKS.map((l, i) => (
