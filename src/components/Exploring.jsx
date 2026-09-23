@@ -26,11 +26,11 @@ export default function Exploring() {
               <motion.div
                 animate={reduce ? undefined : { y: [0, -6, 0] }}
                 transition={reduce ? undefined : { duration: 5 + (i % 3), repeat: Infinity, ease: "easeInOut", delay: i * 0.4 }}
-                className="h-full rounded-2xl border border-white/[0.08] bg-[#0B0D12] p-6 transition-colors duration-500 hover:border-white/[0.16]"
+                className="h-full rounded-2xl border border-line bg-surface p-6 transition-colors duration-500 hover:border-ink/25"
               >
                 <p className="font-mono text-[11px] tracking-[0.25em] text-[#5B8CFF]/80">◌</p>
                 <h3 className="mt-3 text-lg font-semibold">{c.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-[#9CA3AF]">{c.text}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{c.text}</p>
               </motion.div>
             </motion.div>
           ))}

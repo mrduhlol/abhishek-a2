@@ -17,7 +17,7 @@ export default function Journey() {
         <SectionHeading index="04" eyebrow="Path so far" title="The journey." />
         <div ref={ref} className="relative mx-auto max-w-2xl">
           {/* rail */}
-          <div aria-hidden="true" className="absolute bottom-4 left-[7px] top-2 w-px bg-white/[0.08] md:left-[9px]" />
+          <div aria-hidden="true" className="absolute bottom-4 left-[7px] top-2 w-px bg-line md:left-[9px]" />
           {!reduce && (
             <motion.div
               aria-hidden="true"
@@ -38,14 +38,14 @@ export default function Journey() {
                 <span
                   aria-hidden="true"
                   className={`absolute left-0 top-1.5 flex h-4 w-4 items-center justify-center rounded-full border md:h-[19px] md:w-[19px] ${
-                    i === JOURNEY.length - 1 ? "border-[#8B5CF6]/60" : "border-white/20 bg-[#08090C]"
+                    i === JOURNEY.length - 1 ? "border-[#8B5CF6]/60" : "border-ink/20 bg-page"
                   }`}
                 >
-                  <span className={`h-1.5 w-1.5 rounded-full ${i === 0 ? "bg-[#5B8CFF]" : "bg-white/50"}`} />
+                  <span className={`h-1.5 w-1.5 rounded-full ${i === 0 ? "bg-[#5B8CFF]" : "bg-ink/50"}`} />
                 </span>
-                <p className="font-mono text-[11px] tracking-[0.3em] text-white/30">0{i + 1}</p>
+                <p className="font-mono text-[11px] tracking-[0.3em] text-muted">0{i + 1}</p>
                 <h3 className="display-tight mt-1 text-2xl md:text-3xl">{m.title}</h3>
-                <p className="mt-2 max-w-md leading-relaxed text-[#9CA3AF]">{m.text}</p>
+                <p className="mt-2 max-w-md leading-relaxed text-muted">{m.text}</p>
               </motion.li>
             ))}
           </ol>

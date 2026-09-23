@@ -50,16 +50,16 @@ export default function GithubActivity() {
               href={SOCIALS.github}
               target="_blank"
               rel="noreferrer"
-              className="group flex h-full flex-col justify-between rounded-2xl border border-white/[0.08] bg-[#0B0D12] p-8 transition-colors duration-500 hover:border-white/[0.16]"
+              className="group flex h-full flex-col justify-between rounded-2xl border border-line bg-surface p-8 transition-colors duration-500 hover:border-ink/25"
             >
               <div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 font-mono text-lg text-white">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full border border-line font-mono text-lg text-ink">
                   ⌥
                 </div>
-                <p className="mt-6 font-mono text-xs tracking-[0.25em] text-white/35">PROFILE</p>
+                <p className="mt-6 font-mono text-xs tracking-[0.25em] text-muted">PROFILE</p>
                 <p className="display-tight mt-2 text-3xl">@{SOCIALS.githubHandle}</p>
               </div>
-              <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-white">
+              <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-ink">
                 Open profile
                 <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
               </span>
@@ -69,7 +69,7 @@ export default function GithubActivity() {
             {loading ? (
               <div className="space-y-4" aria-label="Loading repositories">
                 {[0, 1, 2].map((i) => (
-                  <div key={i} className="h-24 animate-pulse rounded-2xl border border-white/[0.06] bg-white/[0.02]" />
+                  <div key={i} className="h-24 animate-pulse rounded-2xl border border-line bg-wash" />
                 ))}
               </div>
             ) : (
@@ -79,20 +79,20 @@ export default function GithubActivity() {
                     href={r.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="group flex items-center justify-between gap-4 rounded-2xl border border-white/[0.08] bg-[#0B0D12] px-6 py-5 transition-colors duration-300 hover:border-white/[0.16] hover:bg-white/[0.03]"
+                    className="group flex items-center justify-between gap-4 rounded-2xl border border-line bg-surface px-6 py-5 transition-colors duration-300 hover:border-ink/25 hover:bg-wash"
                   >
                     <div className="min-w-0">
-                      <p className="truncate font-semibold text-white">{r.title}</p>
-                      <p className="mt-1 truncate text-sm text-[#9CA3AF]">{r.description} — {r.tech}</p>
+                      <p className="truncate font-semibold text-ink">{r.title}</p>
+                      <p className="mt-1 truncate text-sm text-muted">{r.description} — {r.tech}</p>
                     </div>
-                    <span aria-hidden="true" className="shrink-0 text-white/40 transition-all duration-300 group-hover:translate-x-1 group-hover:text-white">→</span>
+                    <span aria-hidden="true" className="shrink-0 text-ink/40 transition-all duration-300 group-hover:translate-x-1 group-hover:text-ink">→</span>
                   </a>
                 </Reveal>
               ))
             )}
             <Reveal delay={0.1}>
-              <div className="rounded-2xl border border-dashed border-white/10 px-6 py-5">
-                <p className="font-mono text-[11px] leading-relaxed text-white/35">
+              <div className="rounded-2xl border border-dashed border-line px-6 py-5">
+                <p className="font-mono text-[11px] leading-relaxed text-muted">
                   // activity graph connects here via the GitHub API.
                   <br />
                   // No mock streaks, no inflated counts — real data or nothing.
