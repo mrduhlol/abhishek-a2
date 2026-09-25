@@ -78,15 +78,21 @@ export default function WelcomeIntro({ onReveal, onDone }) {
     window.setTimeout(finish, 350);
   };
 
+  const onPointerUp = (e) => {
+    // Single pointer handler — covers mouse, touch, and pen without double-fire.
+    if (e.pointerType === "touch") e.preventDefault();
+    skip();
+  };
+
   const letters = "welcome".split("");
 
   return (
     <motion.div
-      role="status"
+      role="dialog"
+      aria-modal="true"
       aria-label="Welcome"
-      onClick={skip}
-      onTouchStart={skip}
-      className="fixed inset-0 z-[180] flex cursor-pointer items-center justify-center bg-black"
+      onPointerUp={onPointerUp}
+      className="fixed inset-0 z-[180] flex cursor-pointer touch-manipulation items-center justify-center overscroll-contain bg-black"
       initial={{ opacity: 1 }}
       animate={leaving ? { opacity: 0 } : { opacity: 1 }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
@@ -108,11 +114,11 @@ export default function WelcomeIntro({ onReveal, onDone }) {
               <motion.span
                 key={i}
                 className="inline-block"
-                initial={{ opacity: 0, y: 26, filter: "blur(14px)", rotate: -5 }}
+                initial={{ opacity: 0, y: 26, rotate: -5 }}
                 animate={
                   leaving
-                    ? { opacity: 0, y: -22, filter: "blur(10px)" }
-                    : { opacity: 1, y: 0, filter: "blur(0px)", rotate: 0 }
+                    ? { opacity: 0, y: -22 }
+                    : { opacity: 1, y: 0, rotate: 0 }
                 }
                 transition={
                   leaving

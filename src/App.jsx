@@ -24,7 +24,7 @@ export default function App() {
   return (
     <div className="grain relative min-h-screen bg-[var(--page-bg)] text-[#F5F5F5] transition-colors duration-500">
       <a
-        href="#about"
+        href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-white focus:px-5 focus:py-2 focus:text-sm focus:font-semibold focus:text-black"
       >
         Skip to content
@@ -40,7 +40,7 @@ export default function App() {
       {revealed && (
         <>
           <Navbar />
-          <main>
+          <main id="main">
             <Hero />
             <Statement />
             <div className="mx-auto max-w-6xl px-5 md:px-8" aria-hidden="true">

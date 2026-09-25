@@ -79,6 +79,16 @@ body {
   transition: background-color 0.5s ease;
 }
 
+/* Crisp interaction defaults (web-design-guidelines: Touch & Interaction) */
+a,
+button,
+[role="button"] {
+  touch-action: manipulation;
+}
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
 ::selection {
   background: rgba(91, 140, 255, 0.32);
   color: #fff;
@@ -260,7 +270,7 @@ body {
   opacity: 0;
   transition: opacity 0.25s ease;
 }
-.cursor-face,
+.cursor-arrow,
 .cursor-dot,
 .cursor-label {
   position: absolute;
@@ -268,38 +278,20 @@ body {
   top: 0;
   will-change: transform;
 }
-/* Eye-moment cursor head: cropped to the eyes, circular, glowing rim. */
-.cursor-face {
-  width: 46px;
-  height: 46px;
-  margin: -6px 0 0 -8px;
-  border-radius: 50%;
-  overflow: hidden;
-  background: #000;
-  border: 1.5px solid rgba(139, 92, 246, 0.75);
-  box-shadow:
-    0 0 10px rgba(139, 92, 246, 0.65),
-    0 0 26px rgba(91, 140, 255, 0.35);
+.cursor-arrow {
+  margin: -2px 0 0 -3px;
+  filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.65)) drop-shadow(0 0 18px rgba(91, 140, 255, 0.35));
   transition: scale 0.25s ease;
 }
-.cursor-face img {
+.cursor-arrow svg {
   display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* source frames are full portraits — zoom into the eye band */
-  object-position: 50% 26%;
-  transform: scale(2.15);
-  transform-origin: 50% 30%;
-  user-select: none;
-  -webkit-user-drag: none;
-  pointer-events: none;
+  transition: transform 0.25s ease;
 }
-.cursor-face.cursor-hot {
-  scale: 1.4;
+.cursor-arrow.cursor-hot svg {
+  transform: scale(1.45);
 }
-.cursor-face.cursor-press {
-  scale: 0.85;
+.cursor-arrow.cursor-press svg {
+  transform: scale(0.85);
 }
 .cursor-dot {
   border-radius: 50%;

@@ -32,7 +32,7 @@ export default function Contact() {
           07 — Contact
         </motion.p>
         <h2 className="display-tight text-balance text-[10.5vw] sm:text-7xl md:text-8xl lg:text-[7rem]">
-          {["LET'S BUILD", "SOMETHING", "INTERESTING."].map((line, i) => (
+          {[`LET’S BUILD`, `SOMETHING`, `INTERESTING.`].map((line, i) => (
             <span key={line} className="block overflow-hidden pb-[0.05em]">
               <motion.span
                 className="block"
@@ -76,7 +76,7 @@ export default function Contact() {
                     <span className="hidden font-mono text-xs text-muted sm:block">{l.note}</span>
                     <span
                       aria-hidden="true"
-                      className="flex h-11 w-11 items-center justify-center rounded-full border border-line transition-all duration-300 group-hover:border-ink/40 group-hover:bg-btn group-hover:text-btnink"
+                      className="flex h-11 w-11 items-center justify-center rounded-full border border-line transition-[background-color,border-color,color,transform] duration-300 group-hover:border-ink/40 group-hover:bg-btn group-hover:text-btnink"
                     >
                       ↗
                     </span>

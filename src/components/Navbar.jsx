@@ -21,6 +21,9 @@ function useTheme() {
     if (theme === THEMES.DARK) delete root.dataset.theme;
     else root.dataset.theme = theme;
     localStorage.setItem("aa-theme", theme);
+    // Keep the browser chrome in sync — avoids a dark tab bar on the light theme.
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", theme === THEMES.LIGHT ? "#EDF2F9" : "#08090C");
     window.dispatchEvent(new CustomEvent("aa:theme", { detail: theme }));
     return () => window.clearTimeout(t);
   }, [theme]);
@@ -42,8 +45,14 @@ export default function Navbar() {
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
+    if (!open) return undefined;
+    const onKey = (e) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
     };
   }, [open ]);
 
@@ -53,7 +62,7 @@ export default function Navbar() {
         initial={{ y: -64, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-        className={`fixed inset-x-0 top-0 z-[70] transition-all duration-500 ${
+        className={`fixed inset-x-0 top-0 z-[70] transition-[background-color,border-color] duration-500 ${
           scrolled
             ? "border-b border-line bg-page/80 backdrop-blur-xl"
             : "border-b border-transparent bg-transparent"
@@ -72,7 +81,7 @@ export default function Navbar() {
               <li key={l.id}>
                 <a
                   href={`#${l.id}`}
-                  aria-current={active === l.id ? "true" : undefined}
+                  aria-current={active === l.id ? "page" : undefined}
                   className={`text-[13px] font-medium tracking-wide transition-colors duration-300 ${
                     active === l.id ? "text-ink" : "text-muted hover:text-ink"
                   }`}
@@ -112,7 +121,7 @@ export default function Navbar() {
               href="#contact"
               className="nav-cta rounded-full border border-line px-5 py-2 text-[12px] font-bold tracking-[0.12em] text-ink transition-colors duration-300 hover:border-[#8B5CF6]/60 hover:bg-[#8B5CF6]/10"
             >
-              LET&apos;S BUILD <span aria-hidden="true" className="text-[#5B8CFF]">→</span>
+              LET’S BUILD <span aria-hidden="true" className="text-[#5B8CFF]">→</span>
             </a>
           </div>
 
@@ -121,7 +130,7 @@ export default function Navbar() {
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-label={open ? "Close menu" : "Open menu"}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-line md:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink transition-colors duration-300 hover:border-ink/30 hover:text-ink md:hidden"
           >
             <span className="relative block h-3 w-4">
               <span
@@ -151,7 +160,7 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35, ease: "easeOut" }}
-            className="fixed inset-0 z-[65] flex flex-col justify-center bg-page/95 px-8 backdrop-blur-2xl md:hidden"
+            className="fixed inset-0 z-[65] flex flex-col justify-center overscroll-contain bg-page/95 px-8 backdrop-blur-2xl md:hidden"
           >
             <ul className="space-y-2">
               {NAV_LINKS.map((l, i) => (
@@ -167,7 +176,7 @@ export default function Navbar() {
                     onClick={() => setOpen(false)}
                     className="display-tight block py-2 text-5xl text-ink"
                   >
-                    <span className="mr-4 align-middle text-sm font-normal tracking-widest text-muted">
+                    <span className="mr-4 align-middle text-sm font-normal tabular-nums tracking-widest text-muted">
                       0{i + 1}
                     </span>
                     {l.label}

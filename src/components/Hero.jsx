@@ -123,7 +123,7 @@ export default function Hero() {
         <span className="glacier-rail-tick" />
       </div>
       <div className="glacier-rail glacier-rail-right" aria-hidden="true">
-        <p className="glacier-rail-num">02</p>
+        <p className="glacier-rail-num tabular-nums">02</p>
         <span className="glacier-rail-line" />
         <span className="glacier-rail-dots"><i /><i /><i /><i /><i /></span>
       </div>
@@ -177,11 +177,11 @@ export default function Hero() {
             {...(reduce
               ? {}
               : {
-                  initial: { opacity: 0, y: 44, filter: 'blur(10px)' },
-                  animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
+                  initial: { opacity: 0, y: 44 },
+                  animate: { opacity: 1, y: 0 },
                   transition: { duration: 1, delay: 0.55, ease: [0.22, 1, 0.36, 1] },
                 })}
-            className="hero-name display-tight text-ink text-[clamp(2.5rem,8vw,4.5rem)]"
+            className="hero-name display-tight text-balance text-ink text-[clamp(2.5rem,8vw,4.5rem)]"
             style={{
               textShadow:
                 '0 0 28px rgba(91,140,255,0.35), 0 0 80px rgba(139,92,246,0.22)',

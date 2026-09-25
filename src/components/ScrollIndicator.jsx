@@ -10,7 +10,7 @@ export default function ScrollIndicator({ delay = 1.4 }) {
       initial={reduce ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={reduce ? {} : { delay, duration: 0.9 }}
-      className="flex flex-col items-center gap-2"
+      className="flex flex-col items-center gap-2 text-ink/60 transition-colors duration-300 hover:text-ink"
     >
       <motion.span
         aria-hidden="true"
