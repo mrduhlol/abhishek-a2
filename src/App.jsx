@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Navbar from "./components/Navbar.jsx";
 import Hero from "./components/Hero.jsx";
 import Statement from "./components/Statement.jsx";
@@ -11,10 +12,14 @@ import Contact from "./components/Contact.jsx";
 import Footer from "./components/Footer.jsx";
 import ScrollProgress from "./components/ScrollProgress.jsx";
 import CustomCursor from "./components/CustomCursor.jsx";
+import WelcomeIntro from "./components/WelcomeIntro.jsx";
 import { useSmoothScroll } from "./hooks/useSmoothScroll.js";
 
 export default function App() {
   useSmoothScroll();
+  // Mac-style boot: black "welcome" splash first, site mounts as it lifts.
+  const [revealed, setRevealed] = useState(false);
+  const [introGone, setIntroGone] = useState(false);
 
   return (
     <div className="grain relative min-h-screen bg-[var(--page-bg)] text-[#F5F5F5] transition-colors duration-500">
@@ -26,25 +31,35 @@ export default function App() {
       </a>
       <ScrollProgress />
       <CustomCursor />
-      <Navbar />
-      <main>
-        <Hero />
-        <Statement />
-        <div className="mx-auto max-w-6xl px-5 md:px-8" aria-hidden="true">
-          <div className="h-px bg-line" />
-        </div>
-        <About />
-        <Projects />
-        <div className="mx-auto max-w-6xl px-5 md:px-8" aria-hidden="true">
-          <div className="h-px bg-line" />
-        </div>
-        <Skills />
-        <Journey />
-        <Exploring />
-        <GithubActivity />
-        <Contact />
-      </main>
-      <Footer />
+      {!introGone && (
+        <WelcomeIntro
+          onReveal={() => setRevealed(true)}
+          onDone={() => setIntroGone(true)}
+        />
+      )}
+      {revealed && (
+        <>
+          <Navbar />
+          <main>
+            <Hero />
+            <Statement />
+            <div className="mx-auto max-w-6xl px-5 md:px-8" aria-hidden="true">
+              <div className="h-px bg-line" />
+            </div>
+            <About />
+            <Projects />
+            <div className="mx-auto max-w-6xl px-5 md:px-8" aria-hidden="true">
+              <div className="h-px bg-line" />
+            </div>
+            <Skills />
+            <Journey />
+            <Exploring />
+            <GithubActivity />
+            <Contact />
+          </main>
+          <Footer />
+        </>
+      )}
     </div>
   );
 }
