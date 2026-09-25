@@ -133,6 +133,13 @@ body {
   text-transform: uppercase;
 }
 
+/* Mac hello-style boot splash script */
+.welcome-script {
+  font-family: "Great Vibes", "Snell Roundhand", "Brush Script MT", cursive;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
 .display-tight {
   letter-spacing: -0.045em;
   line-height: 0.94;
@@ -253,7 +260,7 @@ body {
   opacity: 0;
   transition: opacity 0.25s ease;
 }
-.cursor-arrow,
+.cursor-face,
 .cursor-dot,
 .cursor-label {
   position: absolute;
@@ -261,20 +268,38 @@ body {
   top: 0;
   will-change: transform;
 }
-.cursor-arrow {
-  margin: -2px 0 0 -3px;
-  filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.65)) drop-shadow(0 0 18px rgba(91, 140, 255, 0.35));
+/* Eye-moment cursor head: cropped to the eyes, circular, glowing rim. */
+.cursor-face {
+  width: 46px;
+  height: 46px;
+  margin: -6px 0 0 -8px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #000;
+  border: 1.5px solid rgba(139, 92, 246, 0.75);
+  box-shadow:
+    0 0 10px rgba(139, 92, 246, 0.65),
+    0 0 26px rgba(91, 140, 255, 0.35);
   transition: scale 0.25s ease;
 }
-.cursor-arrow svg {
+.cursor-face img {
   display: block;
-  transition: transform 0.25s ease;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* source frames are full portraits — zoom into the eye band */
+  object-position: 50% 26%;
+  transform: scale(2.15);
+  transform-origin: 50% 30%;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
 }
-.cursor-arrow.cursor-hot svg {
-  transform: scale(1.45);
+.cursor-face.cursor-hot {
+  scale: 1.4;
 }
-.cursor-arrow.cursor-press svg {
-  transform: scale(0.85);
+.cursor-face.cursor-press {
+  scale: 0.85;
 }
 .cursor-dot {
   border-radius: 50%;
@@ -341,6 +366,259 @@ body {
   background: rgba(255, 255, 255, 0.82);
   border-color: rgba(47, 107, 255, 0.4);
   box-shadow: 0 0 16px rgba(47, 107, 255, 0.25);
+}
+
+/* ---------- glacier front page (light mode only, matches reference) ---------- */
+.glacier-scene,
+.glacier-rail,
+.glacier-halo,
+.glacier-title-rule {
+  display: none;
+}
+[data-theme="glacier"] .hero-void-glow {
+  display: none;
+}
+[data-theme="glacier"] .glacier-scene {
+  display: block;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #eef4fd 0%, #f4f8fe 34%, #eef3fb 62%, #f7fafd 100%);
+}
+.glacier-sky {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 78% 58%, rgba(255, 244, 224, 0.9), transparent 60%),
+    radial-gradient(ellipse 80% 55% at 50% 0%, rgba(214, 230, 255, 0.9), transparent 70%);
+}
+.glacier-sun {
+  position: absolute;
+  right: 12%;
+  top: 46%;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(255,252,242,0.95) 0%, rgba(255,244,220,0.55) 32%, transparent 68%);
+  filter: blur(2px);
+}
+.glacier-mtn {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+.glacier-mtn-far {
+  bottom: 22%;
+  height: 46%;
+  opacity: 0.9;
+}
+.glacier-mtn-near {
+  bottom: 12%;
+  height: 42%;
+}
+.glacier-lake {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 26%;
+  background:
+    linear-gradient(to bottom, rgba(238,244,252,0.1), rgba(214,228,246,0.65)),
+    radial-gradient(ellipse 50% 90% at 78% 30%, rgba(255,246,225,0.7), transparent 60%);
+}
+.glacier-fog {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: -4%;
+  height: 38%;
+  background:
+    radial-gradient(ellipse 55% 55% at 30% 70%, rgba(255,255,255,0.95), transparent 70%),
+    radial-gradient(ellipse 60% 60% at 70% 65%, rgba(255,255,255,0.9), transparent 70%),
+    linear-gradient(to top, rgba(247,250,253,0.98) 20%, transparent 80%);
+  filter: blur(6px);
+}
+[data-theme="glacier"] .glacier-halo {
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 132%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border: 1.5px solid rgba(35, 70, 135, 0.28);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, transparent 58%, rgba(255,255,255,0.5) 76%, rgba(190,210,240,0.25) 85%, transparent 88%),
+    radial-gradient(ellipse 60% 30% at 50% 100%, rgba(255,255,255,0.7), transparent 70%);
+  box-shadow:
+    inset 0 0 60px rgba(255,255,255,0.6),
+    0 0 80px rgba(190,210,245,0.35);
+  pointer-events: none;
+}
+[data-theme="glacier"] .glacier-halo::after {
+  content: "";
+  position: absolute;
+  inset: 9%;
+  border: 1px solid rgba(35, 70, 135, 0.14);
+  border-radius: 50%;
+}
+[data-theme="glacier"] .hero-portrait {
+  z-index: 2;
+}
+/* side rails */
+[data-theme="glacier"] .glacier-rail {
+  display: flex;
+  position: absolute;
+  top: 120px;
+  bottom: 220px;
+  z-index: 20;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #7b8db0;
+}
+[data-theme="glacier"] .glacier-rail-left {
+  left: max(1.5rem, calc(50% - 620px));
+}
+[data-theme="glacier"] .glacier-rail-right {
+  right: max(1.5rem, calc(50% - 620px));
+}
+.glacier-rail p {
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  line-height: 2.1;
+  font-weight: 600;
+  text-align: left;
+  margin: 0;
+}
+.glacier-rail-num {
+  writing-mode: vertical-rl;
+  font-size: 12px !important;
+  letter-spacing: 0.2em !important;
+}
+.glacier-rail-line {
+  width: 1px;
+  height: 90px;
+  background: linear-gradient(to bottom, transparent, #8ba0c2 30%, #8ba0c2 70%, transparent);
+}
+.glacier-rail-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #2f6bff;
+}
+.glacier-rail-tick {
+  width: 18px;
+  height: 2px;
+  background: #0c1830;
+}
+.glacier-rail-dots {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.glacier-rail-dots i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #8ba0c2;
+  display: block;
+}
+.glacier-rail-dots i:nth-child(3) {
+  background: transparent;
+  border: 1.5px solid #8ba0c2;
+  width: 7px;
+  height: 7px;
+  margin-left: -1.5px;
+}
+@media (max-width: 1023px) {
+  [data-theme="glacier"] .glacier-rail {
+    display: none;
+  }
+}
+/* title block */
+.hero-kicker {
+  color: var(--color-muted);
+}
+[data-theme="glacier"] .hero-kicker {
+  color: #5b7bb4;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+[data-theme="glacier"] .hero-name {
+  color: #0a1428;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  text-shadow: none !important;
+  font-size: clamp(3rem, 9vw, 5.8rem) !important;
+}
+.hero-dot {
+  color: inherit;
+}
+[data-theme="glacier"] .hero-dot {
+  color: #2f6bff;
+}
+[data-theme="glacier"] .glacier-title-rule {
+  display: flex;
+  justify-content: center;
+  margin: 14px auto 0;
+  max-width: 560px;
+  position: relative;
+}
+[data-theme="glacier"] .glacier-title-rule::before {
+  content: "";
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(to right, transparent, rgba(60,100,170,0.5) 30%, rgba(60,100,170,0.5) 70%, transparent);
+}
+[data-theme="glacier"] .glacier-title-rule i {
+  position: absolute;
+  top: -2.5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #2f6bff;
+}
+/* glacier portrait melt into white fog */
+[data-theme="glacier"] .portrait-melt {
+  background: linear-gradient(
+    to bottom,
+    transparent 58%,
+    rgba(244, 248, 254, 0.55) 78%,
+    rgba(247, 250, 253, 0.98) 97%
+  );
+}
+/* glacier scroll cue: circled arrow */
+[data-theme="glacier"] a[aria-label="Scroll to explore"] > span:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(60, 100, 170, 0.4);
+  background: rgba(255, 255, 255, 0.7);
+  color: #0c1830;
+  font-size: 16px;
+}
+[data-theme="glacier"] .hero-top-label,
+[data-theme="glacier"] .hero-rings {
+  display: none;
+}
+/* glacier nav CTA: dark pill like reference */
+[data-theme="glacier"] .nav-cta {
+  background: #0a1428;
+  color: #fff !important;
+  border-color: #0a1428 !important;
+  box-shadow: 0 8px 24px rgba(10, 20, 40, 0.28);
+}
+[data-theme="glacier"] .nav-cta:hover {
+  background: #16294f !important;
+}
+[data-theme="glacier"] nav a[aria-current="true"] span {
+  background-image: none;
+  background-color: #2f6bff;
 }
 
 @media (prefers-reduced-motion: reduce) {
