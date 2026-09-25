@@ -110,9 +110,9 @@ export default function Navbar() {
             </button>
             <a
               href="#contact"
-              className="rounded-full border border-line px-5 py-2 text-[12px] font-bold tracking-[0.12em] text-ink transition-colors duration-300 hover:border-[#8B5CF6]/60 hover:bg-[#8B5CF6]/10"
+              className="nav-cta rounded-full border border-line px-5 py-2 text-[12px] font-bold tracking-[0.12em] text-ink transition-colors duration-300 hover:border-[#8B5CF6]/60 hover:bg-[#8B5CF6]/10"
             >
-              LET&apos;S BUILD →
+              LET&apos;S BUILD <span aria-hidden="true" className="text-[#5B8CFF]">→</span>
             </a>
           </div>
 
