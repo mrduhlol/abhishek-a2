@@ -21,7 +21,7 @@ export default function ScrollIndicator({ delay = 1.4 }) {
         ↓
       </motion.span>
       <span className="font-mono text-[10px] tracking-[0.32em] text-muted">
-        SCROLL TO EXPLORE
+        SCROLL DOWN
       </span>
     </motion.a>
   );
