@@ -1,8 +1,54 @@
 import { useRef } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
 
+function BlackjackArt({ accent }) {
+  return (
+    <div className="relative flex h-full items-center justify-center" aria-hidden="true">
+      <div className="absolute h-36 w-24 -rotate-12 rounded-xl border border-line bg-gradient-to-b from-wash to-transparent" />
+      <div className="absolute h-36 w-24 rotate-6 rounded-xl border border-ink/20 bg-gradient-to-b from-wash to-transparent" />
+      <div
+        className="relative flex h-36 w-24 -rotate-3 flex-col items-center justify-center rounded-xl border bg-surface"
+        style={{ borderColor: `${accent}55` }}
+      >
+        <span className="text-3xl font-extrabold" style={{ color: accent }}>21</span>
+        <span className="mt-1 font-mono text-[10px] tracking-widest text-muted">BLACK</span>
+        <span className="-mt-0.5 font-mono text-[10px] tracking-widest text-muted">JACK</span>
+      </div>
+      <div
+        className="relative ml-[-12px] flex h-36 w-24 rotate-6 flex-col items-center justify-center rounded-xl border bg-surface"
+        style={{ borderColor: `${accent}33` }}
+      >
+        <span className="text-2xl font-extrabold text-ink">A♠</span>
+        <span className="mt-1 font-mono text-[10px] tracking-widest text-muted">HIT</span>
+      </div>
+    </div>
+  );
+}
+
 // Abstract preview per project — no stock imagery, pure CSS/SVG.
-function Preview({ motif, accent }) {
+// If project.image is set, the front-page screenshot is shown as the preview pic.
+function Preview({ motif, accent, image }) {
+  if (image) {
+    return (
+      <div className="relative h-full" aria-hidden="true">
+        <BlackjackArt accent={accent} />
+        <div className="absolute inset-0 flex items-center justify-center p-6 md:p-8">
+          <img
+            src={image}
+            alt=""
+            loading="lazy"
+            className="max-h-[220px] w-full max-w-md rounded-xl border border-ink/20 object-cover object-top shadow-2xl md:max-h-[300px]"
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+  if (motif === "blackjack") {
+    return <BlackjackArt accent={accent} />;
+  }
   if (motif === "transfer") {
     return (
       <div className="relative flex h-full items-center justify-center gap-6" aria-hidden="true">
@@ -106,7 +152,7 @@ export default function ProjectCard({ project, flip = false }) {
           }}
         />
         <div className="relative h-full transition-transform duration-700 ease-out group-hover:scale-[1.03]">
-          <Preview motif={project.motif} accent={project.accent} />
+          <Preview motif={project.motif} accent={project.accent} image={project.image} />
         </div>
         <span className="absolute left-5 top-5 font-mono text-[11px] tracking-[0.3em] text-muted">
           {project.index}

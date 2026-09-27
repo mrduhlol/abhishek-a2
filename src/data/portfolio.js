@@ -20,16 +20,17 @@ export const SOCIALS = {
 
 export const PROJECTS = [
   {
-    id: "flipdeck",
+    id: "blackjack",
     index: "01",
-    name: "FlipDeck",
-    tagline: "UNO-inspired multiplayer web game",
+    name: "Black Jack",
+    tagline: "Classic 21 card game in the browser",
     description:
-      "A real-time multiplayer card game with rooms, turn logic and a fast, tactile interface. Built to learn state sync, game loops and playful UI under latency.",
-    tech: ["React", "TypeScript", "Vite", "Tailwind CSS"],
+      "A browser blackjack game with betting, hit/stand/double logic and a clean casino-table interface. Built to learn game state, odds and fast, tactile UI.",
+    tech: ["React", "JavaScript", "Vite", "Tailwind CSS"],
     links: { live: "#", github: "https://github.com/mrduhlol" },
-    accent: "#5B8CFF",
-    motif: "cards",
+    accent: "#EAB308",
+    motif: "blackjack",
+    image: "/blackjack-preview.png",
   },
   {
     id: "bytedrop",
