@@ -718,6 +718,93 @@ button {
   animation-play-state: paused;
 }
 
+/* ---------- isometric lab (Sep 26 – Oct 3) ----------
+   True isometric projection: x/y/z at 120°, parallel edges, zero
+   perspective. The stage is orthographic on purpose — depth comes
+   from stacking order, shade steps and motion, never a camera. */
+.iso-stage {
+  perspective: none;
+}
+.iso-grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  gap: 0;
+  padding: 24px;
+  opacity: 0.9;
+  mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, black 30%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, black 30%, transparent 78%);
+}
+.iso-tile {
+  position: relative;
+  transform: skewY(-12deg) skewX(24deg) scale(0.86);
+  border: 1px solid var(--color-grid);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--color-wash) 55%, transparent);
+}
+/* travelling highlight — ripple across the lattice, tile to tile */
+@keyframes iso-wave {
+  0%, 100% { background: color-mix(in srgb, var(--color-wash) 55%, transparent); }
+  50% { background: rgba(91, 140, 255, 0.22); border-color: rgba(91, 140, 255, 0.35); }
+}
+.iso-wave {
+  animation: iso-wave 3.2s ease-in-out infinite;
+}
+/* exact-SVG cube faces: rhombus geometry baked into the points,
+   so the 120° axis contract holds by construction. Shade steps
+   (light top, mid left, dark right) sell the depth. */
+.iso-cube {
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.iso-cube:hover {
+  transform: translateY(-10px);
+}
+.iso-svg-top.iso-tone-blue { fill: rgba(91, 140, 255, 0.9); }
+.iso-svg-left.iso-tone-blue { fill: rgba(91, 140, 255, 0.5); }
+.iso-svg-right.iso-tone-blue { fill: rgba(91, 140, 255, 0.3); }
+.iso-svg-top.iso-tone-violet { fill: rgba(139, 92, 246, 0.92); }
+.iso-svg-left.iso-tone-violet { fill: rgba(139, 92, 246, 0.52); }
+.iso-svg-right.iso-tone-violet { fill: rgba(139, 92, 246, 0.32); }
+.iso-svg-top.iso-tone-teal { fill: rgba(45, 212, 191, 0.92); }
+.iso-svg-left.iso-tone-teal { fill: rgba(45, 212, 191, 0.52); }
+.iso-svg-right.iso-tone-teal { fill: rgba(45, 212, 191, 0.32); }
+.iso-svg-top, .iso-svg-left, .iso-svg-right {
+  stroke: rgba(255, 255, 255, 0.14);
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+/* gentle idle float — paused on hover so inspection feels tactile */
+@keyframes iso-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -9px; }
+}
+.iso-float {
+  animation: iso-float 5.5s ease-in-out infinite;
+}
+.iso-cube:hover.iso-float {
+  animation-play-state: paused;
+}
+/* cluster layout: scattered by default, tower when stacked */
+.iso-stack {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 28px;
+}
+.iso-stack .iso-slot {
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.iso-stack.is-stacked {
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.iso-stack.is-stacked .iso-slot-a { transform: translateY(56px); z-index: 1; }
+.iso-stack.is-stacked .iso-slot-b { transform: translateY(0); z-index: 2; }
+.iso-stack.is-stacked .iso-slot-c { transform: translateY(-56px); z-index: 3; }
+
 /* ---------- microinteractions: CTA shine, field feedback, spinner ---------- */
 .btn-shine::after {
   content: "";
