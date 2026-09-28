@@ -3,6 +3,7 @@ import { motion, useMotionValue, useSpring, useReducedMotion } from "motion/reac
 
 // Subtle magnetic pull on pointer devices only. Disabled on touch / reduced motion.
 // Rect is cached on enter (no layout read per move); position updates ride rAF via springs.
+// Adds a gentle press-down (whileTap) microinteraction for tactile CTA feedback.
 export default function MagneticButton({ children, strength = 0.25, className = "", ...rest }) {
   const ref = useRef(null);
   const rectRef = useRef(null);
@@ -34,7 +35,9 @@ export default function MagneticButton({ children, strength = 0.25, className = 
       onPointerEnter={onEnter}
       onPointerMove={onMove}
       onPointerLeave={reset}
-      style={{ x: sx, y: sy, display: "inline-block" }}
+      style={{ x: reduce ? 0 : sx, y: reduce ? 0 : sy, display: "inline-block" }}
+      whileTap={reduce ? undefined : { scale: 0.96 }}
+      transition={{ type: "spring", stiffness: 400, damping: 22 }}
       className={className}
       {...rest}
     >

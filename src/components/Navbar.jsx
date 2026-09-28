@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { NAV_LINKS } from "../data/portfolio.js";
 import { useActiveSection } from "../hooks/useActiveSection.js";
 
@@ -33,8 +33,10 @@ function useTheme() {
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [hovered, setHovered] = useState(null);
   const [theme, toggleTheme] = useTheme();
   const active = useActiveSection(IDS);
+  const reduce = useReducedMotion();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -76,61 +78,107 @@ export default function Navbar() {
             A<span className="text-[#8B5CF6]">.</span>
           </a>
 
-          <ul className="hidden items-center gap-7 md:flex">
-            {NAV_LINKS.map((l) => (
-              <li key={l.id}>
-                <a
-                  href={`#${l.id}`}
-                  aria-current={active === l.id ? "page" : undefined}
-                  className={`text-[13px] font-medium tracking-wide transition-colors duration-300 ${
-                    active === l.id ? "text-ink" : "text-muted hover:text-ink"
-                  }`}
-                >
-                  {l.label}
-                  <span
-                    aria-hidden="true"
-                    className={`mt-1 block h-px bg-gradient-to-r from-[#5B8CFF] to-[#8B5CF6] transition-transform duration-300 ${
-                      active === l.id ? "scale-x-100" : "scale-x-0"
-                    } origin-left`}
-                  />
-                </a>
-              </li>
-            ))}
+          <ul className="hidden items-center gap-1 md:flex" onMouseLeave={() => setHovered(null)}>
+            {NAV_LINKS.map((l) => {
+              const isActive = active === l.id;
+              const showPill = hovered === l.id || (hovered === null && isActive);
+              return (
+                <li key={l.id}>
+                  <motion.a
+                    href={`#${l.id}`}
+                    aria-current={isActive ? "page" : undefined}
+                    onMouseEnter={() => setHovered(l.id)}
+                    onFocus={() => setHovered(l.id)}
+                    whileHover={reduce ? undefined : { y: -1 }}
+                    whileTap={reduce ? undefined : { scale: 0.95 }}
+                    className={`relative rounded-full px-3.5 py-2 text-[13px] font-medium tracking-wide transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-[#5B8CFF] ${
+                      isActive ? "text-ink" : "text-muted hover:text-ink"
+                    }`}
+                  >
+                    {showPill && (
+                      <motion.span
+                        layoutId="nav-pill"
+                        aria-hidden="true"
+                        transition={
+                          reduce
+                            ? { duration: 0 }
+                            : { type: "spring", stiffness: 480, damping: 36 }
+                        }
+                        className={`absolute inset-0 rounded-full ${
+                          isActive ? "bg-wash ring-1 ring-line" : "bg-wash/60"
+                        }`}
+                      />
+                    )}
+                    <span className="relative z-[1]">{l.label}</span>
+                    <span aria-hidden="true" className="relative z-[1] mx-auto mt-0.5 block h-px w-full overflow-hidden">
+                      <motion.span
+                        className="block h-px origin-left bg-gradient-to-r from-[#5B8CFF] to-[#8B5CF6]"
+                        initial={false}
+                        animate={{ scaleX: isActive ? 1 : hovered === l.id ? 0.6 : 0, opacity: isActive || hovered === l.id ? 1 : 0 }}
+                        transition={{ duration: 0.25, ease: "easeOut" }}
+                      />
+                    </span>
+                  </motion.a>
+                </li>
+              );
+            })}
           </ul>
 
           <div className="hidden items-center gap-3 md:flex">
-            <button
+            <motion.button
               type="button"
               onClick={toggleTheme}
+              whileHover={reduce ? undefined : { scale: 1.06 }}
+              whileTap={reduce ? undefined : { scale: 0.9, rotate: -12 }}
+              transition={{ type: "spring", stiffness: 500, damping: 22 }}
               aria-pressed={theme === "glacier"}
               aria-label={theme === "void" ? "Switch to Glacier light theme" : "Switch to dark theme"}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink/70 transition-colors duration-300 hover:border-ink/30 hover:text-ink"
+              className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border border-line text-ink/70 outline-none transition-colors duration-300 hover:border-ink/30 hover:text-ink focus-visible:ring-2 focus-visible:ring-[#5B8CFF]"
             >
-              {theme === "void" ? (
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z" />
-                </svg>
-              ) : (
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
-                  <circle cx="12" cy="12" r="4" />
-                  <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
-                </svg>
-              )}
-            </button>
-            <a
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={theme}
+                  initial={reduce ? false : { rotate: -90, opacity: 0, scale: 0.6 }}
+                  animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                  exit={reduce ? undefined : { rotate: 90, opacity: 0, scale: 0.6 }}
+                  transition={{ duration: 0.22, ease: "easeOut" }}
+                  className="flex"
+                >
+                  {theme === "void" ? (
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z" />
+                    </svg>
+                  ) : (
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+                      <circle cx="12" cy="12" r="4" />
+                      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+                    </svg>
+                  )}
+                </motion.span>
+              </AnimatePresence>
+            </motion.button>
+            <motion.a
               href="#contact"
-              className="nav-cta rounded-full border border-line px-5 py-2 text-[12px] font-bold tracking-[0.12em] text-ink transition-colors duration-300 hover:border-[#8B5CF6]/60 hover:bg-[#8B5CF6]/10"
+              whileHover={reduce ? undefined : { scale: 1.03, y: -1 }}
+              whileTap={reduce ? undefined : { scale: 0.96 }}
+              className="nav-cta btn-shine group relative overflow-hidden rounded-full border border-line px-5 py-2 text-[12px] font-bold tracking-[0.12em] text-ink outline-none transition-colors duration-300 hover:border-[#8B5CF6]/60 hover:bg-[#8B5CF6]/10 focus-visible:ring-2 focus-visible:ring-[#5B8CFF]"
             >
-              LET’S BUILD <span aria-hidden="true" className="text-[#5B8CFF]">→</span>
-            </a>
+              <span className="relative z-[1]">
+                LET’S BUILD{" "}
+                <span aria-hidden="true" className="inline-block text-[#5B8CFF] transition-transform duration-300 group-hover:translate-x-1">
+                  →
+                </span>
+              </span>
+            </motion.a>
           </div>
 
-          <button
+          <motion.button
             type="button"
             onClick={() => setOpen((v) => !v)}
+            whileTap={reduce ? undefined : { scale: 0.88 }}
             aria-expanded={open}
             aria-label={open ? "Close menu" : "Open menu"}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink transition-colors duration-300 hover:border-ink/30 hover:text-ink md:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink outline-none transition-colors duration-300 hover:border-ink/30 hover:text-ink focus-visible:ring-2 focus-visible:ring-[#5B8CFF] md:hidden"
           >
             <span className="relative block h-3 w-4">
               <span
@@ -149,7 +197,7 @@ export default function Navbar() {
                 }`}
               />
             </span>
-          </button>
+          </motion.button>
         </nav>
       </motion.header>
 
@@ -166,21 +214,32 @@ export default function Navbar() {
               {NAV_LINKS.map((l, i) => (
                 <motion.li
                   key={l.id}
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 24, filter: "blur(4px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   exit={{ opacity: 0, y: 12 }}
-                  transition={{ duration: 0.45, delay: 0.06 * i, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: 0.45, delay: 0.05 * i, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <a
+                  <motion.a
                     href={`#${l.id}`}
                     onClick={() => setOpen(false)}
-                    className="display-tight block py-2 text-5xl text-ink"
+                    whileTap={reduce ? undefined : { scale: 0.97, x: 4 }}
+                    className={`display-tight group flex items-baseline py-2 text-5xl outline-none focus-visible:ring-2 focus-visible:ring-[#5B8CFF] ${
+                      active === l.id ? "text-ink" : "text-ink/85"
+                    }`}
                   >
                     <span className="mr-4 align-middle text-sm font-normal tabular-nums tracking-widest text-muted">
                       0{i + 1}
                     </span>
-                    {l.label}
-                  </a>
+                    <span className="transition-transform duration-300 group-active:translate-x-1">
+                      {l.label}
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      className={`ml-3 h-1.5 w-1.5 rounded-full bg-gradient-to-r from-[#5B8CFF] to-[#8B5CF6] transition-all duration-300 ${
+                        active === l.id ? "scale-100 opacity-100" : "scale-0 opacity-0"
+                      }`}
+                    />
+                  </motion.a>
                 </motion.li>
               ))}
             </ul>
