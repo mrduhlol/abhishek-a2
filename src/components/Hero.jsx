@@ -6,9 +6,13 @@ import ScrollIndicator from './ScrollIndicator.jsx';
 import SocialLinks from './SocialLinks.jsx';
 import { HeroLeft, HeroRight, HeroExploring } from './HeroInfo.jsx';
 
+import { useFauxTilt, useParallaxGroup } from '../hooks/useFauxTilt.js';
+import { ParallaxLayer } from './Faux3D.jsx';
+
 // Composition: label -> portrait -> name (overlapping the chest) ->
 // subtitle -> [info | info] -> [03 | scroll | 04] -> footer.
-// The portrait never moves after entrance; only pupils + lids are alive.
+// Faux-3D: portrait stage has real perspective — halo far, rings mid,
+// photo near — plus cursor tilt and scroll retreat for depth.
 export default function Hero() {
   const sectionRef = useRef(null);
   const liveRef = useRef(false);
@@ -28,6 +32,19 @@ export default function Hero() {
   // Background geometry drifts almost imperceptibly on scroll. Nothing else moves.
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
   const ringsY = useTransform(scrollYProgress, [0, 1], [0, 46]);
+  // Faux-3D perspective simulation: scroll retreats the stage in Z
+  // (scale + rotateX) while mouse parallax separates depth layers.
+  const portraitTilt = useFauxTilt({ maxX: 4.5, maxY: 6 });
+  const stageParallax = useParallaxGroup({ stiffness: 55, damping: 16 });
+  const stageRotateX = portraitTilt.rotateX;
+  const stageRotateY = portraitTilt.rotateY;
+  // Scrollytelling exit: portrait sinks + softens, title lifts faster —
+  // the hero hands off to the story instead of hard-cutting.
+  const portraitY = useTransform(scrollYProgress, [0, 1], [0, 110]);
+  const portraitScale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
+  const portraitOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0.25]);
+  const titleY = useTransform(scrollYProgress, [0, 1], [0, -70]);
+  const bodyFade = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
   const rise = (delay, x = 0) =>
     reduce
@@ -137,20 +154,43 @@ export default function Hero() {
           BUILD • BREAK • LEARN • REPEAT
         </motion.p>
 
-        {/* portrait — large, seamless, the centerpiece */}
+        {/* portrait — large, seamless, the centerpiece.
+            Faux-3D stage: perspective + cursor tilt; halo/rings/photo
+            sit at different depths and drift apart on mouse + scroll. */}
         <motion.div
           {...(reduce
             ? {}
             : {
-                initial: { opacity: 0, scale: 0.985 },
-                animate: { opacity: 1, scale: 1 },
+                initial: { opacity: 0 },
+                animate: { opacity: 1 },
                 transition: { duration: 1, delay: 0.35, ease: [0.22, 1, 0.36, 1] },
               })}
           className="hero-portrait relative mx-auto mt-6 h-[min(72svh,66vw)] aspect-[1448/1086] w-auto shrink-0"
         >
-          <div className="portrait-stage" aria-hidden="true" />
-          <div className="glacier-halo" aria-hidden="true" />
+        <motion.div
+          ref={reduce ? undefined : portraitTilt.ref}
+          {...(reduce ? {} : portraitTilt.handlers)}
+          style={
+            reduce
+              ? undefined
+              : {
+                  y: portraitY,
+                  scale: portraitScale,
+                  opacity: portraitOpacity,
+                  rotateX: stageRotateX,
+                  rotateY: stageRotateY,
+                  transformPerspective: 1400,
+                }
+          }
+          className="faux3d-stage absolute inset-0 will-change-transform"
+        >
+          <div ref={reduce ? undefined : stageParallax.ref} {...(reduce ? {} : stageParallax.handlers)} className="faux3d-preserve absolute inset-0">
+          <ParallaxLayer mx={stageParallax.mx} my={stageParallax.my} depth={-9} className="absolute inset-0">
+            <div className="portrait-stage" aria-hidden="true" />
+            <div className="glacier-halo" aria-hidden="true" />
+          </ParallaxLayer>
           {/* faint technical geometry behind the portrait — void only */}
+          <ParallaxLayer mx={stageParallax.mx} my={stageParallax.my} depth={10} className="absolute inset-0">
           <motion.svg
             viewBox="0 0 400 400"
             aria-hidden="true"
@@ -164,12 +204,19 @@ export default function Hero() {
             <circle cx="352" cy="200" r="2" style={{ fill: 'var(--color-ink)' }} fillOpacity="0.4" />
             <circle cx="48" cy="200" r="2" style={{ fill: 'var(--color-ink)' }} fillOpacity="0.25" />
           </motion.svg>
-          <InteractivePortrait liveRef={liveRef} scopeRef={sectionRef} className="relative" />
+          </ParallaxLayer>
+          <ParallaxLayer mx={stageParallax.mx} my={stageParallax.my} depth={5} className="absolute inset-0">
+            <InteractivePortrait liveRef={liveRef} scopeRef={sectionRef} className="relative" />
+          </ParallaxLayer>
+          </div>
+        </motion.div>
         </motion.div>
 
         {/* name — overlapping the upper chest, never the face.
             Overlap ≈28% of portrait height, retuned per breakpoint. */}
-        <div className="hero-title relative z-10 -mt-[4.5rem] text-center sm:-mt-[7.5rem] lg:-mt-40 xl:-mt-44">
+        <motion.div
+          style={reduce ? undefined : { y: titleY }}
+          className="hero-title relative z-10 -mt-[4.5rem] text-center sm:-mt-[7.5rem] lg:-mt-40 xl:-mt-44 will-change-transform">
           <motion.p {...rise(0.65)} className="hero-kicker text-center text-[13px] font-semibold tracking-[0.34em]">
             CSE — CYBERSECURITY
           </motion.p>
@@ -181,18 +228,19 @@ export default function Hero() {
                   animate: { opacity: 1, y: 0 },
                   transition: { duration: 1, delay: 0.55, ease: [0.22, 1, 0.36, 1] },
                 })}
-            className="hero-name display-tight text-balance text-ink text-[clamp(2.5rem,8vw,4.5rem)]"
+            className="hero-name faux3d-text display-tight text-balance text-ink text-[clamp(2.5rem,8vw,4.5rem)]"
             style={{
               textShadow:
-                '0 0 28px rgba(91,140,255,0.35), 0 0 80px rgba(139,92,246,0.22)',
+                '0 1px 0 rgba(255,255,255,0.06), 0 6px 18px rgba(0,0,0,0.45), 0 0 28px rgba(91,140,255,0.35), 0 0 80px rgba(139,92,246,0.22)',
             }}
           >
             ABHISHEK A.<span className="hero-dot" aria-hidden="true">.</span>
           </motion.h1>
           <div className="glacier-title-rule" aria-hidden="true"><i /></div>
-        </div>
+        </motion.div>
 
-        {/* info panels */}
+        {/* info panels — fade out first on scroll so the story takes over */}
+        <motion.div style={reduce ? undefined : { opacity: bodyFade }} className="will-change-transform">
         <div className="mt-12 flex flex-col items-center gap-10 lg:grid lg:grid-cols-2 lg:items-start lg:gap-6">
           <motion.div
             {...rise(0.9, -24)}
@@ -233,6 +281,7 @@ export default function Hero() {
         >
           <p>Turning ideas into experiences.</p>
           <p>© 2026 Abhishek A.</p>
+        </motion.div>
         </motion.div>
       </div>
     </section>
