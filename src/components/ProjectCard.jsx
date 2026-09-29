@@ -1,5 +1,5 @@
-import { useRef } from "react";
-import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
+import { motion, useReducedMotion, useTransform } from "motion/react";
+import { useFauxTilt } from "../hooks/useFauxTilt.js";
 
 function BlackjackArt({ accent }) {
   return (
@@ -98,42 +98,34 @@ function Preview({ motif, accent, image }) {
 }
 
 export default function ProjectCard({ project, flip = false }) {
-  const ref = useRef(null);
   const reduce = useReducedMotion();
 
-  // cursor-follow tilt — tiny, desktop pointers only
-  const px = useMotionValue(0.5);
-  const py = useMotionValue(0.5);
-  const spx = useSpring(px, { stiffness: 120, damping: 18 });
-  const spy = useSpring(py, { stiffness: 120, damping: 18 });
-  const rotateX = useTransform(spy, [0, 1], [2.5, -2.5]);
-  const rotateY = useTransform(spx, [0, 1], [-3, 3]);
-
-  const onMove = (e) => {
-    if (reduce || e.pointerType === "touch" || !ref.current) return;
-    const r = ref.current.getBoundingClientRect();
-    px.set((e.clientX - r.left) / r.width);
-    py.set((e.clientY - r.top) / r.height);
-  };
-  const reset = () => {
-    px.set(0.5);
-    py.set(0.5);
-  };
+  // Faux-3D: stronger cursor tilt + scale lift + cursor glare.
+  // Preview art floats (translateZ) above the card face; body copy
+  // sits mid-depth so the card reads as layered glass, not flat.
+  const tilt = useFauxTilt({ maxX: 6, maxY: 8 });
+  const glareBg = useTransform(
+    [tilt.glareX, tilt.glareY],
+    ([x, y]) =>
+      `radial-gradient(circle at ${x}% ${y}%, rgba(255,255,255,0.13), transparent 58%)`
+  );
 
   return (
     <motion.article
-      ref={ref}
-      onPointerMove={onMove}
-      onPointerLeave={reset}
+      ref={reduce ? undefined : tilt.ref}
+      onPointerEnter={reduce ? undefined : tilt.handlers.onPointerEnter}
+      onPointerMove={reduce ? undefined : tilt.handlers.onPointerMove}
+      onPointerLeave={reduce ? undefined : tilt.handlers.onPointerLeave}
       initial={reduce ? false : { opacity: 0, y: 56 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-      style={reduce ? undefined : { rotateX, rotateY, transformPerspective: 1200 }}
-      className="group grid overflow-hidden rounded-2xl border border-line bg-surface transition-colors duration-500 hover:border-ink/25 md:grid-cols-2"
+      whileHover={reduce ? undefined : { scale: 1.012 }}
+      style={reduce ? undefined : { rotateX: tilt.rotateX, rotateY: tilt.rotateY, transformPerspective: 1100 }}
+      className="group faux3d-stage faux3d-ground grid overflow-hidden rounded-2xl border border-line bg-surface transition-colors duration-500 hover:border-ink/25 md:grid-cols-2"
     >
-      {/* preview */}
-      <div className={`relative min-h-[260px] overflow-hidden md:min-h-[380px] ${flip ? "md:order-2" : ""}`}>
+      {/* preview — floats above face */}
+      <div className={`faux3d-preserve relative min-h-[260px] overflow-hidden md:min-h-[380px] ${flip ? "md:order-2" : ""}`}>
         <div
           className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.04]"
           style={{
@@ -151,16 +143,19 @@ export default function ProjectCard({ project, flip = false }) {
             WebkitMaskImage: "radial-gradient(ellipse 75% 75% at 50% 50%, black, transparent 85%)",
           }}
         />
-        <div className="relative h-full transition-transform duration-700 ease-out group-hover:scale-[1.03]">
+        <div className="faux3d-layer relative h-full transition-transform duration-700 ease-out group-hover:scale-[1.03]" style={{ "--faux-z": "42px" }}>
           <Preview motif={project.motif} accent={project.accent} image={project.image} />
         </div>
-        <span className="absolute left-5 top-5 font-mono text-[11px] tracking-[0.3em] text-muted">
+        {!reduce && (
+          <motion.span aria-hidden="true" className="faux3d-glare" style={{ background: glareBg }} />
+        )}
+        <span className="faux3d-layer absolute left-5 top-5 font-mono text-[11px] tracking-[0.3em] text-muted" style={{ "--faux-z": "60px" }}>
           {project.index}
         </span>
       </div>
 
-      {/* body */}
-      <div className={`flex flex-col justify-center p-7 md:p-12 ${flip ? "md:order-1" : ""}`}>
+      {/* body — mid-depth layer */}
+      <div className={`faux3d-layer flex flex-col justify-center p-7 md:p-12 ${flip ? "md:order-1" : ""}`} style={{ "--faux-z": "24px" }}>
         <p className="font-mono text-[11px] tracking-[0.28em] text-muted uppercase">{project.tagline}</p>
         <h3 className="display-tight mt-3 text-3xl md:text-5xl">{project.name}</h3>
         <p className="mt-4 max-w-md leading-relaxed text-muted">{project.description}</p>
