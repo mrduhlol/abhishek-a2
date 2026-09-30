@@ -1,14 +1,15 @@
 import { motion, useReducedMotion } from "motion/react";
 
 // Minimal editorial heading: eyebrow index + oversized title.
-// Keeps hierarchy consistent across sections.
+// Faux-3D: title rises off the page (rotateX + scale settle) and carries
+// a stacked shadow so type reads extruded, not flat.
 export default function SectionHeading({ index, eyebrow, title, blurb }) {
   const reduce = useReducedMotion();
   return (
-    <div className="mb-12 md:mb-16">
+    <div className="faux3d-stage mb-12 md:mb-16">
       <motion.p
-        initial={reduce ? false : { opacity: 0, y: 12 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={reduce ? false : { opacity: 0, y: 12, skewX: -6 }}
+        whileInView={{ opacity: 1, y: 0, skewX: 0 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className="eyebrow mb-5 flex items-center gap-3"
@@ -18,11 +19,12 @@ export default function SectionHeading({ index, eyebrow, title, blurb }) {
         {eyebrow}
       </motion.p>
       <motion.h2
-        initial={reduce ? false : { opacity: 0, y: 28, filter: "blur(8px)" }}
-        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        initial={reduce ? false : { opacity: 0, y: 34, rotateX: 14, scale: 0.985, filter: "blur(8px)" }}
+        whileInView={{ opacity: 1, y: 0, rotateX: 0, scale: 1, filter: "blur(0px)" }}
         viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="display-tight text-balance text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
+        transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+        style={reduce ? undefined : { transformPerspective: 900 }}
+        className="faux3d-text display-tight text-balance text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
       >
         {title}
       </motion.h2>
