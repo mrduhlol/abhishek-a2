@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "motion/react";
-import MagneticButton from "./MagneticButton.jsx";
+import CTAButton from "./CTAButton.jsx";
 
 const PILLS = ["Cybersecurity", "AI", "Cloud", "Web Development", "Robotics"];
 
@@ -36,22 +36,12 @@ export function HeroLeft() {
         intersection of development, cybersecurity and AI.
       </p>
       <div className="mt-5 flex flex-wrap gap-3">
-        <MagneticButton strength={0.2}>
-          <a
-            href="#projects"
-            className="inline-block rounded-full bg-btn px-5 py-2.5 text-[11px] font-bold tracking-[0.12em] text-btnink transition-colors duration-300 hover:bg-btn/85"
-          >
-            VIEW PROJECTS →
-          </a>
-        </MagneticButton>
-        <MagneticButton strength={0.2}>
-          <a
-            href="#contact"
-            className="inline-block rounded-full border border-line px-5 py-2.5 text-[11px] font-bold tracking-[0.12em] text-ink transition-colors duration-300 hover:border-ink/30 hover:bg-wash"
-          >
-            CONTACT ME
-          </a>
-        </MagneticButton>
+        <CTAButton href="#projects" variant="primary">
+          VIEW PROJECTS
+        </CTAButton>
+        <CTAButton href="#contact" variant="ghost" arrow={false}>
+          CONTACT ME
+        </CTAButton>
       </div>
       <p className="mt-5 flex items-center gap-2 text-[12px] text-muted">
         <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden="true" />

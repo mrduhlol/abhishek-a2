@@ -164,6 +164,33 @@ button {
   text-wrap: balance;
 }
 
+/* ---------- scrollytelling 2.0 ---------- */
+/* chapter rail: quiet until scrolled past hero, hidden on touch/reduced motion */
+.story-rail {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+.story-rail.story-rail-on,
+.story-rail:focus-within,
+.story-rail:hover {
+  opacity: 1;
+  pointer-events: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .story-rail {
+    display: none;
+  }
+}
+/* sticky project stack needs breathing room so frames can layer */
+#projects .sticky {
+  margin-bottom: 1rem;
+}
+/* pinned story stage: keep text crisp over the grid */
+#story .sticky {
+  isolation: isolate;
+}
+
 /* soft vignette for hero depth */
 .vignette {
   background: radial-gradient(
@@ -613,6 +640,248 @@ button {
   background-color: #2f6bff;
 }
 
+/* ---------- faux-3D kit (Sep 27 – Oct 3 week) ----------
+   Depth illusion via layering + perspective + scale/skew/rotate.
+   All motion is transform/opacity only; disabled under reduced-motion. */
+.faux3d-stage {
+  perspective: 1200px;
+  perspective-origin: 50% 45%;
+}
+.faux3d-preserve {
+  transform-style: preserve-3d;
+}
+.faux3d-layer {
+  transform: translateZ(var(--faux-z, 30px));
+  will-change: transform;
+}
+.faux3d-glare {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  mix-blend-mode: screen;
+}
+.faux3d-stage:hover .faux3d-glare {
+  opacity: 1;
+}
+[data-theme="glacier"] .faux3d-glare {
+  mix-blend-mode: multiply;
+  opacity: 0;
+}
+/* stacked text shadow => extruded / letterpress depth on headings */
+.faux3d-text {
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06),
+    0 6px 18px rgba(0, 0, 0, 0.45),
+    0 0 42px rgba(91, 140, 255, 0.16);
+}
+[data-theme="glacier"] .faux3d-text {
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9),
+    0 10px 28px rgba(35, 70, 135, 0.18);
+}
+/* soft contact shadow that grounds floating cards */
+.faux3d-ground {
+  position: relative;
+}
+.faux3d-ground::after {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: -18px;
+  height: 28px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.45), transparent 70%);
+  filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+}
+.faux3d-ground:hover::after {
+  opacity: 1;
+}
+/* gentle idle float for fragments / chips (paused on hover) */
+@keyframes faux-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -7px, 0); }
+}
+.faux-float {
+  animation: faux-float 6s ease-in-out infinite;
+}
+.faux-float-slow {
+  animation: faux-float 8.5s ease-in-out infinite;
+}
+.group:hover .faux-float,
+.group:hover .faux-float-slow {
+  animation-play-state: paused;
+}
+
+/* ---------- microinteractions: CTA shine, field feedback, spinner ---------- */
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 60%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+  pointer-events: none;
+}
+.btn-shine:hover::after,
+.btn-shine:focus-visible::after {
+  transform: translateX(120%);
+}
+[data-theme="glacier"] .btn-shine::after {
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 60%
+  );
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 0, 0, 0.25);
+  border-top-color: currentColor;
+  animation: micro-spin 0.7s linear infinite;
+  display: inline-block;
+}
+@keyframes micro-spin {
+  to { transform: rotate(360deg); }
+}
+
+.field-input:-webkit-autofill,
+.field-input:-webkit-autofill:hover,
+.field-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--color-ink);
+  -webkit-box-shadow: 0 0 0 1000px var(--color-page) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* ---------- liquid-motion 404 ----------
+   Organic system: gradient sea shifts hue, goo blobs morph + merge,
+   404 text wobbles via SVG displacement, clicks spawn ripples.
+   Transform/opacity only; static fallbacks under reduced-motion. */
+.liquid-404 {
+  background: var(--page-bg);
+  cursor: crosshair;
+}
+.liquid-sea {
+  background:
+    radial-gradient(ellipse 55% 42% at 50% 38%, rgba(91, 140, 255, 0.16), transparent 70%),
+    radial-gradient(ellipse 42% 36% at 30% 70%, rgba(139, 92, 246, 0.14), transparent 70%),
+    radial-gradient(ellipse 40% 34% at 74% 72%, rgba(45, 212, 191, 0.1), transparent 70%),
+    linear-gradient(120deg, #08090c, #0d1024 30%, #131032 55%, #08090c 85%);
+  background-size: 180% 180%, 160% 160%, 160% 160%, 220% 220%;
+  animation: liquid-sea-shift 16s ease-in-out infinite alternate;
+}
+[data-theme="glacier"] .liquid-sea {
+  background:
+    radial-gradient(ellipse 55% 42% at 50% 38%, rgba(47, 107, 255, 0.18), transparent 70%),
+    radial-gradient(ellipse 42% 36% at 28% 70%, rgba(139, 92, 246, 0.12), transparent 70%),
+    radial-gradient(ellipse 40% 34% at 74% 72%, rgba(45, 212, 191, 0.14), transparent 70%),
+    linear-gradient(120deg, #eef4fd, #e2ecfa 30%, #f3efff 55%, #eef4fd 85%);
+  background-size: 180% 180%, 160% 160%, 160% 160%, 220% 220%;
+}
+@keyframes liquid-sea-shift {
+  0% { background-position: 0% 20%, 100% 80%, 20% 100%, 0% 40%; }
+  50% { background-position: 60% 60%, 30% 30%, 80% 40%, 55% 65%; }
+  100% { background-position: 100% 80%, 0% 20%, 60% 90%, 100% 30%; }
+}
+.liquid-blob {
+  position: absolute;
+  filter: blur(2px);
+  animation: liquid-morph 9s ease-in-out infinite alternate;
+}
+.liquid-blob-a {
+  left: 8%;
+  top: 12%;
+  width: min(46vw, 420px);
+  aspect-ratio: 1;
+  background: radial-gradient(circle at 35% 35%, rgba(91, 140, 255, 0.85), rgba(91, 140, 255, 0.25) 60%, transparent 72%);
+}
+.liquid-blob-b {
+  right: 6%;
+  top: 30%;
+  width: min(52vw, 480px);
+  aspect-ratio: 1.1;
+  background: radial-gradient(circle at 60% 40%, rgba(139, 92, 246, 0.8), rgba(139, 92, 246, 0.22) 60%, transparent 72%);
+  animation-delay: -3s;
+}
+.liquid-blob-c {
+  left: 28%;
+  bottom: -12%;
+  width: min(60vw, 560px);
+  aspect-ratio: 1.25;
+  background: radial-gradient(circle at 50% 45%, rgba(45, 212, 191, 0.55), rgba(45, 212, 191, 0.16) 60%, transparent 72%);
+  animation-delay: -6s;
+}
+@keyframes liquid-morph {
+  0% { border-radius: 58% 42% 55% 45% / 48% 55% 45% 52%; }
+  33% { border-radius: 45% 55% 42% 58% / 58% 42% 60% 40%; }
+  66% { border-radius: 52% 48% 60% 40% / 42% 58% 44% 56%; }
+  100% { border-radius: 60% 40% 48% 52% / 55% 45% 58% 42%; }
+}
+.liquid-title {
+  font-size: clamp(6rem, 24vw, 13rem);
+  line-height: 0.9;
+  background: linear-gradient(100deg, #fff 10%, #9db9ff 35%, #c4b5fd 55%, #5eead4 80%, #fff 95%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: liquid-sheen 7s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 42px rgba(91, 140, 255, 0.35));
+}
+[data-theme="glacier"] .liquid-title {
+  background: linear-gradient(100deg, #0a1428 5%, #2f6bff 35%, #8b5cf6 55%, #0ea5a4 80%, #0a1428 95%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 12px 32px rgba(35, 70, 135, 0.25));
+}
+@keyframes liquid-sheen {
+  from { background-position: 0% 50%; }
+  to { background-position: 100% 50%; }
+}
+.liquid-ripple {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  border-radius: 50%;
+  border: 2px solid rgba(139, 92, 246, 0.7);
+  box-shadow: 0 0 0 6px rgba(91, 140, 255, 0.18), 0 0 32px rgba(91, 140, 255, 0.35), inset 0 0 18px rgba(91, 140, 255, 0.25);
+}
+.liquid-ripple::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(94, 234, 212, 0.6);
+}
+.liquid-btn-sheen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(91, 140, 255, 0.35) 50%, transparent 60%);
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+  pointer-events: none;
+}
+button:hover .liquid-btn-sheen {
+  transform: translateX(120%);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .grain::after {
     animation: none;
@@ -625,5 +894,8 @@ button {
   }
   html {
     scroll-behavior: auto;
+  }
+  .btn-shine::after {
+    display: none;
   }
 }
