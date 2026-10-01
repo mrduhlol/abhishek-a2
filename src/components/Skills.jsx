@@ -1,11 +1,11 @@
-import { motion, useReducedMotion } from "motion/react";
 import SectionHeading from "./SectionHeading.jsx";
+import { TiltCard, DepthLayer } from "./Faux3D.jsx";
 import { SKILL_GROUPS } from "../data/portfolio.js";
 
 // Editorial skill map — grouped, no fake percentages, no icon wall.
-// Faint connective traces sit behind the grid for a technical feel.
+// Faux-3D: each group is a tilt card; header sits mid-depth, chips float
+// near-depth so the grid reads as stacked glass.
 export default function Skills() {
-  const reduce = useReducedMotion();
   return (
     <section id="skills" className="relative scroll-mt-20" aria-label="Skills">
       <div className="mx-auto max-w-6xl px-5 py-24 md:px-8 md:py-36">
@@ -29,18 +29,21 @@ export default function Skills() {
           </svg>
           <div className="relative grid gap-5 sm:grid-cols-2">
             {SKILL_GROUPS.map((g, gi) => (
-              <motion.div
+              <TiltCard
                 key={g.id}
-                initial={reduce ? false : { opacity: 0, y: 32 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.7, delay: gi * 0.08, ease: [0.22, 1, 0.36, 1] }}
-                className="group rounded-2xl border border-line bg-surface p-7 transition-colors duration-500 hover:border-ink/25 md:p-8"
+                maxX={5}
+                maxY={7}
+                scale={1.02}
+                className="faux3d-ground rounded-2xl border border-line bg-surface transition-colors duration-500 hover:border-ink/25"
+                innerClassName="p-7 md:p-8"
               >
+                <DepthLayer depth={26}>
                 <div className="flex items-baseline justify-between">
                   <h3 className="text-[13px] font-bold tracking-[0.28em] uppercase">{g.title}</h3>
                   <span className="font-mono text-[11px] text-muted">0{gi + 1}</span>
                 </div>
+                </DepthLayer>
+                <DepthLayer depth={44}>
                 <ul className="mt-6 flex flex-wrap gap-2">
                   {g.items.map((s) => (
                     <li
@@ -51,7 +54,8 @@ export default function Skills() {
                     </li>
                   ))}
                 </ul>
-              </motion.div>
+                </DepthLayer>
+              </TiltCard>
             ))}
           </div>
         </div>
