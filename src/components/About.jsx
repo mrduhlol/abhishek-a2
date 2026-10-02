@@ -5,7 +5,8 @@ import Reveal from "./Reveal.jsx";
 import { ABOUT_INTERESTS } from "../data/portfolio.js";
 
 // Opposite side: lightweight "system diagram" — orbiting nodes on a grid
-// with floating code fragments. Pure CSS/SVG + one subtle pointer tilt.
+// with floating code fragments. Faux-3D: grid far, diagram mid,
+// fragments near-depth with idle float + cursor tilt + glare.
 function SystemVisual() {
   const ref = useRef(null);
   const reduce = useReducedMotion();
@@ -28,8 +29,9 @@ function SystemVisual() {
       ref={ref}
       onPointerMove={onMove}
       style={reduce ? undefined : { rotateX: tiltX, rotateY: tiltY, transformPerspective: 900 }}
-      className="relative overflow-hidden rounded-2xl border border-line bg-wash"
+      className="faux3d-stage faux3d-ground group relative overflow-hidden rounded-2xl border border-line bg-wash"
     >
+      <div className="faux3d-preserve relative">
       <div
         aria-hidden="true"
         className="absolute inset-0"
@@ -39,9 +41,11 @@ function SystemVisual() {
           backgroundSize: "36px 36px",
           maskImage: "radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%)",
           WebkitMaskImage: "radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%)",
+          transform: "translateZ(0px)",
         }}
       />
-      {/* orbit diagram */}
+      {/* orbit diagram — mid-depth */}
+      <div className="faux3d-layer" style={{ "--faux-z": "28px" }}>
       <svg viewBox="0 0 400 340" className="relative block h-auto w-full text-muted" role="img" aria-label="Abstract system diagram">
         <circle cx="200" cy="165" r="96" fill="none" style={{ stroke: "var(--color-line)" }} />
         <circle cx="200" cy="165" r="58" fill="none" style={{ stroke: "var(--color-line)" }} />
@@ -59,12 +63,15 @@ function SystemVisual() {
         <text x="212" y="168" fill="currentColor" fontSize="10" fontFamily="monospace">core</text>
         <text x="252" y="158" fill="currentColor" fontSize="10" fontFamily="monospace">edge</text>
       </svg>
-      {/* floating fragments */}
-      <div className="pointer-events-none absolute left-4 top-4 rounded-md border border-line bg-surface/90 px-3 py-2 font-mono text-[11px] text-ink/60">
+      </div>
+      {/* floating fragments — near-depth, idle float */}
+      <div className="faux3d-layer faux-float pointer-events-none absolute left-4 top-4 rounded-md border border-line bg-surface/90 px-3 py-2 font-mono text-[11px] text-ink/60" style={{ "--faux-z": "56px" }}>
         <span className="text-[#5B8CFF]">$</span> whoami<span className="animate-pulse">_</span>
       </div>
-      <div className="pointer-events-none absolute bottom-4 right-4 rounded-md border border-line bg-surface/90 px-3 py-2 font-mono text-[11px] text-ink/60">
+      <div className="faux3d-layer faux-float-slow pointer-events-none absolute bottom-4 right-4 rounded-md border border-line bg-surface/90 px-3 py-2 font-mono text-[11px] text-ink/60" style={{ "--faux-z": "56px" }}>
         status: <span className="text-emerald-400">building</span>
+      </div>
+      <span aria-hidden="true" className="faux3d-glare" />
       </div>
     </motion.div>
   );

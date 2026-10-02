@@ -5,6 +5,9 @@ import { JOURNEY } from "../data/portfolio.js";
 
 // Cinematic vertical timeline — the rail draws itself as you scroll,
 // milestones fade in as the line reaches them.
+// Faux-3D: items swing in with a slight rotateY + skew, like cards
+// turning toward the viewer as the rail reaches them. Heading pins on desktop
+// so the story reads as narration over the scrolling milestones.
 export default function Journey() {
   const ref = useRef(null);
   const reduce = useReducedMotion();
@@ -14,8 +17,17 @@ export default function Journey() {
   return (
     <section id="journey" className="relative scroll-mt-20" aria-label="The journey">
       <div className="mx-auto max-w-6xl px-5 py-24 md:px-8 md:py-36">
-        <SectionHeading index="04" eyebrow="Path so far" title="The journey." />
-        <div ref={ref} className="relative mx-auto max-w-2xl">
+        <div className="grid gap-12 lg:grid-cols-12 lg:gap-10">
+          <div className="lg:col-span-5">
+            <div className="lg:sticky lg:top-28">
+              <SectionHeading index="04" eyebrow="Path so far" title="The journey." />
+              <p className="mt-4 hidden max-w-sm leading-relaxed text-muted lg:block">
+                Scroll — the rail draws the path while each milestone steps into the light.
+              </p>
+            </div>
+          </div>
+          <div className="lg:col-span-7">
+          <div ref={ref} className="relative mx-auto max-w-2xl">
           {/* rail */}
           <div aria-hidden="true" className="absolute bottom-4 left-[7px] top-2 w-px bg-line md:left-[9px]" />
           {!reduce && (
@@ -25,14 +37,15 @@ export default function Journey() {
               className="absolute bottom-4 left-[7px] top-2 w-px origin-top bg-gradient-to-b from-[#5B8CFF] to-[#8B5CF6] md:left-[9px]"
             />
           )}
-          <ol className="space-y-10 md:space-y-14">
+          <ol className="faux3d-stage space-y-10 md:space-y-14">
             {JOURNEY.map((m, i) => (
               <motion.li
                 key={m.id}
-                initial={reduce ? false : { opacity: 0, y: 28, filter: "blur(6px)" }}
-                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                initial={reduce ? false : { opacity: 0, y: 32, rotateY: -9, skewY: 1.5, filter: "blur(6px)" }}
+                whileInView={{ opacity: 1, y: 0, rotateY: 0, skewY: 0, filter: "blur(0px)" }}
                 viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+                style={reduce ? undefined : { transformPerspective: 900, transformOrigin: "left center" }}
                 className="relative pl-10 md:pl-14"
               >
                 <span
@@ -49,6 +62,8 @@ export default function Journey() {
               </motion.li>
             ))}
           </ol>
+          </div>
+        </div>
         </div>
       </div>
     </section>
