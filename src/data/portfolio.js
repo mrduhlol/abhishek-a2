@@ -107,3 +107,51 @@ export const ABOUT_INTERESTS = [
   "Software Engineering",
   "Robotics",
 ];
+
+// Scrollytelling 2.0 — pinned narrative chapters. Scroll scrubs through
+// these; each chapter crossfades + scales cinematically while sticky.
+// Keep copy short: one idea per chapter, readable in ~3 seconds.
+export const SCROLLY_STORY = [
+  {
+    id: "build",
+    index: "01",
+    kink: "BUILD",
+    title: "I start by building.",
+    text: "Interfaces, games, tools — if I can click it, I want to know how it was made. Every project is a lab experiment.",
+    accent: "#5B8CFF",
+  },
+  {
+    id: "break",
+    index: "02",
+    kink: "BREAK",
+    title: "Then I break it.",
+    text: "Labs, networks, web security. Breaking things on purpose teaches how systems actually behave under pressure.",
+    accent: "#8B5CF6",
+  },
+  {
+    id: "learn",
+    index: "03",
+    kink: "LEARN",
+    title: "Every break is a lesson.",
+    text: "Linux, networking, fundamentals done right. I document, automate the boring parts, and harden what I build.",
+    accent: "#22D3EE",
+  },
+  {
+    id: "repeat",
+    index: "04",
+    kink: "REPEAT",
+    title: "Then I ship it again — stronger.",
+    text: "Secure systems, AI-assisted workflows, things that matter. The loop never ends: build, break, learn, repeat.",
+    accent: "#34D399",
+  },
+];
+
+export const STORY_SECTIONS = [
+  { id: "top", label: "Intro" },
+  { id: "story", label: "Story" },
+  { id: "about", label: "About" },
+  { id: "projects", label: "Work" },
+  { id: "skills", label: "Skills" },
+  { id: "journey", label: "Journey" },
+  { id: "contact", label: "Contact" },
+];
