@@ -1,0 +1,386 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-23T10:18:50.196397+00:00",
+  "title": "Design System: Abhishek's portfolio adventure",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Warm Paper",
+        "tonalRamp": [
+          "oklch(15.00% 0.0218 92.51)",
+          "oklch(26.43% 0.0218 92.51)",
+          "oklch(37.86% 0.0218 92.51)",
+          "oklch(49.29% 0.0218 92.51)",
+          "oklch(60.71% 0.0218 92.51)",
+          "oklch(72.14% 0.0218 92.51)",
+          "oklch(83.57% 0.0218 92.51)",
+          "oklch(95.00% 0.0218 92.51)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Charcoal Ink",
+        "tonalRamp": [
+          "oklch(15.00% 0.0145 95.57)",
+          "oklch(26.43% 0.0145 95.57)",
+          "oklch(37.86% 0.0145 95.57)",
+          "oklch(49.29% 0.0145 95.57)",
+          "oklch(60.71% 0.0145 95.57)",
+          "oklch(72.14% 0.0145 95.57)",
+          "oklch(83.57% 0.0145 95.57)",
+          "oklch(95.00% 0.0145 95.57)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Pencil Grey",
+        "tonalRamp": [
+          "oklch(15.00% 0.0202 96.33)",
+          "oklch(26.43% 0.0202 96.33)",
+          "oklch(37.86% 0.0202 96.33)",
+          "oklch(49.29% 0.0202 96.33)",
+          "oklch(60.71% 0.0202 96.33)",
+          "oklch(72.14% 0.0202 96.33)",
+          "oklch(83.57% 0.0202 96.33)",
+          "oklch(95.00% 0.0202 96.33)"
+        ]
+      },
+      "olive": {
+        "role": "primary",
+        "displayName": "Field Olive",
+        "tonalRamp": [
+          "oklch(15.00% 0.0608 121.11)",
+          "oklch(26.43% 0.0608 121.11)",
+          "oklch(37.86% 0.0608 121.11)",
+          "oklch(49.29% 0.0608 121.11)",
+          "oklch(60.71% 0.0608 121.11)",
+          "oklch(72.14% 0.0608 121.11)",
+          "oklch(83.57% 0.0608 121.11)",
+          "oklch(95.00% 0.0608 121.11)"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Paper Rule",
+        "tonalRamp": [
+          "oklch(15.00% 0.0265 92.42)",
+          "oklch(26.43% 0.0265 92.42)",
+          "oklch(37.86% 0.0265 92.42)",
+          "oklch(49.29% 0.0265 92.42)",
+          "oklch(60.71% 0.0265 92.42)",
+          "oklch(72.14% 0.0265 92.42)",
+          "oklch(83.57% 0.0265 92.42)",
+          "oklch(95.00% 0.0265 92.42)"
+        ]
+      },
+      "speech-paper": {
+        "role": "neutral",
+        "displayName": "Speech Paper",
+        "tonalRamp": [
+          "oklch(15.00% 0.0142 84.58)",
+          "oklch(26.43% 0.0142 84.58)",
+          "oklch(37.86% 0.0142 84.58)",
+          "oklch(49.29% 0.0142 84.58)",
+          "oklch(60.71% 0.0142 84.58)",
+          "oklch(72.14% 0.0142 84.58)",
+          "oklch(83.57% 0.0142 84.58)",
+          "oklch(95.00% 0.0142 84.58)"
+        ]
+      },
+      "highlands": {
+        "role": "secondary",
+        "displayName": "Highland Blue",
+        "tonalRamp": [
+          "oklch(15.00% 0.0460 242.12)",
+          "oklch(26.43% 0.0460 242.12)",
+          "oklch(37.86% 0.0460 242.12)",
+          "oklch(49.29% 0.0460 242.12)",
+          "oklch(60.71% 0.0460 242.12)",
+          "oklch(72.14% 0.0460 242.12)",
+          "oklch(83.57% 0.0460 242.12)",
+          "oklch(95.00% 0.0460 242.12)"
+        ]
+      },
+      "woods": {
+        "role": "secondary",
+        "displayName": "Woodland Green",
+        "tonalRamp": [
+          "oklch(15.00% 0.0597 136.71)",
+          "oklch(26.43% 0.0597 136.71)",
+          "oklch(37.86% 0.0597 136.71)",
+          "oklch(49.29% 0.0597 136.71)",
+          "oklch(60.71% 0.0597 136.71)",
+          "oklch(72.14% 0.0597 136.71)",
+          "oklch(83.57% 0.0597 136.71)",
+          "oklch(95.00% 0.0597 136.71)"
+        ]
+      },
+      "fields": {
+        "role": "secondary",
+        "displayName": "Open-field Green",
+        "tonalRamp": [
+          "oklch(15.00% 0.0766 121.41)",
+          "oklch(26.43% 0.0766 121.41)",
+          "oklch(37.86% 0.0766 121.41)",
+          "oklch(49.29% 0.0766 121.41)",
+          "oklch(60.71% 0.0766 121.41)",
+          "oklch(72.14% 0.0766 121.41)",
+          "oklch(83.57% 0.0766 121.41)",
+          "oklch(95.00% 0.0766 121.41)"
+        ]
+      },
+      "dunes": {
+        "role": "secondary",
+        "displayName": "Dune Ochre",
+        "tonalRamp": [
+          "oklch(15.00% 0.0811 60.99)",
+          "oklch(26.43% 0.0811 60.99)",
+          "oklch(37.86% 0.0811 60.99)",
+          "oklch(49.29% 0.0811 60.99)",
+          "oklch(60.71% 0.0811 60.99)",
+          "oklch(72.14% 0.0811 60.99)",
+          "oklch(83.57% 0.0811 60.99)",
+          "oklch(95.00% 0.0811 60.99)"
+        ]
+      },
+      "tide": {
+        "role": "secondary",
+        "displayName": "Tidal Teal",
+        "tonalRamp": [
+          "oklch(15.00% 0.0542 207.40)",
+          "oklch(26.43% 0.0542 207.40)",
+          "oklch(37.86% 0.0542 207.40)",
+          "oklch(49.29% 0.0542 207.40)",
+          "oklch(60.71% 0.0542 207.40)",
+          "oklch(72.14% 0.0542 207.40)",
+          "oklch(83.57% 0.0542 207.40)",
+          "oklch(95.00% 0.0542 207.40)"
+        ]
+      },
+      "grotto": {
+        "role": "secondary",
+        "displayName": "Grotto Violet",
+        "tonalRamp": [
+          "oklch(15.00% 0.0497 312.50)",
+          "oklch(26.43% 0.0497 312.50)",
+          "oklch(37.86% 0.0497 312.50)",
+          "oklch(49.29% 0.0497 312.50)",
+          "oklch(60.71% 0.0497 312.50)",
+          "oklch(72.14% 0.0497 312.50)",
+          "oklch(83.57% 0.0497 312.50)",
+          "oklch(95.00% 0.0497 312.50)"
+        ]
+      },
+      "ember": {
+        "role": "secondary",
+        "displayName": "Ember Clay",
+        "tonalRamp": [
+          "oklch(15.00% 0.0961 36.49)",
+          "oklch(26.43% 0.0961 36.49)",
+          "oklch(37.86% 0.0961 36.49)",
+          "oklch(49.29% 0.0961 36.49)",
+          "oklch(60.71% 0.0961 36.49)",
+          "oklch(72.14% 0.0961 36.49)",
+          "oklch(83.57% 0.0961 36.49)",
+          "oklch(95.00% 0.0961 36.49)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Portrait name."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Project names."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Project taglines."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Project descriptions."
+      },
+      "handwritten": {
+        "displayName": "Handwritten",
+        "purpose": "Invitations, captions and speech."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Chapter coordinates and small labels."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Technical stacks and chapter numbers."
+      }
+    },
+    "shadows": [
+      {
+        "name": "map",
+        "value": "0 16px 40px #29271f1c",
+        "purpose": "Floating field map."
+      },
+      {
+        "name": "guide-dialog",
+        "value": "0 10px 30px #29271f17",
+        "purpose": "Nonmodal guide conversation."
+      },
+      {
+        "name": "intro-speech",
+        "value": "0 5px 13px #29271f12",
+        "purpose": "First-scroll speech."
+      },
+      {
+        "name": "town-speech",
+        "value": "0 4px 12px #29271f0c",
+        "purpose": "Resident conversation."
+      }
+    ],
+    "motion": [
+      {
+        "name": "begin-arrow",
+        "value": "transform 0.25s",
+        "purpose": "Scroll invitation arrow hover."
+      },
+      {
+        "name": "project-arrow",
+        "value": "transform 0.2s",
+        "purpose": "Outward source-link arrow hover."
+      },
+      {
+        "name": "guide-jump",
+        "value": "1100ms",
+        "purpose": "First-scroll jump after the line or silent wait."
+      },
+      {
+        "name": "town-arrival",
+        "value": "0.8s cubic-bezier(.22,1,.36,1)",
+        "purpose": "Guide joins the couple."
+      },
+      {
+        "name": "ascii-sway",
+        "value": "3.6s ease-in-out infinite",
+        "purpose": "One-pixel decorative scenery sway; disabled with reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide-project",
+        "value": "1600px"
+      },
+      {
+        "name": "compact-desktop",
+        "value": "1100px"
+      },
+      {
+        "name": "stacked-project",
+        "value": "760px"
+      },
+      {
+        "name": "small-guide",
+        "value": "719px"
+      },
+      {
+        "name": "small-town",
+        "value": "700px"
+      },
+      {
+        "name": "small-scenery",
+        "value": "600px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Header map control",
+      "kind": "button",
+      "refersTo": "navigation-button",
+      "description": "Compact transparent navigation control; the application provides expanded state and panel behavior.",
+      "html": "<button class=\"ds-nav-button\" type=\"button\"><svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path d=\"m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2Z M9 3v16 M15 5v16\"/></svg>Map</button>",
+      "css": ".ds-nav-button{font-family:var(--font-body,\"Manrope\",sans-serif);display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0;border:0;border-radius:0;background:transparent;color:var(--ink,#29271f);font-size:11px;font-weight:600;cursor:pointer}.ds-nav-button:hover{color:var(--olive,#606b43)}.ds-nav-button:focus-visible{outline:2px solid var(--olive,#606b43);outline-offset:6px;}"
+    },
+    {
+      "name": "Project source link",
+      "kind": "button",
+      "refersTo": "source-link",
+      "description": "The current project action while live subdomains remain pending.",
+      "html": "<a class=\"ds-source-link\" href=\"https://github.com/mrduhlol/Orbit\" target=\"_blank\" rel=\"noopener noreferrer\">Explore the source<svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path d=\"M5 19 19 5M5 5h14v14\"/></svg></a>",
+      "css": ".ds-source-link{font-family:var(--font-body,\"Manrope\",sans-serif);display:inline-flex;align-items:center;gap:18px;padding:10px 0;color:var(--ink,#29271f);border-bottom:1px solid var(--ink,#29271f);font-size:11px;font-weight:600;text-decoration:none}.ds-source-link svg{transition:transform .2s}.ds-source-link:hover{color:var(--terrain-accent,#526d82);border-color:var(--terrain-accent,#526d82)}.ds-source-link:hover svg{transform:translate(2px,-2px)}.ds-source-link:focus-visible{outline:2px solid var(--olive,#606b43);outline-offset:6px;}@media(prefers-reduced-motion:reduce){.ds-source-link svg{transition:none}}"
+    },
+    {
+      "name": "Chapter marker",
+      "kind": "chip",
+      "refersTo": "chapter-badge",
+      "description": "Static terrain annotation; this is not a filter or button.",
+      "html": "<div class=\"ds-chapter\"><span class=\"ds-chapter-number\">01</span><span>The highlands</span><i></i></div>",
+      "css": ".ds-chapter{font-family:var(--font-body,\"Manrope\",sans-serif);display:flex;align-items:center;gap:14px;color:var(--muted,#6b685b);font-size:10px}.ds-chapter-number{display:grid;place-items:center;border:1px solid var(--terrain-accent,#526d82);border-radius:50%;width:29px;height:29px;color:var(--terrain-accent,#526d82);font:9px var(--font-mono,\"DM Mono\",monospace)}.ds-chapter i{width:45px;height:1px;background:var(--rule,#d6d0bd)}"
+    },
+    {
+      "name": "Field map",
+      "kind": "nav",
+      "refersTo": "map-panel",
+      "description": "Bordered paper navigation with numbered chapter rows and current location.",
+      "html": "<nav class=\"ds-map\" aria-label=\"World map\"><div class=\"ds-map-title\">Choose your next stop <span>you are here \u2193</span></div><a href=\"#project-orbit\" aria-current=\"location\"><span>01</span><strong>Orbit</strong><small>The highlands</small></a><a href=\"#project-voxlink\"><span>02</span><strong>Voxlink</strong><small>The whispering woods</small></a></nav>",
+      "css": ".ds-map{font-family:var(--font-body,\"Manrope\",sans-serif);width:min(440px,90vw);padding:25px;background:var(--paper,#f4efdf);color:var(--ink,#29271f);border:1px solid var(--ink,#29271f);box-shadow:0 16px 40px #29271f1c}.ds-map-title{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px;margin-bottom:20px}.ds-map-title span{font:14px var(--font-hand,\"Kalam\",cursive);color:var(--olive,#606b43)}.ds-map a{display:flex;align-items:center;gap:16px;min-height:44px;border-top:1px solid var(--rule,#d6d0bd);color:inherit;font-size:12px;text-decoration:none}.ds-map a>span{width:30px;font:9px var(--font-mono,\"DM Mono\",monospace);color:var(--muted,#6b685b)}.ds-map small{margin-left:auto;color:var(--muted,#6b685b);font-size:9px}.ds-map a:hover,.ds-map a[aria-current]{color:var(--olive,#606b43)}.ds-map a[aria-current] strong:after{content:\" \u2022\"}.ds-map a:focus-visible{outline:2px solid var(--olive,#606b43);outline-offset:6px;}"
+    },
+    {
+      "name": "Guide conversation",
+      "kind": "card",
+      "refersTo": "guide-dialog",
+      "description": "Nonmodal paper conversation with a handwritten heading and navigational choices.",
+      "html": "<section class=\"ds-dialog\" aria-label=\"Your adventure guide\"><div class=\"ds-dialog-heading\"><span>Your little guide</span><button type=\"button\" aria-label=\"Close guide conversation\">\u00d7</button></div><p>Quite a view from up here. Orbit is just over that ridge.</p><button class=\"ds-dialog-action\" type=\"button\">Show me the projects <span aria-hidden=\"true\">\u2197</span></button></section>",
+      "css": ".ds-dialog{font-family:var(--font-body,\"Manrope\",sans-serif);width:min(280px,calc(100vw - 32px));padding:16px;border:1px solid #8c826b;border-radius:4px 14px 14px 14px;background:#fffaf0;color:var(--ink,#29271f);box-shadow:0 10px 30px #29271f17}.ds-dialog-heading{display:flex;align-items:center;justify-content:space-between;font:20px var(--font-hand,\"Kalam\",cursive)}.ds-dialog p{margin:6px 0 14px;font-size:13px;line-height:1.6}.ds-dialog button{min-height:36px;border:0;background:transparent;color:inherit;font:inherit;cursor:pointer}.ds-dialog-heading button{width:36px;font:24px/1 sans-serif}.ds-dialog-action{display:flex;width:100%;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid #d5cdbb!important;text-align:left;font-size:12px!important}.ds-dialog button:hover{color:#556039;text-decoration:underline;text-underline-offset:3px}.ds-dialog button:focus-visible{outline:2px solid #6f7952;outline-offset:2px}"
+    },
+    {
+      "name": "Introductory speech",
+      "kind": "custom",
+      "description": "The supplied first-scroll quote, shared by audible and silent paths.",
+      "html": "<div class=\"ds-intro-speech\">Ah shit, here we go again.</div>",
+      "css": ".ds-intro-speech{width:218px;padding:14px 17px;color:var(--ink,#29271f);background:#fffaf0;border:1.5px solid var(--ink,#29271f);border-radius:45% 40% 40% 8% / 15% 20% 20% 20%;font-family:var(--font-hand,\"Kalam\",cursive);font-size:20px;line-height:1.25;box-shadow:0 5px 13px #29271f12}"
+    }
+  ],
+  "narrative": {
+    "northStar": "A continuous illustrated expedition",
+    "overview": "Warm paper, charcoal ink, olive field marks: the portfolio feels like a sketchbook carried through a small living world. Monumental condensed lettering gives the work presence; handwritten marginalia and ASCII landforms bring a curious human voice. The approved portrait stays recognizable, with its chest fading into the page beneath the giant name.\n\nThe backpack guide and layered Three.js contour scenery share the same drawn language. Space around the copy keeps seven distinct habitats readable. Motion tells the journey through climbing, swinging, swimming, and arrival; the quiet version retains the same places and information. This world replaces the previous portfolio cards and construction scene.",
+    "keyCharacteristics": [
+      "Warm paper and charcoal linework.",
+      "Monumental condensed names with handwritten marginalia.",
+      "Distinct terrain accents within one continuous world.",
+      "A small expressive guide and a populated town.",
+      "Readable content with static and non-WebGL alternatives."
+    ],
+    "rules": [
+      {
+        "name": "The One World Rule",
+        "body": "Terrain accents change by habitat; the paper ground, ink, and type families continue across the entire expedition.",
+        "section": "colors"
+      },
+      {
+        "name": "The Voice Rule",
+        "body": "Reserve handwritten type for human asides and speech; keep project facts in Manrope and technical annotations in DM Mono.",
+        "section": "typography"
+      },
+      {
+        "name": "The Quiet Depth Rule",
+        "body": "Keep ordinary content flat; use contour layers for landscape depth and small shadows for floating conversation or navigation.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** carry the paper, ink, and four font families across new sections.",
+      "**Do** keep copy clear of illustration bleed and preserve the mobile reading order.",
+      "**Do** use habitat accents for local markers, captions, and project-link hover.",
+      "**Do** retain visible keyboard focus, readable text, sound opt-in, and reduced-motion behavior.",
+      "**Do** preserve the approved portrait fade and keep raster provenance with assets."
+    ],
+    "donts": [
+      "**Don't** reintroduce the old portfolio cards or construction scene into this expedition.",
+      "**Don't** place project facts inside decorative scene artwork as their only presentation.",
+      "**Don't** turn technical stack annotations into filter controls without an actual filtering feature.",
+      "**Don't** require audio, parallax, or WebGL to understand the projects or use navigation."
+    ]
+  }
+}
