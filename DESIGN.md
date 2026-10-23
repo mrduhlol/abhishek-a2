@@ -1,36 +1,35 @@
 ---
-name: Abhishek's portfolio adventure
-description: A continuous illustrated expedition through seven project habitats.
+name: Abhishek's dimensional expedition
+description: A shaded miniature world with a winding trail, a rigged adventurer, and discoverable work.
 colors:
-  paper: "#f4efdf"
-  ink: "#29271f"
-  muted: "#6b685b"
-  olive: "#606b43"
-  rule: "#d6d0bd"
-  speech-paper: "#fffaf0"
-  highlands: "#526d82"
-  woods: "#526a48"
-  fields: "#64723e"
-  dunes: "#875a32"
-  tide: "#3f7077"
-  grotto: "#73617e"
-  ember: "#94503d"
+  canopy: "#2e493a"
+  canopy-hover: "#21392b"
+  exp-gold: "#e8c986"
+  exp-paper: "#f6f0df"
+  exp-ink: "#262e29"
+  scene-text: "#f7f1df"
+  place-text: "#fff4da"
+  place-backing: "#243c32f2"
+  panel-text: "#2d3e32"
+  speech-paper: "#fff8e4"
+  chart-paper: "#e9ddbc"
+  chart-ink: "#38382b"
+  chart-muted: "#71664e"
 typography:
   display:
     fontFamily: '"Barlow Condensed", sans-serif'
-    fontSize: "min(24cqw, 17vw)"
+    fontSize: "clamp(76px, 13.7vw, 230px)"
     fontWeight: 800
     lineHeight: 0.85
     letterSpacing: "-0.025em"
   headline:
     fontFamily: '"Barlow Condensed", sans-serif'
-    fontSize: "clamp(68px, 7.8vw, 112px)"
-    fontWeight: 800
-    lineHeight: 0.9
+    fontSize: "52px"
+    lineHeight: 1
     letterSpacing: "-0.02em"
   title:
     fontFamily: '"Manrope", sans-serif'
-    fontSize: "17px"
+    fontSize: "18px"
     fontWeight: 600
     lineHeight: 1.6
   body:
@@ -38,192 +37,188 @@ typography:
     fontSize: "13px"
     fontWeight: 400
     lineHeight: 1.9
-  handwritten:
-    fontFamily: '"Kalam", cursive'
-    fontSize: "20px"
-    fontWeight: 400
-    lineHeight: 1.35
   label:
     fontFamily: '"Manrope", sans-serif'
-    fontSize: "10px"
-    lineHeight: 1.7
-    letterSpacing: "0.08em"
+    fontSize: "12px"
+  handwritten:
+    fontFamily: '"Kalam", cursive'
+    fontSize: "19px"
+    fontWeight: 400
   mono:
     fontFamily: '"DM Mono", monospace'
-    fontSize: "9px"
+    fontSize: "10px"
     fontWeight: 400
 rounded:
   square: "0"
   circle: "50%"
-  guide-dialog: "4px 14px 14px 14px"
+  chart: "3px"
 spacing:
   compact: "8px"
-  small: "14px"
+  small: "18px"
   medium: "20px"
   large: "24px"
   generous: "30px"
 components:
-  navigation-button:
+  entry-button:
+    backgroundColor: "{colors.canopy}"
+    textColor: "#fff5dd"
+    rounded: "{rounded.square}"
+    padding: "18px 23px"
+  entry-button-hover:
+    backgroundColor: "{colors.canopy-hover}"
+  header-navigation:
     backgroundColor: "transparent"
-    textColor: "{colors.ink}"
+    textColor: "{colors.scene-text}"
+    padding: "10px 2px"
+  place-label:
+    backgroundColor: "{colors.place-backing}"
+    textColor: "{colors.place-text}"
+    rounded: "3px"
+    padding: "17px 23px 16px"
+    width: "max-content"
+  discovery-action:
+    backgroundColor: "#f4ebd5"
+    textColor: "#253d31"
     rounded: "{rounded.square}"
-    padding: "0"
-  navigation-button-hover:
-    textColor: "{colors.olive}"
-  source-link:
-    textColor: "{colors.ink}"
-    padding: "10px 0"
+    padding: "15px 21px"
+  detail-panel:
+    backgroundColor: "{colors.exp-paper}"
+    textColor: "{colors.panel-text}"
     rounded: "{rounded.square}"
-  chapter-badge:
-    textColor: "{colors.highlands}"
+    padding: "60px 45px 45px"
+    width: "440px"
+  map-stop:
+    backgroundColor: "#f6ecd1"
+    textColor: "{colors.chart-ink}"
     rounded: "{rounded.circle}"
     width: "29px"
     height: "29px"
-  map-panel:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
-    padding: "25px"
-    width: "min(440px, 90vw)"
-  guide-dialog:
+  conversation:
     backgroundColor: "{colors.speech-paper}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.guide-dialog}"
-    padding: "16px"
-    width: "min(280px, calc(100vw - 32px))"
+    textColor: "#2c3e32"
+    rounded: "{rounded.square}"
+    padding: "18px 24px"
 ---
 
-# Design System: Abhishek's portfolio adventure
+# Design System: Abhishek's dimensional expedition
 
 ## Overview
 
-**Creative North Star: "A continuous illustrated expedition"**
+**Creative North Star: "A living miniature expedition"**
 
-Warm paper, charcoal ink, olive field marks: the portfolio feels like a sketchbook carried through a small living world. Monumental condensed lettering gives the work presence; handwritten marginalia and ASCII landforms bring a curious human voice. The approved portrait stays recognizable, with its chest fading into the page beneath the giant name.
+Sculpted terrain, warm sunlight, shaded objects, and an animated backpack adventurer make the portfolio feel like a small world to walk through. The character has an authored skeleton, modeled clothing and boots, and a gait tied to actual travel. The world uses faceted low-poly geometry and physically shaded materials; photorealism is not its visual claim.
 
-The backpack guide and layered Three.js contour scenery share the same drawn language. Space around the copy keeps seven distinct habitats readable. Motion tells the journey through climbing, swinging, swimming, and arrival; the quiet version retains the same places and information. This world replaces the previous portfolio cards and construction scene.
+The approved portrait and monumental name remain the opening identity. During exploration, restrained HTML controls leave room for the landscape. Scene identity sits on a dependable dark local backing. Warm paper belongs to details, conversations, and the treasure chart; scenery gets depth from real geometry, light, shadows, atmosphere, and an oblique perspective camera. This replaces the rejected sketch/ASCII world and flat illustrated guide.
 
 **Key Characteristics:**
 
-- Warm paper and charcoal linework.
-- Monumental condensed names with handwritten marginalia.
-- Distinct terrain accents within one continuous world.
-- A small expressive guide and a populated town.
-- Readable content with static and non-WebGL alternatives.
+- Dimensional terrain and objects with natural material color and readable light.
+- A skinned adventurer with adult proportions, a visible backpack, and grounded movement.
+- Condensed display lettering, calm factual copy, and handwritten human asides.
+- Small scene controls, warm paper details, and a spatial treasure chart.
+- Equivalent HTML navigation, explicit sound opt-in, and a quiet motion mode.
 
 ## Colors
 
-The palette has the warmth of paper and the restraint of field sketches; each habitat adds one muted local accent.
+Natural greens and warm paper connect the interface to the landscape. The frontmatter captures shared interface colors; rock, foliage, water, sky, and town material palettes stay in their scene modules.
 
 ### Primary
 
-- **Field Olive** (`olive`): navigation hover, focus, invitations, and the main editorial accent.
-
-### Secondary
-
-- **Highland Blue**, **Woodland Green**, **Open-field Green**, **Dune Ochre**, **Tidal Teal**, **Grotto Violet**, and **Ember Clay**: the corresponding project marker, scene details, handwritten caption, and link hover. Their frontmatter keys match the seven habitats, in journey order.
+- **Canopy** and **Canopy Hover**: the entry action and its darker hover state.
+- **Expedition Gold**: the exploring wordmark accent and text selection. Related warm gold shades identify focus, progress, and invitations over the scene; keep these as component treatments.
 
 ### Neutral
 
-- **Warm Paper** (`paper`): the continuous page and map ground.
-- **Charcoal Ink** (`ink`): headlines, readable copy, contours, and strong borders.
-- **Pencil Grey** (`muted`): descriptions, metadata, coordinates, and secondary notes.
-- **Paper Rule** (`rule`): quiet separators and route connections.
-- **Speech Paper** (`speech-paper`): the guide's conversation and introductory bubble. Town speech uses a nearby warm tint in its own stylesheet.
+- **Expedition Paper**: project/contact details and the unavailable-world project list.
+- **Expedition Ink**: the root ink custom property and selection text.
+- **Scene Text**: pale navigation and HUD text over the landscape.
+- **Place Text** and **Place Backing**: warm pale identity/helper text on a near-opaque dark green backing, retaining contrast across bright and shaded habitats.
+- **Panel Text**: dark green factual copy on paper panels.
+- **Speech Paper**: introductory notices and resident dialogue.
+- **Chart Paper**, **Chart Ink**, and **Chart Muted**: the map's local parchment, labels, and supporting instructions. Fold shading and geographic fills belong to that component.
 
-**The One World Rule.** Terrain accents change by habitat; the paper ground, ink, and type families continue across the entire expedition.
+**The Material Rule.** Shade scenery through materials and lights. Keep local terrain colors in geometry modules instead of expanding the shared interface palette for every prop.
 
 ## Typography
 
-**Display Font:** Barlow Condensed, with sans-serif fallback.
-**Body Font:** Manrope, with sans-serif fallback.
-**Handwritten Font:** Kalam, with cursive fallback.
-**Label/Mono Font:** DM Mono, with monospace fallback, for technical annotations.
+**Display Font:** Barlow Condensed, sans-serif fallback. Bold condensed forms anchor the opening name, place names, and panel headings.
 
-These fonts are served locally from `public/fonts/`, with swap loading. The condensed display is dense and assertive; Manrope keeps small factual copy calm; Kalam supplies the guide's informal voice.
+**Body Font:** Manrope, sans-serif fallback, for project descriptions, navigation, actions, and technical stack lists.
 
-### Hierarchy
+**Handwritten Font:** Kalam, cursive fallback, for invitations, place captions, and dialogue. **Label/Mono Font:** DM Mono, monospace fallback, for numbered map markers and chart annotations.
 
-- **Display:** the oversized portrait name uses the display token; its width follows the portrait container. Mobile uses `min(25cqw, 22vw)`.
-- **Headline:** project names use the headline token. The longer github-widgets name has a deliberate line break and smaller scale. Contact and town headings use their own responsive display sizes.
-- **Title:** project taglines use semibold Manrope and generous leading.
-- **Body:** project descriptions use the body token and a maximum width of 350px on desktop, expanding to 380px on mobile.
-- **Handwritten:** invitations, terrain captions, and speech use Kalam; size and small rotations vary with placement.
-- **Label / Mono:** uppercase chapter coordinates use spaced labels; stack lists and chapter numbers use DM Mono. Keep these secondary to descriptions.
+All four families are served locally from `public/fonts/` with swap loading. The frontmatter records representative roles, not every responsive heading size. The opening name becomes 24vw on phones; project place names use `clamp(40px, 4.8vw, 68px)` and reduce to 38px on phones (the town heading uses 40px); panel headings reduce to 42px. Place helper copy uses 12px on desktop and 11px on phones. Body copy has generous leading, while labels stay compact. The invitation paragraph is limited to 36ch; scene helper copy to 38ch.
 
-**The Voice Rule.** Reserve handwritten type for human asides and speech; keep project facts in Manrope and technical annotations in DM Mono.
+**The Voice Rule.** Keep factual project content in Manrope. Use handwriting for the guide's voice and place atmosphere, and monospace sparingly for chart annotations.
 
 ## Layout
 
-The spatial model is a continuous vertical expedition rather than a card grid. A fixed paper header keeps sound and the map within reach. The opening centers the portrait between marginal notes; its desktop height follows the viewport, with an 800px minimum and 1150px cap.
+The world fills one viewport (`100dvh`); the document itself does not scroll. Wheel movement, touch drags, and arrow keys advance or reverse a winding horizontal route. World X increases while Y and Z undulate. The following perspective camera changes elevation and viewing offset between habitats. Project details open as HTML overlays.
 
-Project stops occupy a maximum 1600px width. Desktop copy and artwork alternate between 40/60 and 60/40 columns, with 8vw horizontal padding; copy remains no wider than 410px. Art may bleed toward the outer edge, while the text column remains clear. At 1600px and above, project padding becomes 120px. At 1100px and below, terrain and heading sizes reduce. At 760px and below, every stop stacks copy above artwork and uses 8vw side padding; the opening and header simplify, and the journey counter disappears.
+The opening uses a 57/43 portrait/invitation split. At 750px and below it becomes a single column with 52/48 portrait/invitation rows. Preserve the approved portrait's transparent cutout and chest fade. Exploration places identity near the upper left on a padded dark backing, capped at 520px and the available screen width, with travel/discovery controls along the bottom. The narrow HUD becomes a two-column grid with the instruction beneath it.
 
-The town is intentionally wider than a phone: a local horizontal viewport contains a stage at least 900px wide, with a drag hint and keyboard focus. Keep the page itself free of horizontal overflow. Town arrival centers the couple within that viewport.
-
-Use compact spacing within metadata, larger gaps between copy groups, and broad breathing room between chapters. Additional scene breakpoints at 600px, character sizing below 720px, and town adjustments at 700px belong to those components.
+Details align right in a shaded overlay: a 440px paper panel with bounded height and internal scrolling. On phones it becomes a bottom-aligned sheet, full available width, with a 78dvh height cap. The modal treasure chart is up to 1400px wide, with an intentionally wide 1180px minimum geography stage inside a local horizontal viewport. At 700px and below the chart frame/padding contract; at 1320px and below its scroll hint appears. Keep chart overflow local and the page within the screen.
 
 ## Elevation & Depth
 
-Depth comes primarily from layered contours, low-opacity color washes, foreground silhouettes, ASCII marks, and a small pointer/scroll response in the orthographic Three.js scenes. The ordinary page stays flat. Shadows identify floating conversations and the open map, rather than lifting every project into a container.
+The scene uses a perspective camera, rough matte materials, directional sunlight, hemisphere fill, a cooler rim light, fog, and cast/received shadows. Snow shelves, tree trunks, dunes, basalt, buildings, and the adventurer occupy real scene volume. Water, crystals, lamps, and lava have local reflectance, transparency, or emission. The shaded SVG treasure chart is an alternate navigation surface, not a substitute for dimensional world geometry.
 
-### Shadow Vocabulary
+Interface shadows identify overlays: conversation (`0 10px 30px #142b2533`), details (`0 20px 80px #10231955`), and map (`0 28px 100px #0e110ed9`). A scene vignette and restrained text shadows support pale controls without enclosing the world in cards.
 
-- **Map:** `0 16px 40px #29271f1c`, separating the floating field map from the page.
-- **Guide dialog:** `0 10px 30px #29271f17`, giving the conversation a small lift.
-- **Intro speech:** `0 5px 13px #29271f12`, keeping the spoken aside close to the character.
-- **Town speech:** `0 4px 12px #29271f0c`, a softer lift for local dialogue.
+**The Grounding Rule.** Keep feet, trail, and terrain on the shared route surface, including the coast's deck lift. Scale walking cadence from actual movement; camera smoothing must not create a floating or sliding guide.
 
-**The Quiet Depth Rule.** Keep ordinary content flat; use contour layers for landscape depth and small shadows for floating conversation or navigation.
+Normal motion includes environmental updates and damped camera/character movement; destination jumps over 52 world units can snap the guide. Captures at low quality are visibly softer, so do not infer full-resolution detail from the art style alone. Reduced motion snaps travel and camera placement, freezes ambient scene animation, removes CSS transitions/unfolding, and renders scene changes as needed. Sound remains separate and starts off. Cave activation uses a short fade: world swap at 300ms, transition end at 850ms; reduced motion removes the opacity transition.
+
+Maintain visual depth at the runtime's adaptive quality levels: high caps DPR at 1.25 with a 1024px shadow map, balanced uses 0.8/512px, and low uses 0.6/512px. Sustained slow rendered frames lower quality. Scene culling and visible-neighbour updates control cost without replacing the geometry with drawings.
 
 ## Shapes
 
-Typography and open linework dominate. Links are flat text with a bottom rule; map edges are square; numbered chapter markers are circles. Conversations use uneven rounded corners and speech tails. Characters and town buildings are inline SVG, while terrain strokes use Three.js line batches and restrained translucent fills. Preserve the irregular drawn silhouette rather than imposing one rounded rectangle on every surface.
+Scene silhouettes are sculpted and faceted: irregular rock masses, layered foliage, worked timber, pitched roofs, masonry, and a fully modeled character. Keep volume legible from the oblique view. Reuse geometry and instancing for repeated details.
 
-The portrait is the principal raster image. Preserve the approved cutout and chest mask; record provenance alongside any replacement shipping raster.
+The interface uses square paper panels and rectangular actions. Circular previous/next controls and map numbers orient the visitor; the chart and place label have only a slight corner radius. Conversations are square paper blocks with triangular tails. Preserve the six original project marks and their colors. Orbit uses a name-bearing landmark because no verified logo was found. Sources are recorded in `docs/expedition-logos.md` and `docs/expedition-character-assets.md`.
 
 ## Components
 
-### Buttons
+### Entry and Discovery Actions
 
-Small, direct controls belong to the paper world. Header sound and map controls have transparent backgrounds, compact labels, inline SVG icons, and at least 44px height. Hover uses Field Olive; keyboard focus uses a visible olive outline with offset. Sound starts off and requires an explicit opt-in. A blocked playback attempt produces an inline status notice with a dismiss action.
+The primary entry action uses Canopy with pale text and an inline arrow; its quiet alternative is an underlined button. Entry with sound is explicit consent. Discovery reverses to warm paper with dark text. Preserve the current hover treatments and visible gold keyboard outline. Disabled terrain arrows fade and stop accepting actions.
 
-The guide and residents are actual buttons drawn as people. Preserve their descriptive accessible names, focus rings, and Escape dismissal. The guide's dialog is nonmodal and offers project and opening navigation.
+### Header and Travel Navigation
 
-### Links
+The condensed `a.` wordmark, sound state, map, and contact stay in a compact top strip. Text shifts from dark over the opening to pale over the world. Previous/next buttons, arrow keys, map travel, and discovery provide HTML access alongside scene interactions. Place identity, contextual discovery, the map marker, cave proximity, and the progress line follow the rendered guide’s actual position. Requested progress remains separate as route intent, so changing route intent does not immediately relabel the departing habitat. The place/helper region keeps its dark backing over every habitat. If WebGL fails, HTML navigation uses requested progress because no scene position is available.
 
-Project actions are underlined text with an outward arrow, 10px vertical padding, and an 18px icon gap. Hover adopts the terrain accent and nudges the arrow. Pending live destinations render only “Explore the source”; a confirmed live URL adds “Explore project” and changes the repository label to “Source code.”
+### Project and Contact Details
 
-### Navigation
+Paper panels keep descriptions, technology lists, source links, and contact outside the canvas. They are labeled dialogs with initial focus, a focus loop, Escape/close dismissal, and focus restoration. Source actions remain available while `live` is null; a confirmed destination adds a separate live action. Technology labels are plain text lists.
 
-The compact fixed header uses a condensed `a.` wordmark and quiet Manrope navigation. The map is a bordered paper panel with numbered rows, local terrain names, and an olive current-location marker. Escape returns focus to its toggle; clicking elsewhere or choosing a stop closes it. Small screens keep sound and map visible while hiding the contact shortcut.
+### Treasure Chart
 
-### Chapter Markers and Metadata
-
-A fine circular number, terrain label, and short horizontal rule introduce each project. Technical stacks are plain monospace lists separated by slashes. These are annotations, not interactive filter chips.
+Parchment folds, shaded miniature habitats, a winding route, numbered markers, and a traveler pin give a spatial overview. A marker's 29px visual circle sits inside a 44px button. Current, hovered, and focused stops gain a dark olive fill and pale text. The native modal dialog contains focus, closes with Escape/backdrop activation, restores its opener, and centers the local viewport near progress. The final cave marker travels to the cave; entering town still requires activation.
 
 ### Conversations
 
-Guide and town speech use warm paper, charcoal borders, Kalam lettering, and deliberately uneven corners. Residents pause while speaking or focused; replies are announced in a live region. The couple holds hands with hearts at arrival, then stares when activated. Do not make essential project information depend on a conversation.
+Notices and resident speech share warm paper, dark text, a modest lift, and Kalam lettering. Names use Manrope. Captions work without sound; recorded reactions accompany interactions after opt-in. Residents pause briefly on interaction. “People nearby” provides keyboard access to the same conversations.
 
-### Terrain and Guide
+### Landmarks and Actors
 
-Each terrain combines its own contour drawing with ASCII scenery. Renderers mount near the viewport, render on demand, pause offscreen or when the document is hidden, and dispose resources on unmount. A WebGL failure shows the ASCII alternative. Reduced motion removes parallax and character animation; project text and navigation remain available.
+Physical plaques sit within the landscape. Hover raises them; leaving reverses the reveal. Click/tap opens details; the HUD discovery action supplies keyboard access. Preserve raycast occlusion so foreground solids block hidden targets.
 
-The first qualifying scroll shows the supplied quote once per session. With sound enabled, the line plays before the guide jumps; the silent path preserves the bubble and timing. The guide changes pose by habitat and transfers into the town couple at arrival.
+The Quaternius Adventurer is a low-poly skinned GLB with a modeled backpack and authored animation clips. Residents reuse the rig with age scale, material/clothing variations, and working/walking behavior. Workers share a generic upper-body interaction clip; bespoke sweeping, building, watering, and held-tool gestures are not established. Town arrival brings the guide beside a companion with hearts and a joined-hands pose using the existing rig. Their shared palm target preserves contact while activation turns both toward the viewer. Reduced motion presents the completed pose without a reaching tween. Facial animation is absent; the supplied captures do not establish finger articulation. Phone arrival framing emphasizes the pair; the resident controls keep offscreen conversations reachable without reframing the camera. Keep town behind the explicitly activated cave, with return travel restoring the saved trail progress.
 
 ## Do's and Don'ts
 
 ### Do:
 
-- **Do** carry the paper, ink, and four font families across new sections.
-- **Do** keep copy clear of illustration bleed and preserve the mobile reading order.
-- **Do** use habitat accents for local markers, captions, and project-link hover.
-- **Do** retain visible keyboard focus, readable text, sound opt-in, and reduced-motion behavior.
-- **Do** preserve the approved portrait fade and keep raster provenance with assets.
+- **Do** build terrain, props, and characters as shaded dimensional objects with readable silhouettes and contact shadows.
+- **Do** preserve the approved portrait cutout, chest fade, and local font families.
+- **Do** keep route, terrain placement, character movement, and camera framing coordinated.
+- **Do** keep project facts, navigation, contact, and dialogue available through HTML controls.
+- **Do** retain sound opt-in, visible focus, reduced motion, resource cleanup, and asset provenance.
 
 ### Don't:
 
-- **Don't** reintroduce the old portfolio cards or construction scene into this expedition.
-- **Don't** place project facts inside decorative scene artwork as their only presentation.
-- **Don't** turn technical stack annotations into filter controls without an actual filtering feature.
-- **Don't** require audio, parallax, or WebGL to understand the projects or use navigation.
+- **Don't** restore the rejected sketch/ASCII scenery or flat illustrated guide as the main world.
+- **Don't** describe faceted low-poly geometry or the fixed character face as photorealistic.
+- **Don't** require hover, audio, or working WebGL to reach project source links.
+- **Don't** invent a project logo or live destination without verified source material.
+- **Don't** enter town merely because the traveler reaches the final cave.
