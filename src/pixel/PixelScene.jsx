@@ -12,6 +12,7 @@ import {
 } from "./route";
 import { drawActor } from "./actors";
 import { drawVehicle } from "./vehicles";
+import { drawObstacle, drawPortal, drawPlatform, drawPlinth } from "./props";
 import { TOWN_NPCS } from "./town";
 const BASE = import.meta.env.BASE_URL;
 const MARKS = [
@@ -32,32 +33,6 @@ function canvas(w, h, paint) {
   ctx.imageSmoothingEnabled = false;
   paint(ctx);
   return c;
-}
-function obstaclePaint(ctx, type) {
-  ctx.fillStyle = "#252b29";
-  if (type === "jump") {
-    ctx.fillRect(2, 21, 60, 15);
-    ctx.fillStyle = "#77503c";
-    ctx.fillRect(3, 19, 57, 14);
-    ctx.fillStyle = "#b28c53";
-    ctx.fillRect(5, 19, 53, 3);
-    ctx.fillRect(3, 21, 7, 11);
-    ctx.fillStyle = "#493e32";
-    for (let i = 0; i < 7; i++) ctx.fillRect(14 + i * 6, 24 + (i % 3), 4, 2);
-    ctx.fillStyle = "#617148";
-    ctx.fillRect(20, 16, 10, 4);
-    ctx.fillRect(46, 17, 8, 3);
-  } else {
-    ctx.fillRect(4, 6, 6, 36);
-    ctx.fillRect(54, 6, 6, 36);
-    ctx.fillStyle = "#63734d";
-    ctx.fillRect(2, 2, 60, 8);
-    ctx.fillStyle = "#afbd78";
-    for (let i = 0; i < 10; i++) ctx.fillRect(3 + i * 6, 1 + (i % 3), 5, 3);
-    ctx.fillStyle = "#9a7750";
-    ctx.fillRect(6, 11, 2, 29);
-    ctx.fillRect(56, 11, 2, 29);
-  }
 }
 export default function PixelScene(props) {
   const host = useRef(null),
@@ -89,7 +64,7 @@ export default function PixelScene(props) {
       jumpTime = -99,
       crouch = false,
       entered = false,
-      entranceTime = 0,
+      entranceTime = -99,
       stareUntil = 0,
       townWalk = 0,
       hover = null,
@@ -104,7 +79,16 @@ export default function PixelScene(props) {
       pointer = new THREE.Vector2();
     const cache = new Map(),
       welcomed = new Set();
-    let torchDrawUntil = 0;
+    let torchDrawUntil = 0,
+      openingBounds = null,
+      launchFrom = null,
+      launchTo = null;
+    const launchCanvas = canvas(32, 48, () => {});
+    launchCanvas.className = "pixel-launch-hero";
+    launchCanvas.setAttribute("aria-hidden", "true");
+    launchCanvas.hidden = true;
+    node.closest("main").append(launchCanvas);
+    const launchContext = launchCanvas.getContext("2d");
     const texture = (image) => {
       const t = new THREE.CanvasTexture(image);
       t.magFilter = t.minFilter = THREE.NearestFilter;
@@ -183,28 +167,12 @@ export default function PixelScene(props) {
     };
     const portal = (group, px, py, id) => {
       const p = plane(
-        canvas(72, 80, (c) => {
-          c.fillStyle = "#252832";
-          c.fillRect(3, 12, 66, 66);
-          c.fillStyle = "#72777b";
-          c.fillRect(0, 23, 72, 48);
-          c.fillRect(8, 8, 54, 20);
-          c.fillRect(20, 0, 30, 10);
-          c.fillStyle = "#aaa591";
-          for (let i = 0; i < 9; i++)
-            c.fillRect((i * 17) % 63, 10 + Math.floor(i / 3) * 20, 12, 5);
-          c.fillStyle = "#101e29";
-          c.fillRect(20, 29, 32, 48);
-          c.fillRect(25, 20, 22, 10);
-          c.fillStyle = "#c9ab62";
-          c.fillRect(18, 35, 3, 8);
-          c.fillRect(52, 35, 3, 8);
-        }),
-        11.25,
-        12.5,
+        canvas(96, 96, drawPortal),
+        15,
+        15,
         group,
         px,
-        py + 5,
+        py + 6.5625,
         9,
       );
       p.userData.action = { type: "portal", id };
@@ -277,7 +245,7 @@ export default function PixelScene(props) {
       node.style.cursor = "default";
     };
     const perform = (name) => {
-      if (latest.current.paused) return;
+      if (latest.current.paused || clock - entranceTime < 1.4) return;
       if (
         name === "jump" &&
         clock - jumpTime > 0.8 &&
@@ -338,6 +306,7 @@ export default function PixelScene(props) {
         atlas.src = `${BASE}pixel/terrain-atlas.png`;
         await atlas.decode();
         if (disposed) return;
+        const terrainArt = [];
         for (let i = 0; i < 7; i++) {
           const art = canvas(768, 512, (c) =>
             c.drawImage(
@@ -352,6 +321,7 @@ export default function PixelScene(props) {
               512,
             ),
           );
+          terrainArt.push(art);
           const bg = plane(art, 120, 80, trailGroup, i * 120 + 60, -40, 0);
           scenery.push(bg);
           if (i === 0 || i === 6) {
@@ -369,27 +339,9 @@ export default function PixelScene(props) {
           }
           if (i === 4)
             plane(
-              canvas(128, 56, (c) => {
-                c.fillStyle = "#3d3e36";
-                c.fillRect(2, 18, 122, 35);
-                c.fillStyle = "#70543b";
-                c.fillRect(0, 10, 128, 35);
-                for (let y = 10; y < 43; y += 6) {
-                  c.fillStyle = y % 12 ? "#ac8956" : "#967349";
-                  c.fillRect(2, y, 124, 5);
-                  c.fillStyle = "#cfaf71";
-                  c.fillRect(3, y, 122, 1);
-                }
-                c.fillStyle = "#463d31";
-                for (const px of [4, 116]) {
-                  c.fillRect(px, 1, 7, 50);
-                  c.fillStyle = "#b79765";
-                  c.fillRect(px, 1, 7, 4);
-                  c.fillStyle = "#463d31";
-                }
-              }),
+              canvas(128, 64, drawPlatform),
               20,
-              8.75,
+              10,
               trailGroup,
               i * 120 + 60,
               pathY(i * 120 + 60) + 8.5,
@@ -405,16 +357,7 @@ export default function PixelScene(props) {
           };
           makeActor(guide, trailGroup);
           const base = plane(
-            canvas(64, 64, (c) => {
-              c.fillStyle = "#342f38";
-              c.fillRect(8, 20, 48, 40);
-              c.fillStyle = "#9d8151";
-              c.fillRect(10, 14, 44, 41);
-              c.fillStyle = "#c2ae74";
-              c.fillRect(12, 12, 40, 7);
-              c.fillStyle = "#555642";
-              c.fillRect(15, 57, 34, 5);
-            }),
+            canvas(64, 64, (c) => drawPlinth(c, { chapter: i })),
             10,
             10,
             trailGroup,
@@ -450,14 +393,50 @@ export default function PixelScene(props) {
             logo.material.map = tex;
           }
         }
+        // Overlapping pixel clusters soften the atlas joins without blurring its art.
+        for (let i = 1; i < terrainArt.length; i++) {
+          const left = terrainArt[i - 1]
+            .getContext("2d")
+            .getImageData(0, 0, 768, 512);
+          const right = terrainArt[i]
+            .getContext("2d")
+            .getImageData(0, 0, 768, 512);
+          const seam = canvas(128, 512, (ctx) => {
+            const result = ctx.createImageData(128, 512);
+            const bayer = [
+              0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5,
+            ];
+            for (let y = 0; y < 512; y++)
+              for (let sx = 0; sx < 128; sx++) {
+                const t = sx / 127;
+                const useRight =
+                  (bayer[
+                    (Math.floor(y / 2) % 4) * 4 + (Math.floor(sx / 2) % 4)
+                  ] +
+                    0.5) /
+                    16 <
+                  t * t * (3 - 2 * t);
+                const source = useRight ? right : left;
+                const sourceX = useRight
+                  ? Math.max(0, sx - 64)
+                  : Math.min(767, 704 + sx);
+                const from = (y * 768 + sourceX) * 4,
+                  to = (y * 128 + sx) * 4;
+                for (let channel = 0; channel < 4; channel++)
+                  result.data[to + channel] = source.data[from + channel];
+              }
+            ctx.putImageData(result, 0, 0);
+          });
+          scenery.push(plane(seam, 20, 80, trailGroup, i * 120, -40, 0.2));
+        }
         for (const o of OBSTACLES) {
           const m = plane(
-            canvas(64, 48, (c) => obstaclePaint(c, o.type)),
-            10,
-            7.5,
+            canvas(96, 64, (c) => drawObstacle(c, { obstacle: o })),
+            12,
+            8,
             trailGroup,
             o.x,
-            pathY(o.x) + (o.type === "jump" ? 1.3 : 3),
+            pathY(o.x) + 3.5,
             11,
           );
           m.userData.obstacle = o;
@@ -586,13 +565,27 @@ export default function PixelScene(props) {
       }
       if (p.entered && !entered) {
         entered = true;
-        entranceTime = clock;
-        jumpTime = clock;
+        entranceTime = p.reducedMotion ? -99 : clock;
+        launchFrom = openingBounds;
+        jumpTime = -99;
       }
       if (!p.entered) {
         entered = false;
         x = START_X;
+        const opening = document.querySelector(".opening-pixel-hero");
+        if (opening) {
+          const rect = opening.getBoundingClientRect();
+          openingBounds = {
+            x: rect.x,
+            y: rect.y,
+            width: rect.width,
+            height: rect.height,
+          };
+        }
       }
+      const launchT = clamp((clock - entranceTime) / 1.25);
+      const launching =
+        entered && !p.reducedMotion && launchFrom && launchT < 1;
       const desired = START_X + clamp(p.progress) * (END_X - START_X);
       if (p.navigation !== signal) {
         if (signal !== -1 && world === "trail") {
@@ -613,7 +606,7 @@ export default function PixelScene(props) {
         heroY = pathY(x),
         mode = "walk";
       if (world === "trail") {
-        if (entered && !p.paused) {
+        if (entered && !p.paused && clock - entranceTime > 1.4) {
           const step =
             Math.sign(desired - x) *
             Math.min(Math.abs(desired - x), dt * (crouch ? 10 : 26));
@@ -628,7 +621,7 @@ export default function PixelScene(props) {
         const c = chapterAtX(x);
         if (c !== chapter) {
           chapter = c;
-          if (c === 1) torchDrawUntil = clock + 1.2;
+          if (c === 1) torchDrawUntil = clock + (p.reducedMotion ? 0 : 1.6);
           setPeople(
             actors.filter((a) => a.data.id === `guide-${c}`).map((a) => a.data),
           );
@@ -667,8 +660,14 @@ export default function PixelScene(props) {
       const moving =
         world === "trail" ? Math.abs(x - previous) > 0.001 : townWalk < 1;
       const staring = clock < stareUntil;
-      const pose =
-        world === "town" && townWalk === 1
+      const drawingTorch =
+        world === "trail" && chapter === 1 && clock < torchDrawUntil;
+      const drawFrame = drawingTorch
+        ? Math.min(3, Math.floor((1.6 - (torchDrawUntil - clock)) / 0.4))
+        : 3;
+      const pose = launching
+        ? "jump"
+        : world === "town" && townWalk === 1
           ? staring
             ? "hold-stare"
             : "hold"
@@ -685,20 +684,19 @@ export default function PixelScene(props) {
                     : "idle";
       hero.mesh.position.set(
         heroX,
-        heroY +
-          3.6 +
-          (world === "trail" && mode === "walk" ? jump : 0) +
-          (entered && clock - entranceTime < 1
-            ? Math.max(0, 1 - (clock - entranceTime)) * 12
-            : 0),
+        heroY + 3.6 + (world === "trail" && mode === "walk" ? jump : 0),
         14,
       );
       setActor(
         hero,
         pose,
-        moving ? Math.floor(walkDistance * 1.8 + clock * 2) % 4 : 0,
+        drawingTorch
+          ? drawFrame
+          : moving
+            ? Math.floor(walkDistance * 1.8 + clock * 2) % 4
+            : 0,
         desired >= x ? 1 : -1,
-        world === "trail" && chapter === 1,
+        world === "trail" && chapter === 1 && (!drawingTorch || drawFrame > 0),
       );
       for (const a of actors) {
         if (a === hero) continue;
@@ -756,14 +754,16 @@ export default function PixelScene(props) {
         );
         hero.mesh.position.y = vehicle.position.y + 2;
       }
-      hero.mesh.visible = !(vehicle.visible && mode === "truck");
+      hero.mesh.visible =
+        entered && !launching && !(vehicle.visible && mode === "truck");
       hearts.visible = world === "town" && townWalk === 1;
       hearts.position.set(
         heroX + 1.7,
         heroY + 10 + (p.reducedMotion ? 0 : Math.sin(clock * 2) * 0.4),
         20,
       );
-      torch.visible = world === "trail" && chapter === 1;
+      torch.visible =
+        world === "trail" && chapter === 1 && (!drawingTorch || drawFrame >= 3);
       torch.position.set(heroX + 2, heroY + 5, 15);
       for (const target of targets) {
         if (target.userData.restY !== undefined) {
@@ -779,6 +779,44 @@ export default function PixelScene(props) {
       const lerp = p.reducedMotion ? 1 : Math.min(1, dt * 5);
       camera.position.x += (targetX - camera.position.x) * lerp;
       camera.position.y += (targetY - camera.position.y) * lerp;
+      camera.updateMatrixWorld();
+      const landing = hero.mesh.position.clone().project(camera);
+      const heroWidth = (5 / (camera.right - camera.left)) * node.clientWidth;
+      const heroHeight =
+        (7.5 / (camera.top - camera.bottom)) * node.clientHeight;
+      launchTo = {
+        x: ((landing.x + 1) / 2) * node.clientWidth - heroWidth / 2,
+        y: ((1 - landing.y) / 2) * node.clientHeight - heroHeight / 2,
+        width: heroWidth,
+        height: heroHeight,
+      };
+      launchCanvas.hidden = !launching;
+      if (launching) {
+        const ease = launchT * launchT * (3 - 2 * launchT);
+        const rect = {
+          x: launchFrom.x + (launchTo.x - launchFrom.x) * ease,
+          y:
+            launchFrom.y +
+            (launchTo.y - launchFrom.y) * ease -
+            Math.sin(Math.PI * launchT) * (node.clientWidth < 650 ? 90 : 140),
+          width: launchFrom.width + (launchTo.width - launchFrom.width) * ease,
+          height:
+            launchFrom.height + (launchTo.height - launchFrom.height) * ease,
+        };
+        Object.assign(launchCanvas.style, {
+          left: `${rect.x}px`,
+          top: `${rect.y}px`,
+          width: `${rect.width}px`,
+          height: `${rect.height}px`,
+        });
+        launchContext.clearRect(0, 0, 32, 48);
+        drawActor(launchContext, {
+          kind: "hero",
+          age: "teen",
+          pose: launchT > 0.9 ? "idle" : "jump",
+          direction: 1,
+        });
+      }
       renderer.render(scene, camera);
       const el = renderer.domElement;
       Object.assign(el.dataset, {
@@ -790,7 +828,38 @@ export default function PixelScene(props) {
         pose,
         torch: String(torch.visible),
         blocked: blocked?.id || "",
-        jumpHeight: jump.toFixed(3),
+        jumpHeight: (launching
+          ? Math.sin(launchT * Math.PI) * 6
+          : jump
+        ).toFixed(3),
+        launchPhase: !entered
+          ? "seated"
+          : launching
+            ? launchT > 0.85
+              ? "handoff"
+              : "leaping"
+            : "landing",
+        launchFrom: JSON.stringify(launchFrom),
+        launchTo: JSON.stringify(launchTo),
+        overlayVisible: String(!launchCanvas.hidden),
+        overlayBounds: JSON.stringify(
+          launchCanvas.hidden
+            ? null
+            : launchCanvas.getBoundingClientRect().toJSON(),
+        ),
+        frameTime: String(performance.now()),
+        torchFrame: String(drawingTorch ? drawFrame : -1),
+        heroVisible: String(hero.mesh.visible),
+        torchPhase:
+          chapter !== 1
+            ? "stowed"
+            : drawingTorch
+              ? drawFrame === 0
+                ? "reach"
+                : drawFrame < 3
+                  ? "extract"
+                  : "raised"
+              : "raised",
         crouching: String(crouch),
         townArrived: String(world === "town" && townWalk === 1),
         handHolding: String(
@@ -843,6 +912,7 @@ export default function PixelScene(props) {
     return () => {
       disposed = true;
       cancelAnimationFrame(frame);
+      launchCanvas.remove();
       observer.disconnect();
       node.removeEventListener("pointermove", move);
       node.removeEventListener("pointerleave", leave);
