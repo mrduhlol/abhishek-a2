@@ -284,7 +284,7 @@ export default function ExpeditionScene({ progress = 0, world = 'trail', reduced
     let lastStamp = 0, time = 0, activeWorld = null, dirty = true, lastPositionAt = -1;
     let qualityIndex = 0, frameAverage = 0, frameSamples = 0, slowSeconds = 0, renderedLastFrame = false;
     let resizeObserver, intersectionObserver, hovered = null, pointerDown = null;
-    let hero = null, town = null, girl = null, stareUntil = 0, townWalk = 0;
+    let hero = null, town = null, girl = null, stareUntil = 0, townWalk = 0, handBlend = 0;
     const disposers = [], actors = [], biomes = [], landmarks = [];
     const pending = new AbortController();
     const scene = new THREE.Scene();
@@ -629,6 +629,15 @@ export default function ExpeditionScene({ progress = 0, world = 'trail', reduced
     }
 
     const movement = new THREE.Vector3(), npcDirection = new THREE.Vector3(), viewOffset = new THREE.Vector3();
+    const handTarget = new THREE.Vector3(), heroHand = new THREE.Vector3(), partnerHand = new THREE.Vector3();
+    const facing = new THREE.Vector3(), towardCamera = new THREE.Vector3(), facingRotation = new THREE.Quaternion();
+    function facesCamera(actor) {
+      actor.root.getWorldQuaternion(facingRotation);
+      facing.set(0, 0, 1).applyQuaternion(facingRotation).setY(0).normalize();
+      actor.root.getWorldPosition(towardCamera);
+      towardCamera.subVectors(camera.position, towardCamera).setY(0).normalize();
+      return facing.dot(towardCamera) > Math.cos(.12);
+    }
     function frame(stamp) {
       if (disposed || failed || !visible || document.hidden) return;
       const rawDt = lastStamp ? Math.max(0, (stamp - lastStamp) / 1000) : 1 / 60;
@@ -670,6 +679,7 @@ export default function ExpeditionScene({ progress = 0, world = 'trail', reduced
           pointerDown = null;
           renderer.domElement.style.cursor = '';
           townWalk = 0;
+          handBlend = 0;
           stareUntil = 0;
           if (activeWorld === 'town') hero.root.position.copy(positionOf(town?.spawn || town?.heroSpawn, [-22, .08, 4]));
           dirty = true;
@@ -753,6 +763,16 @@ export default function ExpeditionScene({ progress = 0, world = 'trail', reduced
           }
           movement.subVectors(hero.root.position, previousHero);
           animateActor(hero, quiet ? 0 : dt, !quiet && townWalk < 1 && movement.length() > .0008, quiet ? 0 : movement.length() / dt, time < stareUntil ? camera.position : undefined);
+          // Both mixers and both root yaws are final before solving the pair.
+          // Reduced motion presents the completed pose without a reach tween.
+          if (girl && townWalk === 1 && hero.loaded && girl.loaded) {
+            handBlend = quiet ? 1 : handBlend + (1 - handBlend) * DAMP(9, dt);
+            handTarget.copy(hero.root.position).lerp(girl.root.position, .5);
+            handTarget.y += Math.min(hero.height, girl.height) * .57;
+            handTarget.z += .14;
+            hero.avatar.applyHandTarget?.('L', handTarget, handBlend);
+            girl.avatar.applyHandTarget?.('R', handTarget, handBlend);
+          } else handBlend = 0;
           viewOffset.set(9, 13, 25);
           bg.set('#c8d6c5');
         }
@@ -763,6 +783,14 @@ export default function ExpeditionScene({ progress = 0, world = 'trail', reduced
         renderer.domElement.dataset.progress = String(p);
         renderer.domElement.dataset.reducedMotion = String(quiet);
         renderer.domElement.dataset.townArrived = String(activeWorld === 'town' && Boolean(girl) && townWalk === 1);
+        const paired = activeWorld === 'town' && girl && townWalk === 1;
+        const leftContact = paired && hero.avatar.getHandPosition?.('L', heroHand);
+        const rightContact = paired && girl.avatar.getHandPosition?.('R', partnerHand);
+        const handDistance = leftContact && rightContact ? leftContact.distanceTo(rightContact) : null;
+        // A one-centimetre skin-surface gap is contact, not merely completed travel.
+        renderer.domElement.dataset.handHolding = String(handDistance !== null && handDistance < .01);
+        renderer.domElement.dataset.handDistance = handDistance === null ? '' : handDistance.toFixed(5);
+        renderer.domElement.dataset.staring = String(Boolean(paired && time < stareUntil && facesCamera(hero) && facesCamera(girl)));
         scene.fog.color.copy(bg);
         // Preserve a useful horizontal view on phones without shrinking the guide away.
         const narrow = clamp((1.25 - camera.aspect) / 1.25);

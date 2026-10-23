@@ -269,6 +269,104 @@ export async function createAvatar({ THREE, kind = 'hero', age = 'adult' }) {
   const gazeEuler = new THREE.Euler(0, 0, 0, 'YXZ');
   const animatedHead = head?.quaternion.clone();
   const worldScale = new THREE.Vector3();
+  const arms = {};
+  const skin = model.getObjectByName('Adventurer_Body_3');
+  for (const side of ['L', 'R']) {
+    const upper = model.getObjectByName(`UpperArm${side}`);
+    const lower = model.getObjectByName(`LowerArm${side}`);
+    const wrist = model.getObjectByName(`Wrist${side}`);
+    const middle = model.getObjectByName(`Middle2${side}`);
+    if (!skin || !upper || !lower || !wrist || !middle) continue;
+    const descendants = new Set();
+    wrist.traverse(bone => descendants.add(bone));
+    const desired = wrist.getWorldPosition(new THREE.Vector3())
+      .lerp(middle.getWorldPosition(new THREE.Vector3()), 0.55);
+    // Select a real palm-edge vertex, wholly weighted to the hand hierarchy.
+    // This remains a skin-surface measurement, even as the fingers animate.
+    desired.x += (side === 'L' ? 1 : -1) * 0.025;
+    const { skinIndex, skinWeight, position } = skin.geometry.attributes;
+    let vertexIndex = -1, nearest = Infinity;
+    const point = new THREE.Vector3();
+    for (let i = 0; i < position.count; i++) {
+      let handWeight = 0;
+      for (let k = 0; k < 4; k++) {
+        if (descendants.has(skin.skeleton.bones[skinIndex.getComponent(i, k)])) handWeight += skinWeight.getComponent(i, k);
+      }
+      if (handWeight < 0.99) continue;
+      skin.getVertexPosition(i, point).applyMatrix4(skin.matrixWorld);
+      const distance = point.distanceToSquared(desired);
+      if (distance < nearest) { nearest = distance; vertexIndex = i; }
+    }
+    if (vertexIndex >= 0) arms[side] = {
+      upper, lower, vertexIndex,
+      animatedUpper: upper.quaternion.clone(), animatedLower: lower.quaternion.clone(),
+    };
+  }
+  const shoulder = new THREE.Vector3(), elbow = new THREE.Vector3(), contact = new THREE.Vector3();
+  const axis = new THREE.Vector3(), pole = new THREE.Vector3(), bend = new THREE.Vector3();
+  const desiredElbow = new THREE.Vector3(), reachable = new THREE.Vector3();
+  const from = new THREE.Vector3(), to = new THREE.Vector3();
+  const turn = new THREE.Quaternion(), parentRotation = new THREE.Quaternion(), bodyRotation = new THREE.Quaternion();
+  const beforeUpper = new THREE.Quaternion(), beforeLower = new THREE.Quaternion();
+
+  function refreshRig() {
+    group.updateWorldMatrix(true, false);
+    group.updateMatrixWorld(true);
+  }
+
+  function getHandPosition(side, out = new THREE.Vector3()) {
+    const arm = arms[side];
+    if (disposed || !arm) return null;
+    refreshRig();
+    return skin.getVertexPosition(arm.vertexIndex, out).applyMatrix4(skin.matrixWorld);
+  }
+
+  function aimBone(bone, current, desired, origin, limit) {
+    from.subVectors(current, origin).normalize();
+    to.subVectors(desired, origin).normalize();
+    turn.setFromUnitVectors(from, to);
+    const angle = 2 * Math.acos(clamp(Math.abs(turn.w), 0, 1));
+    if (angle > limit) turn.identity().slerp(new THREE.Quaternion().setFromUnitVectors(from, to), limit / angle);
+    bone.parent.getWorldQuaternion(parentRotation);
+    turn.premultiply(parentRotation.clone().invert()).multiply(parentRotation);
+    bone.quaternion.premultiply(turn).normalize();
+    refreshRig();
+  }
+
+  // Run only after animation and caller-owned root transforms. The two rigid
+  // segments end at the selected skin vertex, so no bone translation, stretch,
+  // helper geometry or wrist teleport is used to manufacture contact.
+  function applyHandTarget(side, worldPoint, strength = 1) {
+    const arm = arms[side];
+    if (disposed || !arm || !worldPoint || ![worldPoint.x, worldPoint.y, worldPoint.z].every(Number.isFinite)) return null;
+    getHandPosition(side, contact);
+    arm.upper.getWorldPosition(shoulder);
+    arm.lower.getWorldPosition(elbow);
+    beforeUpper.copy(arm.upper.quaternion);
+    beforeLower.copy(arm.lower.quaternion);
+    const upperLength = shoulder.distanceTo(elbow), lowerLength = elbow.distanceTo(contact);
+    axis.subVectors(worldPoint, shoulder);
+    const distance = clamp(axis.length(), Math.abs(upperLength - lowerLength) + 0.005, (upperLength + lowerLength) * 0.98);
+    if (axis.lengthSq() < 1e-8) return getHandPosition(side);
+    axis.normalize();
+    reachable.copy(shoulder).addScaledVector(axis, distance);
+    group.getWorldQuaternion(bodyRotation);
+    // Elbows hang slightly out/back; the pole stays in the character's frame
+    // while the shared target stays in world space through the camera turn.
+    pole.set(side === 'L' ? 0.8 : -0.8, -1, -0.35).applyQuaternion(bodyRotation);
+    bend.copy(pole).addScaledVector(axis, -pole.dot(axis)).normalize();
+    const along = (upperLength ** 2 - lowerLength ** 2 + distance ** 2) / (2 * distance);
+    const across = Math.sqrt(Math.max(0, upperLength ** 2 - along ** 2));
+    desiredElbow.copy(shoulder).addScaledVector(axis, along).addScaledVector(bend, across);
+    aimBone(arm.upper, elbow, desiredElbow, shoulder, 1.65);
+    arm.lower.getWorldPosition(elbow);
+    getHandPosition(side, contact);
+    aimBone(arm.lower, contact, reachable, elbow, 2.2);
+    const weight = clamp(Number.isFinite(strength) ? strength : 0, 0, 1);
+    arm.upper.quaternion.slerp(beforeUpper, 1 - weight);
+    arm.lower.quaternion.slerp(beforeLower, 1 - weight);
+    return getHandPosition(side);
+  }
   // Desynchronise residents while leaving the hero's initial fit exact.
   if (kind !== 'hero') {
     idle.time = (seed % 997) / 997 * asset.idle.duration;
@@ -278,6 +376,10 @@ export async function createAvatar({ THREE, kind = 'hero', age = 'adult' }) {
 
   function update(dt, { moving = false, speed = 0, lookAt, working = false } = {}) {
     if (disposed || !Number.isFinite(dt) || dt < 0) return;
+    for (const arm of Object.values(arms)) {
+      arm.upper.quaternion.copy(arm.animatedUpper);
+      arm.lower.quaternion.copy(arm.animatedLower);
+    }
     dt = Math.min(dt, 0.1);
     const travelSpeed = Number.isFinite(speed) ? Math.abs(speed) : 0;
     const walking = Boolean(moving) && travelSpeed > 0.005;
@@ -293,6 +395,10 @@ export async function createAvatar({ THREE, kind = 'hero', age = 'adult' }) {
     walk.setEffectiveTimeScale(walking ? travelSpeed / Math.max(strideSpeed, 0.001) : 0);
     if (head) head.quaternion.copy(animatedHead); // Never accumulate gaze onto gaze.
     mixer.update(dt);
+    for (const arm of Object.values(arms)) {
+      arm.animatedUpper.copy(arm.upper.quaternion);
+      arm.animatedLower.copy(arm.lower.quaternion);
+    }
     visual.position.y = -scale * (
       groundAt(asset.idleMotion.floor, idle) * (1 - walkWeight)
       + groundAt(asset.walkMotion.floor, walk) * walkWeight
@@ -331,7 +437,7 @@ export async function createAvatar({ THREE, kind = 'hero', age = 'adult' }) {
     skeletons.forEach(skeleton => skeleton.dispose());
   }
 
-  return { group, update, dispose };
+  return { group, update, applyHandTarget, getHandPosition, dispose };
 }
 
 export default createAvatar;
