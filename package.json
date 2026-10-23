@@ -8,8 +8,8 @@
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test": "node --test scripts/adventure.test.mjs",
-    "test:browser": "playwright test"
+    "test": "node --test scripts/pixel.test.mjs",
+    "test:browser": "playwright test tests/pixel.spec.js"
   },
   "dependencies": {
     "react": "^19.2.8",

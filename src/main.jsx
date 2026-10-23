@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import ExpeditionApp from './expedition/ExpeditionApp.jsx'
+import ExpeditionApp from './pixel/PixelApp.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
