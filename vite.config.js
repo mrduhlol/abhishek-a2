@@ -1,5 +1,4 @@
 import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
@@ -7,5 +6,5 @@ import { defineConfig } from 'vite'
 // SITE_BASE='/abhishek-a2/' only for subpath previews (GitHub Pages).
 export default defineConfig({
   base: process.env.SITE_BASE || '/',
-  plugins: [react(), tailwindcss()],
+  plugins: [react()],
 })
