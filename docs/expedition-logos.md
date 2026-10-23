@@ -108,3 +108,5 @@ GitHub repository ownership is recorded above; it is not a claim that every asse
 ## WebGL texture preparation
 
 For integration, `github-widgets.svg`, `inkora.svg`, and `black-jack.svg` received explicit `width="256" height="256"` attributes. Their original viewBox and artwork are unchanged. ViewBox-only SVG images reported zero intrinsic dimensions to the texture loader, collapsing the corresponding geometry; explicit dimensions make the supplied artwork render correctly. Acquisition hashes above describe the source downloads before this two-attribute preparation.
+
+Voxlink and Stikr PNGs additionally embed source-origin metadata; their decoded pixels are unchanged. The acquisition hashes describe the downloaded bytes before metadata embedding.
