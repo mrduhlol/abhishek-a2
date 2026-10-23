@@ -1,0 +1,11 @@
+# Expedition implementation contract
+
+All new runtime code lives in src/expedition. Existing project data stays src/data/projects.js.
+
+Terrain module src/expedition/biomes/NAME.js exports default function buildBiome({ THREE, kit, index }). Returns { group: THREE.Group, update(time, dt)?, dispose()? }. Parent positions group at x=index*48. Group uses local x [-24,24], z [-20,20], y world elevation via kit.height(x,z). Route goes x increasing; camera makes world move left. Keep walking corridor abs(z-kit.pathZ(x)) < 1.6 clear. No character/project logo/text inside biome; parent supplies landmarks. Ground MUST be an actual shaded surface, shadows, rocks/plants/props dimensional; no sketch lines or flat SVG. Triangle budget <45k, meshes <150. Use InstancedMesh for repeated detail. Own one biome file only.
+
+kit API: height(x,z) returns terrain elevation (continuous global route); pathZ(x) returns trail z at local x; ground(color, options={}) returns ground mesh already added to kit.group (options roughness, segments default64). mesh(geometry, materialOrColor, position=[0,0,0], scale=[1,1,1], rotation=[0,0,0]) adds Mesh to group, casts/receives shadows. material(color, options={}) MeshStandardMaterial; box(color,position,scale,rotation?) and rock(color,position,scale,seed?) add meshes. random() seeded 0..1. group provided mutable THREE.Group. Ground slopes follow height; place objects using height(x,z). Don't instantiate WebGLRenderer, lights, loader, cameras. Group return kit.group. Dispose optional only own extras; parent traverses geometry/material disposal.
+
+Seven modules: mountain,forest,grassland,desert,ocean,cave,volcano, matching project order. Lit richly colored coherent miniature nature world, physically shaded natural forms, environmental storytelling. Avoid generic pile of cones; author memorable specific landmarks and compelling depth. Common corridor trail created centrally. Ocean is coastline traversed along a boardwalk, no undersea human walking. Cave is cavern terrain, final separate portal lies beyond volcano and enters town.
+
+Commit/push only owned file after syntax/oxlint with flock .git/adventure-commit.lock. Never git add all. New modules will not affect deployed page until parent integrates.
