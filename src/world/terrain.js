@@ -35,6 +35,7 @@ export function createTerrain(type = 'mountain', drawOverride) {
     const material = new THREE.MeshBasicMaterial({ color, transparent: true, opacity, depthWrite: false, side: THREE.DoubleSide });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.z = z;
+    mesh.renderOrder = z;
     group.add(mesh);
     disposable.add(geometry); disposable.add(material);
   }
@@ -265,7 +266,9 @@ export function createTerrain(type = 'mountain', drawOverride) {
     const geometry=new THREE.BufferGeometry();
     geometry.setAttribute('position',new THREE.Float32BufferAttribute(points,3));
     const material=new THREE.LineBasicMaterial({color,transparent:true,opacity,depthWrite:false});
-    group.add(new THREE.LineSegments(geometry,material));
+    const strokes=new THREE.LineSegments(geometry,material);
+    strokes.renderOrder=points[2] || 0;
+    group.add(strokes);
     disposable.add(geometry);disposable.add(material);
   }
   return {group,dispose(){disposable.forEach(item=>item.dispose());}};

@@ -126,12 +126,12 @@ export default function AdventureHero({ soundEnabled = false, onSoundBlocked, on
       let y = startY;
       let currentPose = 'sit';
       const travel = nameBox.top < height * 0.25;
-      if (hasScrolled) {
+      if (hasScrolled && window.scrollY > 35) {
         x += mobile ? -20 : 55;
         y += 130;
         currentPose = 'idle';
       }
-      if (hasScrolled && travel) {
+      if (hasScrolled && window.scrollY > 35 && travel) {
         const arc = reduced ? 0 : Math.sin(progress * Math.PI * 2);
         x = mobile ? width - 73 : width * (activeIndex % 2 === 0 ? 0.72 : 0.27) + arc * 36;
         y = height * (mobile ? 0.72 : 0.56) + arc * 24;

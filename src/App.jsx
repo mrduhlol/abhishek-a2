@@ -121,6 +121,10 @@ export default function App() {
   const [soundBlocked,setSoundBlocked]=useState(false);
   const [heroArrived,setHeroArrived]=useState(false);
   const chapter=useChapter();
+  useEffect(()=>{
+    const id=decodeURIComponent(window.location.hash.slice(1));
+    if(id) document.getElementById(id)?.scrollIntoView({behavior:'instant'});
+  },[]);
   const soundToggle=()=>{setSoundBlocked(false);if(soundEnabled){stopAdventureAudio();setSoundEnabled(false);}else{unlockAdventureAudio().catch(()=>{setSoundBlocked(true);setSoundEnabled(false);});setSoundEnabled(true);}};
   const index=PROJECTS.findIndex(p=>`project-${p.id}`===chapter);
   return <>

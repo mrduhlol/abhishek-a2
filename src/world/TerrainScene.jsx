@@ -147,6 +147,7 @@ export default function TerrainScene({ type = 'mountain', className = '' }) {
       renderer.domElement.removeEventListener('webglcontextrestored', onContextRestored);
       drawing.dispose();
       renderer.dispose();
+      renderer.forceContextLoss();
       renderer.domElement.remove();
     };
   }, [type]);
