@@ -1,0 +1,19 @@
+Adventurer by Quaternius
+
+Asset source: https://poly.pizza/m/5EGWBMpuXq
+Download: https://static.poly.pizza/bbe369ee-a686-42c7-adad-14356f5f2f15.glb
+Listing release date: 2022-02-22
+Retrieved: 2026-10-23
+License: CC0 1.0 Universal (CC0-1.0), as explicitly assigned on this asset listing.
+https://creativecommons.org/publicdomain/zero/1.0/
+The full legal code is included in CC0-1.0.txt.
+
+Credit is optional under CC0. Suggested credit:
+“Adventurer” by Quaternius, via Poly Pizza (CC0 1.0).
+
+The GLB is unmodified. preview-front.webp and preview-back.webp are renders of
+this same GLB using Three.js, with matte material settings described in
+docs/expedition-character-assets.md. They are asset previews, not photographs.
+
+See provenance.json for the original listing metadata and SHA-256, and
+inspection.json for measured binary and Three.js details.

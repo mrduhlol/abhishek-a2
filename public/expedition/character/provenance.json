@@ -1,0 +1,41 @@
+{
+  "retrievedOn": "2026-10-23",
+  "title": "Adventurer",
+  "creator": "Quaternius",
+  "sourcePage": "https://poly.pizza/m/5EGWBMpuXq",
+  "creatorPackPage": "https://quaternius.com/packs/ultimatemodularcharacters.html",
+  "downloadUrl": "https://static.poly.pizza/bbe369ee-a686-42c7-adad-14356f5f2f15.glb",
+  "license": "CC0-1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "listingLicenseText": "Feb 22, 2022 \u2022 FBX/GLTF format \u2022 Public Domain (CC0)",
+  "sourceMetadata": {
+    "Title": "Adventurer",
+    "UploadDate": "2022-02-22T02:33:52.191Z",
+    "ResourceID": "bbe369ee-a686-42c7-adad-14356f5f2f15",
+    "PublicID": "5EGWBMpuXq",
+    "Creator": {
+      "Username": "Quaternius",
+      "DPURL": "https://static.poly.pizza/dp%2Ff63b655a-051c-4c4b-8dcc-3b346a39ece0.jpg",
+      "Socials": {
+        "Twitter": "quaternius",
+        "Pateron": "quaternius",
+        "Website": "https://quaternius.com/"
+      }
+    },
+    "Category": "People & Characters",
+    "Tags": [
+      "Person",
+      "Human",
+      "Man",
+      "Character"
+    ],
+    "Type": "FBX",
+    "Licence": "CC0 1.0",
+    "Animated": true,
+    "Tris": 3388
+  },
+  "file": "adventurer.glb",
+  "bytes": 1944116,
+  "sha256": "4a8639cd8eee9d8a150464edc25eb0536ced464790704a64e40c8620d99f66db",
+  "modifications": "None; original GLB bytes downloaded directly from the listing CDN. Source listing triangle count differs from measured binary; use inspection.json."
+}
