@@ -56,3 +56,6 @@
   .town-hearts svg:nth-child(2) { translate: 4px -23px; }
   .town-hearts svg:nth-child(3) { translate: -4px -20px; }
 }
+@media (hover:hover) {
+  .town-person:hover, .town-person:hover * { animation-play-state:paused!important; }
+}

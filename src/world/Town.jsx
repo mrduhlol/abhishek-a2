@@ -106,6 +106,13 @@ export default function Town({ heroArrived = false }) {
   const [pageVisible, setPageVisible] = useState(true);
 
   useEffect(() => {
+    if (!heroArrived || !viewportRef.current) return;
+    const viewport = viewportRef.current;
+    // Bring the guide's ending into view on narrow screens before free exploration.
+    viewport.scrollLeft = Math.max(0, viewport.scrollWidth * .58 - viewport.clientWidth / 2);
+  }, [heroArrived]);
+
+  useEffect(() => {
     const node = sectionRef.current;
     const observer = new IntersectionObserver(([entry]) => setAwake(entry.isIntersecting), { rootMargin: '100px' });
     observer.observe(node);
