@@ -3,7 +3,7 @@
   --paper: #f4efdf;
   --ink: #29271f;
   --muted: #6b685b;
-  --olive: #6f7952;
+  --olive: #606b43;
   --rule: #d6d0bd;
   --font-display: "Barlow Condensed", sans-serif;
   --font-body: "Manrope", sans-serif;
@@ -984,5 +984,19 @@ img {
 @media (max-width: 760px) {
   .site-header {
     height: 68px;
+  }
+}
+.copy-status {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+/* The illustration may bleed toward the outer edge, never into its copy. */
+@media (min-width: 761px) {
+  .terrain-art {
+    margin: 0 -50px 0 0;
+  }
+  .project-stop--reverse .terrain-art {
+    margin: 0 0 0 -50px;
   }
 }

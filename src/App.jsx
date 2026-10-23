@@ -1,11 +1,14 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { PROJECTS } from "./data/projects.js";
 import Icon from "./world/Icon.jsx";
+import AsciiScenery from "./world/AsciiScenery.jsx";
 import AdventureHero, {
   unlockAdventureAudio,
   stopAdventureAudio,
 } from "./world/AdventureHero.jsx";
 import Town from "./world/Town.jsx";
+import Contact from "./world/Contact.jsx";
+import Footer from "./world/Footer.jsx";
 const TerrainScene = lazy(() => import("./world/TerrainScene.jsx"));
 
 const BASE = import.meta.env.BASE_URL;
@@ -316,6 +319,7 @@ function ProjectStop({ project: p, index }) {
       </div>
       <div className="terrain-art">
         <DeferredTerrain type={p.terrain} />
+        <AsciiScenery type={p.terrain} />
         <span className="terrain-caption handwritten">
           {TERRAIN_NOTES[index]}
         </span>
@@ -323,77 +327,6 @@ function ProjectStop({ project: p, index }) {
       <span className="terrain-coordinate small-label" aria-hidden="true">
         {String(index + 1).padStart(2, "0")} / 07 · {p.terrain.toUpperCase()}
       </span>
-    </section>
-  );
-}
-
-function Contact() {
-  const [copied, setCopied] = useState(false);
-  const timer = useRef();
-  useEffect(() => () => clearTimeout(timer.current), []);
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText("abhishek.a2534@gmail.com");
-      setCopied(true);
-      clearTimeout(timer.current);
-      timer.current = setTimeout(() => setCopied(false), 2500);
-    } catch {
-      window.location.href = "mailto:abhishek.a2534@gmail.com";
-    }
-  };
-  return (
-    <section
-      id="contact"
-      data-chapter
-      className="contact-section"
-      aria-labelledby="contact-title"
-    >
-      <span className="handwritten contact-note">
-        You made it. Glad you stayed.
-      </span>
-      <h2 id="contact-title">
-        GOOD THINGS
-        <br />
-        START WITH <em>HELLO.</em>
-      </h2>
-      <div className="contact-row">
-        <a className="email-link" href="mailto:abhishek.a2534@gmail.com">
-          abhishek.a2534@gmail.com
-          <Icon name="northeast" size={24} />
-        </a>
-        <button onClick={copy} className="copy-email">
-          {copied ? "Copied!" : "Copy email"}
-        </button>
-      </div>
-      <nav aria-label="Social links" className="social-links">
-        <a
-          href="https://github.com/mrduhlol"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          GitHub
-          <Icon name="northeast" size={15} />
-        </a>
-        <a
-          href="https://www.linkedin.com/in/duhlol"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          LinkedIn
-          <Icon name="northeast" size={15} />
-        </a>
-      </nav>
-      <span className="sr-only" role="status">
-        {copied ? "Email address copied to clipboard" : ""}
-      </span>
-      <div className="town-invitation">
-        <span className="handwritten">
-          Not quite the end.
-          <br />
-          There's a whole little life down here.
-        </span>
-        <Icon name="down" size={28} />
-      </div>
     </section>
   );
 }
@@ -456,19 +389,7 @@ export default function App() {
         <Contact />
         <Town heroArrived={heroArrived} />
       </main>
-      <footer className="site-footer">
-        <a href="#top" className="wordmark" aria-label="Back to top">
-          a<span>.</span>
-        </a>
-        <p>
-          © {new Date().getFullYear()} Abhishek A.
-          <span>Built with a little wander.</span>
-        </p>
-        <a href="#top">
-          Back to the beginning
-          <Icon name="arrow" size={17} />
-        </a>
-      </footer>
+      <Footer />
       <AdventureHero
         soundEnabled={soundEnabled}
         onSoundBlocked={() => {

@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local browser checks and design review captures
+/test-results/
+/playwright-report/
+/.impeccable/review/
