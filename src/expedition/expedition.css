@@ -234,7 +234,12 @@ button {
   left: 4.2vw;
   z-index: 3;
   pointer-events: none;
-  text-shadow: 0 2px 16px #142b25;
+  width: max-content;
+  max-width: min(520px, calc(100% - 8.4vw));
+  padding: 17px 23px 16px;
+  color: #fff4da;
+  background: #243c32f2;
+  border-radius: 3px;
 }
 .exp-place > span {
   font-family: Kalam, cursive;
@@ -243,16 +248,17 @@ button {
 }
 .exp-place h1 {
   font-family: "Barlow Condensed", sans-serif;
-  font-size: clamp(42px, 5.5vw, 82px);
+  font-size: clamp(40px, 4.8vw, 68px);
   font-weight: 800;
   line-height: 1;
   margin: 5px 0 12px;
   letter-spacing: -0.02em;
 }
 .exp-place p {
-  font-size: 11px;
+  font-size: 12px;
   max-width: 38ch;
   line-height: 1.7;
+  margin: 0;
 }
 .exp-hud {
   position: absolute;
@@ -533,16 +539,19 @@ button {
   .exp-place {
     left: 24px;
     top: 100px;
+    max-width: calc(100% - 48px);
+    padding: 13px 16px;
   }
   .exp-place > span {
     font-size: 17px;
   }
   .exp-place h1 {
-    font-size: 44px;
+    font-size: 38px;
   }
   .exp-place p {
-    font-size: 10px;
-    width: 28ch;
+    font-size: 11px;
+    max-width: 28ch;
+    width: auto;
   }
   .exp-hud {
     left: 20px;
@@ -617,8 +626,10 @@ button {
   margin-top: 24px;
   display: block;
 }
-.exp-place {
-  text-shadow: 0 2px 18px #142b2570;
+.in-town .expedition-npc-controls {
+  top: auto !important;
+  bottom: 125px;
+  max-height: 42%;
 }
 .exp-crossing {
   position: absolute;

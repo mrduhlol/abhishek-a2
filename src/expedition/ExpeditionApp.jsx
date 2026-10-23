@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 import { PROJECTS } from "../data/projects";
-import { chapterAt, clamp, projectProgress } from "./route";
+import { chapterAt, clamp, projectProgress, START_X, END_X } from "./route";
 import TreasureMap from "./TreasureMap";
 import { createSoundscape } from "./soundscape";
 import "./expedition.css";
@@ -55,6 +55,7 @@ function Glyph({ kind }) {
 export default function ExpeditionApp() {
   const [entered, setEntered] = useState(false),
     [progress, setProgress] = useState(0),
+    [arrivedProgress, setActualProgress] = useState(0),
     [world, setWorld] = useState("trail");
   const [map, setMap] = useState(false),
     [project, setProject] = useState(null),
@@ -68,6 +69,8 @@ export default function ExpeditionApp() {
   const [reduced, setReduced] = useState(
     () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
+  const closeProject = useCallback(() => setProject(null), []);
+  const closeContact = useCallback(() => setContact(false), []);
   const audio = useRef(null),
     state = useRef({}),
     noticeTimer = useRef(),
@@ -87,7 +90,8 @@ export default function ExpeditionApp() {
       crossing,
     };
   }, [entered, world, map, project, contact, progress, crossing]);
-  const chapter = chapterAt(progress),
+  const actualProgress = failed ? progress : arrivedProgress;
+  const chapter = chapterAt(actualProgress),
     current = PROJECTS[chapter];
   useEffect(() => {
     const m = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -133,6 +137,14 @@ export default function ExpeditionApp() {
     setNpc(null);
   }, []);
   const positionChanged = useCallback((position) => {
+    if (state.current.world === "trail") {
+      const arrivedProgress = clamp((position.x - START_X) / (END_X - START_X));
+      setActualProgress((previous) =>
+        Math.abs(previous - arrivedProgress) > 0.00001
+          ? arrivedProgress
+          : previous,
+      );
+    }
     audio.current?.terrain(
       state.current.world === "town"
         ? "town"
@@ -297,6 +309,7 @@ export default function ExpeditionApp() {
             setEntered(false);
             setWorld("trail");
             setProgress(0);
+            setActualProgress(0);
           }}
         >
           a<span>.</span>
@@ -386,7 +399,7 @@ export default function ExpeditionApp() {
               </span>
               <button
                 aria-label="Next terrain"
-                disabled={world === "town" || progress >= 1}
+                disabled={world === "town" || actualProgress >= 0.9999}
                 onClick={() =>
                   travel(chapter === 6 ? 1 : projectProgress(chapter + 1))
                 }
@@ -403,7 +416,7 @@ export default function ExpeditionApp() {
               <button className="exp-discover" onClick={portal}>
                 Return through the cave <Glyph kind="arrow" />
               </button>
-            ) : progress > 0.96 ? (
+            ) : actualProgress > 0.96 ? (
               <button className="exp-discover" onClick={portal}>
                 Enter the cave <Glyph kind="arrow" />
               </button>
@@ -420,11 +433,11 @@ export default function ExpeditionApp() {
             className="exp-progress"
             role="progressbar"
             aria-label="Journey progress"
-            aria-valuenow={Math.round(progress * 100)}
+            aria-valuenow={Math.round(actualProgress * 100)}
             aria-valuemin={0}
             aria-valuemax={100}
           >
-            <i style={{ width: `${progress * 100}%` }} />
+            <i style={{ width: `${actualProgress * 100}%` }} />
           </div>
         </>
       )}
@@ -462,12 +475,12 @@ export default function ExpeditionApp() {
         open={map}
         onClose={() => setMap(false)}
         onTravel={travel}
-        progress={progress}
+        progress={actualProgress}
         projects={PROJECTS}
         world={world}
       />
       {project !== null && (
-        <Panel title={PROJECTS[project].name} onClose={() => setProject(null)}>
+        <Panel title={PROJECTS[project].name} onClose={closeProject}>
           <p className="exp-panel-tagline">{PROJECTS[project].tagline}</p>
           <p>{PROJECTS[project].description}</p>
           <ul className="exp-tech">
@@ -488,7 +501,7 @@ export default function ExpeditionApp() {
         </Panel>
       )}
       {contact && (
-        <Panel title="Let’s make something." onClose={() => setContact(false)}>
+        <Panel title="Let’s make something." onClose={closeContact}>
           <p>A good idea, a question, or just a hello. I’m listening.</p>
           <a className="exp-email" href="mailto:abhishek.a2534@gmail.com">
             abhishek.a2534@gmail.com
