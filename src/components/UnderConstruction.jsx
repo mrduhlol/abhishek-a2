@@ -147,7 +147,7 @@ export default function UnderConstruction() {
   }, [reduce]);
 
   return (
-    <div className="grain relative min-h-dvh overflow-hidden bg-[#140c1c] text-[#fff6d8]">
+    <div id="site-update" className="grain relative min-h-dvh overflow-hidden bg-[#140c1c] text-[#fff6d8]">
       <canvas
         ref={canvasRef}
         aria-hidden="true"
