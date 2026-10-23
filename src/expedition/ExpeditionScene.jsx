@@ -819,6 +819,23 @@ export default function ExpeditionScene({ progress = 0, world = 'trail', reduced
           const canvas = renderer.domElement;
           const { width, height } = canvas.getBoundingClientRect();
           const savedPointer = pointer.clone();
+          const projectPoints = [];
+          if (activeWorld === 'trail') {
+            const landmark = landmarks[chapter];
+            if (landmark) {
+              (landmark.logo || landmark.face).getWorldPosition(screen);
+              screen.project(camera);
+              const x = (screen.x + 1) / 2, y = (1 - screen.y) / 2;
+              let visible = x >= 0 && x <= 1 && y >= 0 && y <= 1 && Math.abs(screen.z) < 1;
+              if (visible) {
+                pointer.set(screen.x, screen.y);
+                const hit = pick();
+                visible = hit?.type === 'project' && hit.index === chapter;
+              }
+              projectPoints.push({ id: PROJECTS[chapter].id, index: chapter, x, y, visible, height: landmark.plaque.position.y, restHeight: landmark.restY });
+            }
+          }
+          canvas.dataset.projectPoints = JSON.stringify(projectPoints);
           const npcPoints = [];
           if (activeWorld === 'town') {
             for (const actor of actors) {

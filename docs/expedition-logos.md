@@ -104,3 +104,7 @@ GitHub repository ownership is recorded above; it is not a claim that every asse
 - Parsed all four SVGs as XML and checked that they have no scripts, event handlers, foreign objects, or external dependencies.
 - Fully decoded both PNGs and checked their format and dimensions.
 - No runtime/site source files are part of this change.
+
+## WebGL texture preparation
+
+For integration, `github-widgets.svg`, `inkora.svg`, and `black-jack.svg` received explicit `width="256" height="256"` attributes. Their original viewBox and artwork are unchanged. ViewBox-only SVG images reported zero intrinsic dimensions to the texture loader, collapsing the corresponding geometry; explicit dimensions make the supplied artwork render correctly. Acquisition hashes above describe the source downloads before this two-attribute preparation.
