@@ -17,47 +17,53 @@ export function paintTown(ctx, { width = 1536, height = 768, random = Math.rando
   const W = width, H = height;
   const r = () => random();
 
+  // desaturated palette
   const C = {
-    sky: '#b8d8f0', sky2: '#8fb8e0',
-    grass0: '#5a8a4a', grass1: '#4a7a3a', grass2: '#3a6a2e', grass3: '#2a5a22',
-    dirt: '#8a6a4a', dirt2: '#6a4a30',
-    cobble0: '#9a9a9a', cobble1: '#7a7a7a', cobble2: '#b0a898', cobble3: '#5a5a5a',
-    plaster: '#e8d8b8', plaster2: '#d8c8a0', plasterSh: '#b8a880',
-    timber: '#5a3a22', timber2: '#7a5a38', timberHi: '#9a7a58',
-    roof: '#e07030', roof2: '#c05820', roof3: '#904018', roofHi: '#f09050',
-    door: '#4a2a14', window: '#9ac8e0', windowSh: '#5a8ab0',
-    treeTrunk: '#4a3020', treeLeaf: '#3a7a3a', treeLeaf2: '#5a9a4a', treeLeaf3: '#2a5a2a', treeHi: '#7aba5a',
-    flowerR: '#e04040', flowerY: '#e0c040', flowerB: '#4060e0', flowerP: '#c040c0',
-    pot: '#a06040',
-    stall: '#d0a060', stallCanopy: '#c04040', stallCanopy2: '#4060a0',
-    well: '#6a6a6a', well2: '#8a8a8a', wellWater: '#3a6a90',
-    laundry: '#e0d0b0', laundry2: '#b0c0d0',
-    cart: '#8a6a4a',
+    grass0: '#6b8a5a', grass1: '#5a7a4a', grass2: '#4a6a3a', grass3: '#3a5a2e',
+    grassHi: '#7fa06a',
+    dirt: '#8a7252', dirt2: '#6a5238', dirt3: '#4a3a26',
+    cobble0: '#9a9488', cobble1: '#7a7468', cobble2: '#b0a898', cobble3: '#5a5448', cobble4: '#c8c0b0',
+    plaster: '#e0d0b0', plaster2: '#d0c0a0', plasterSh: '#a89878', plasterHi: '#f0e4c8',
+    timber: '#5a3a24', timber2: '#7a5a38', timberHi: '#9a7a58', timberSh: '#3a2418',
+    roof: '#d06830', roof2: '#b05020', roof3: '#803818', roofHi: '#e88040', roofDark: '#602810',
+    door: '#3a2010', door2: '#5a3420',
+    window: '#8ab8d0', windowSh: '#5a88a8', windowFrame: '#4a3020',
+    treeTrunk: '#3a2818', treeLeaf: '#4a7a3a', treeLeaf2: '#5a8a4a', treeLeaf3: '#3a6a2a', treeHi: '#7aba5a', treeSh: '#2a4a1e',
+    flowerR: '#c04848', flowerY: '#c8b040', flowerB: '#4860a0', flowerP: '#a048a0', flowerW: '#d8d0c0',
+    pot: '#905838', pot2: '#704028',
+    stall: '#c09858', stallCanopy: '#b04838', stallCanopy2: '#3858a0', stallCanopy3: '#d8c8a8',
+    well: '#686868', well2: '#888888', wellWater: '#3a6080', wellRope: '#a09070',
+    laundry: '#d8c8b0', laundry2: '#a8b8c8', laundry3: '#c8a8a8',
+    cart: '#7a5a38', cartWheel: '#4a3020',
+    shadow: '#2a2a20',
   };
 
   function fill(x, y, w, h, c) { ctx.fillStyle = c; ctx.fillRect(Math.floor(x), Math.floor(y), Math.max(1, Math.floor(w)), Math.max(1, Math.floor(h))); }
   function px(x, y, c) { if (x < 0 || y < 0 || x >= W || y >= H) return; ctx.fillStyle = c; ctx.fillRect(Math.floor(x), Math.floor(y), 1, 1); }
   function cluster(x, y, w, h, colors) {
     for (let yy = 0; yy < h; yy++) for (let xx = 0; xx < w; xx++) {
-      if (r() < 0.32) continue;
+      if (r() < 0.28) continue;
       px(x + xx, y + yy, colors[Math.floor(r() * colors.length)]);
     }
   }
-
-  // Sky
-  fill(0, 0, W, 120, C.sky);
-  fill(0, 100, W, 20, C.sky2);
-
-  // Grass base
-  fill(0, 120, W, H - 120, C.grass1);
-  for (let i = 0; i < 6000; i++) {
-    const x = Math.floor(r() * W);
-    const y = 120 + Math.floor(r() * (H - 120));
-    px(x, y, r() < 0.5 ? C.grass0 : (r() < 0.5 ? C.grass2 : C.grass3));
+  // ---- Ground: no sky. Grass base with clustered variation ----
+  fill(0, 0, W, H, C.grass1);
+  // large grass clusters (not single-pixel noise)
+  for (let i = 0; i < 260; i++) {
+    const cx = Math.floor(r() * W);
+    const cy = Math.floor(r() * H);
+    const rw = 6 + Math.floor(r() * 18);
+    const rh = 4 + Math.floor(r() * 12);
+    cluster(cx, cy, rw, rh, [C.grass0, C.grass2, C.grass3, C.grassHi]);
+  }
+  // dirt patches
+  for (let i = 0; i < 90; i++) {
+    const cx = Math.floor(r() * W);
+    const cy = Math.floor(r() * H);
+    cluster(cx, cy, 10 + Math.floor(r() * 24), 6 + Math.floor(r() * 14), [C.dirt, C.dirt2, C.dirt3]);
   }
 
-  // Dirt paths
-  // main path from entry (left) to square
+  // ---- Paths: cobble/dirt bands ----
   function pathBand(x0, y0, x1, y1, width) {
     const steps = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0));
     for (let i = 0; i <= steps; i++) {
@@ -65,268 +71,421 @@ export function paintTown(ctx, { width = 1536, height = 768, random = Math.rando
       const x = Math.floor(x0 + (x1 - x0) * t);
       const y = Math.floor(y0 + (y1 - y0) * t);
       for (let dy = -Math.floor(width / 2); dy <= Math.floor(width / 2); dy++) for (let dx = -Math.floor(width / 2); dx <= Math.floor(width / 2); dx++) {
-        px(x + dx, y + dy, r() < 0.6 ? C.dirt : C.dirt2);
+        const col = (Math.abs(dx) + Math.abs(dy) > width / 2 - 2) ? C.dirt2 : (r() < 0.55 ? C.cobble0 : C.cobble1);
+        px(x + dx, y + dy, col);
       }
     }
   }
-  pathBand(160, 460, 560, 470, 26);
-  pathBand(560, 470, 800, 490, 26);
-  pathBand(200, 500, 560, 470, 18);
-  // path to right exit
-  pathBand(1050, 490, 1450, 500, 24);
+  // entry to square
+  pathBand(160, 460, 560, 470, 28);
+  pathBand(200, 500, 560, 470, 20);
+  pathBand(560, 470, 800, 490, 28);
+  pathBand(1050, 490, 1450, 500, 26);
 
-  // Central square cobbles
-  const sqX0 = 550, sqY0 = 360, sqX1 = 1050, sqY1 = 620;
-  for (let y = sqY0; y < sqY1; y++) for (let x = sqX0; x < sqX1; x++) {
-    const c = (x + y) % 7;
-    const col = c === 0 ? C.cobble3 : (c < 3 ? C.cobble0 : (c < 5 ? C.cobble1 : C.cobble2));
-    px(x, y, col);
+  // ---- Central square: cobbles with clustered stones ----
+  const sqX0 = 540, sqY0 = 350, sqX1 = 1060, sqY1 = 630;
+  fill(sqX0, sqY0, sqX1 - sqX0, sqY1 - sqY0, C.cobble1);
+  // stone clusters
+  for (let y = sqY0; y < sqY1; y += 3) for (let x = sqX0; x < sqX1; x += 3) {
+    const col = (r() < 0.33) ? C.cobble0 : (r() < 0.5 ? C.cobble2 : (r() < 0.7 ? C.cobble4 : C.cobble3));
+    fill(x, y, 2, 2, col);
   }
-  // cobble grout
-  for (let y = sqY0; y < sqY1; y += 6) for (let x = sqX0; x < sqX1; x++) px(x, y, C.cobble3);
-  for (let x = sqX0; x < sqX1; x += 7) for (let y = sqY0; y < sqY1; y++) if (r() < 0.7) px(x, y, C.cobble3);
+  // grout lines
+  for (let y = sqY0; y < sqY1; y += 7) fill(sqX0, y, sqX1 - sqX0, 1, C.cobble3);
+  for (let x = sqX0; x < sqX1; x += 8) fill(x, sqY0, 1, sqY1 - sqY0, C.cobble3);
 
-  // Building painter
+  // ---- Building painter (richer) ----
   function building(x, y, w, h, opts = {}) {
-    const roofH = opts.roofH || 28;
+    const roofH = opts.roofH || Math.floor(w * 0.45);
     const plaster = opts.plaster || C.plaster;
     const plaster2 = opts.plaster2 || C.plaster2;
+    // ground shadow (offset down-right)
+    fill(x + 4, y + h + 2, w + 6, 6, C.shadow);
     // walls
     for (let yy = 0; yy < h; yy++) for (let xx = 0; xx < w; xx++) {
-      const c = (xx + yy * 2) % 5 === 0 ? plaster2 : plaster;
+      const c = (xx % 6 === 0 || yy % 5 === 0) ? plaster2 : plaster;
       px(x + xx, y + yy, c);
     }
-    // timber framing
-    if (opts.timber) {
-      // vertical posts
-      for (let p = 0; p <= 2; p++) {
-        const px0 = x + Math.floor(w * (p / 2));
-        for (let yy = 0; yy < h; yy++) { px(px0, y + yy, C.timber); px(px0 + 1, y + yy, C.timber2); }
-      }
-      // horizontal beams
-      for (let b = 0; b < 3; b++) {
-        const by = y + Math.floor(h * (b / 2.5));
-        for (let xx = 0; xx < w; xx++) px(x + xx, by, C.timber);
+    // timber frame: thick posts + beams
+    const postW = 3;
+    // vertical posts at edges and middle
+    const posts = [0, Math.floor(w / 2) - 1, w - postW];
+    for (const p of posts) for (let yy = 0; yy < h; yy++) for (let t = 0; t < postW; t++) {
+      px(x + p + t, y + yy, (t === 0) ? C.timberHi : (t === postW - 1 ? C.timberSh : C.timber));
+    }
+    // horizontal beams
+    for (let b = 0; b < 3; b++) {
+      const by = y + Math.floor(h * (b / 2.5));
+      for (let xx = 0; xx < w; xx++) {
+        for (let t = 0; t < 3; t++) px(x + xx, by + t, (t === 0) ? C.timberHi : (t === 2 ? C.timberSh : C.timber));
       }
     }
-    // shadow right side
-    for (let yy = 0; yy < h; yy++) { px(x + w - 1, y + yy, C.plasterSh); px(x + w - 2, y + yy, C.plasterSh); }
+    // diagonal braces in panels
+    if (opts.brace) {
+      for (let i = 0; i < h; i++) {
+        const xx = Math.floor(i * (w / h));
+        for (let t = 0; t < 2; t++) px(x + xx + t, y + i, C.timber2);
+      }
+    }
+    // plaster texture clusters
+    for (let i = 0; i < Math.floor(w * h / 18); i++) {
+      px(x + Math.floor(r() * w), y + Math.floor(r() * h), r() < 0.5 ? C.plasterHi : C.plasterSh);
+    }
+    // right-side shadow
+    for (let yy = 0; yy < h; yy++) for (let t = 0; t < 4; t++) px(x + w - 1 - t, y + yy, C.plasterSh);
     // top highlight
-    for (let xx = 0; xx < w; xx++) px(x + xx, y, C.plaster2);
-    // roof (orange tiles)
+    for (let xx = 0; xx < w; xx++) px(x + xx, y, C.plasterHi);
+
+    // ---- Pitched roof ----
+    // roof covers wall top with overhang; front slope (lighter) and side slope (darker)
+    const over = 6;
     for (let t = 0; t < roofH; t++) {
-      const over = Math.floor(t / 3);
-      for (let xx = -over; xx < w + over; xx++) {
-        const col = (t % 3 === 0) ? C.roofHi : (t % 2 === 0 ? C.roof : C.roof2);
-        px(x + xx, y - t, col);
+      const inset = Math.floor(t * 0.6);
+      const left = x - over + inset;
+      const right = x + w - 1 + over - inset;
+      for (let xx = left; xx <= right; xx++) {
+        // front slope vs side slope: left half lighter, right half darker
+        const col = (xx < x + w / 2) ? (t < 3 ? C.roofHi : C.roof) : (t < 3 ? C.roof2 : C.roofDark);
+        px(xx, y - t, col);
       }
     }
-    // roof ridge
-    for (let xx = -2; xx < w + 2; xx++) px(x + xx, y - roofH, C.roof3);
-    // roof texture tiles
-    for (let t = 0; t < roofH; t++) for (let xx = 0; xx < w; xx += 4) {
-      if (r() < 0.4) px(x + xx + (t % 2) * 2, y - t, C.roof3);
+    // ridge cap
+    const ridgeLeft = x - over + Math.floor(roofH * 0.6);
+    const ridgeRight = x + w - 1 + over - Math.floor(roofH * 0.6);
+    for (let xx = ridgeLeft; xx <= ridgeRight; xx++) {
+      px(xx, y - roofH, C.roof3);
+      px(xx, y - roofH - 1, C.roofDark);
     }
-    // door
-    const doorW = opts.doorW || 10;
+    // gable ends (triangular fill at left/right)
+    for (let t = 0; t < roofH; t++) {
+      const inset = Math.floor(t * 0.6);
+      // left gable
+      px(x - over + inset - 1, y - t, C.roofDark);
+      // right gable
+      px(x + w - 1 + over - inset + 1, y - t, C.roofDark);
+    }
+    // roof tile texture clusters
+    for (let t = 2; t < roofH - 2; t++) for (let k = 0; k < Math.floor(w / 6); k++) {
+      const xx = x - over + Math.floor(t * 0.6) + 3 + k * 6 + (t % 2) * 3;
+      if (xx > x + w + over - Math.floor(t * 0.6)) continue;
+      px(xx, y - t, C.roof3);
+      px(xx + 1, y - t, C.roof3);
+    }
+
+    // ---- Door ----
+    const doorW = opts.doorW || 14;
+    const doorH = opts.doorH || 22;
     const doorX = x + Math.floor(w / 2) - Math.floor(doorW / 2);
-    const doorY = y + h - (opts.doorH || 18);
-    for (let yy = 0; yy < (opts.doorH || 18); yy++) for (let xx = 0; xx < doorW; xx++) {
-      px(doorX + xx, doorY + yy, (xx === 0 || xx === doorW - 1) ? C.timber : C.door);
+    const doorY = y + h - doorH;
+    // frame
+    for (let yy = -1; yy <= doorH; yy++) for (let t = 0; t < 2; t++) {
+      px(doorX - 1 - t, doorY + yy, C.timber);
+      px(doorX + doorW + t, doorY + yy, C.timber);
     }
-    // door handle
-    px(doorX + doorW - 2, doorY + Math.floor((opts.doorH || 18) / 2), C.roofHi);
-    // windows
+    for (let xx = -1; xx <= doorW; xx++) px(doorX + xx, doorY - 1, C.timber);
+    // door panels
+    for (let yy = 0; yy < doorH; yy++) for (let xx = 0; xx < doorW; xx++) {
+      const c = (xx < doorW / 2) ? (yy % 7 < 3 ? C.door : C.door2) : (yy % 7 < 3 ? C.door2 : C.door);
+      px(doorX + xx, doorY + yy, c);
+    }
+    // handle
+    px(doorX + doorW - 3, doorY + Math.floor(doorH / 2), C.roofHi);
+    px(doorX + doorW - 2, doorY + Math.floor(doorH / 2), C.roofHi);
+
+    // ---- Windows ----
     const winCount = opts.windows || 2;
+    const winW = 12, winH = 12;
     for (let wi = 0; wi < winCount; wi++) {
-      const wx = x + 6 + wi * Math.floor((w - 12) / Math.max(1, winCount));
-      const wy = y + 8;
-      for (let yy = 0; yy < 10; yy++) for (let xx = 0; xx < 12; xx++) {
-        if (xx === 0 || yy === 0 || xx === 11 || yy === 9) px(wx + xx, wy + yy, C.timber);
-        else px(wx + xx, wy + yy, (xx + yy) % 3 === 0 ? C.windowSh : C.window);
+      const wx = x + 8 + wi * Math.floor((w - 16) / Math.max(1, winCount - 1 + 0.001));
+      if (winCount === 1) {} 
+      const wy = y + 8 + (wi % 2) * 4;
+      // frame
+      for (let yy = -1; yy <= winH; yy++) for (let t = 0; t < 2; t++) {
+        px(wx - 1 - t, wy + yy, C.windowFrame);
+        px(wx + winW + t, wy + yy, C.windowFrame);
+      }
+      for (let xx = -1; xx <= winW; xx++) { px(wx + xx, wy - 1, C.windowFrame); px(wx + xx, wy + winH, C.windowFrame); }
+      // glass
+      for (let yy = 0; yy < winH; yy++) for (let xx = 0; xx < winW; xx++) {
+        px(wx + xx, wy + yy, (xx + yy) % 4 === 0 ? C.windowSh : C.window);
+      }
+      // cross
+      for (let yy = 0; yy < winH; yy++) px(wx + Math.floor(winW / 2), wy + yy, C.windowFrame);
+      for (let xx = 0; xx < winW; xx++) px(wx + xx, wy + Math.floor(winH / 2), C.windowFrame);
+      // shutters
+      for (let yy = 0; yy < winH; yy++) {
+        px(wx - 3, wy + yy, C.timber2);
+        px(wx - 4, wy + yy, C.timber);
+        px(wx + winW + 2, wy + yy, C.timber2);
+        px(wx + winW + 3, wy + yy, C.timber);
       }
     }
-    // flowerpot near door
+
+    // flowerpot near door (larger)
     if (opts.pot !== false) {
-      const potX = doorX + doorW + 4;
-      const potY = y + h - 6;
-      for (let yy = 0; yy < 6; yy++) for (let xx = 0; xx < 5; xx++) px(potX + xx, potY + yy, C.pot);
-      // flowers
-      for (let i = 0; i < 5; i++) {
-        const fx = potX + i, fy = potY - 1 - Math.floor(r() * 3);
-        px(fx, fy, [C.flowerR, C.flowerY, C.flowerB, C.flowerP][Math.floor(r() * 4)]);
+      const potX = doorX + doorW + 6;
+      const potY = y + h - 8;
+      for (let yy = 0; yy < 8; yy++) for (let xx = 0; xx < 6; xx++) {
+        px(potX + xx, potY + yy, (yy < 2) ? C.pot2 : C.pot);
       }
+      // rim
+      for (let xx = 0; xx < 6; xx++) px(potX + xx, potY, C.pot2);
+      // flowers cluster
+      const fcols = [C.flowerR, C.flowerY, C.flowerB, C.flowerP, C.flowerW];
+      for (let i = 0; i < 7; i++) {
+        const fx = potX + 1 + Math.floor(r() * 4);
+        const fy = potY - 2 - Math.floor(r() * 4);
+        px(fx, fy, fcols[Math.floor(r() * fcols.length)]);
+        px(fx, fy - 1, fcols[Math.floor(r() * fcols.length)]);
+      }
+      // leaves
+      for (let i = 0; i < 4; i++) px(potX + 1 + Math.floor(r() * 4), potY - 1, C.treeLeaf);
     }
   }
 
-  // Place buildings around square
-  // Top row
-  building(140, 230, 150, 90, { timber: true, windows: 2 });
-  building(320, 220, 120, 80, { timber: false, windows: 2 });
-  building(470, 210, 130, 95, { timber: true, windows: 3 });
-  building(1100, 220, 140, 90, { timber: true, windows: 2 });
-  building(1270, 230, 160, 95, { timber: false, windows: 3 });
-  // Large inn top-center above square
-  building(700, 150, 200, 110, { timber: true, windows: 4, roofH: 34, doorW: 14 });
-  // Left column
-  building(80, 360, 110, 80, { timber: false, windows: 2 });
-  building(80, 470, 100, 75, { timber: true, windows: 1 });
-  // Right column
-  building(1100, 360, 120, 85, { timber: false, windows: 2 });
-  building(1120, 470, 110, 80, { timber: true, windows: 2 });
-  // Bottom row
-  building(260, 640, 150, 80, { timber: true, windows: 2 });
-  building(440, 650, 130, 75, { timber: false, windows: 2 });
-  building(620, 660, 120, 70, { timber: true, windows: 1 });
-  building(820, 660, 130, 75, { timber: false, windows: 2 });
-  building(1000, 650, 140, 80, { timber: true, windows: 2 });
-  building(1180, 640, 150, 80, { timber: false, windows: 2 });
+  // ---- Place buildings in clusters (tucked) ----
+  const buildings = [
+    // top row
+    { x: 120, y: 200, w: 170, h: 100, opts: { windows: 2, brace: true } },
+    { x: 310, y: 190, w: 140, h: 90, opts: { windows: 2 } },
+    { x: 470, y: 180, w: 160, h: 105, opts: { windows: 3, brace: true } },
+    { x: 690, y: 140, w: 230, h: 120, opts: { windows: 4, doorW: 16, roofH: 110, brace: true } },
+    { x: 950, y: 170, w: 150, h: 95, opts: { windows: 2 } },
+    { x: 1120, y: 185, w: 170, h: 100, opts: { windows: 3, brace: true } },
+    { x: 1310, y: 200, w: 150, h: 95, opts: { windows: 2 } },
+    // left column
+    { x: 60, y: 340, w: 130, h: 90, opts: { windows: 2 } },
+    { x: 60, y: 455, w: 120, h: 85, opts: { windows: 1, brace: true } },
+    // right column
+    { x: 1110, y: 340, w: 140, h: 95, opts: { windows: 2 } },
+    { x: 1120, y: 460, w: 130, h: 90, opts: { windows: 2, brace: true } },
+    // bottom row
+    { x: 240, y: 620, w: 170, h: 95, opts: { windows: 2, brace: true } },
+    { x: 430, y: 630, w: 150, h: 90, opts: { windows: 2 } },
+    { x: 610, y: 640, w: 140, h: 85, opts: { windows: 1 } },
+    { x: 790, y: 640, w: 150, h: 90, opts: { windows: 2 } },
+    { x: 970, y: 630, w: 160, h: 95, opts: { windows: 2, brace: true } },
+    { x: 1160, y: 620, w: 170, h: 95, opts: { windows: 2 } },
+  ];
+  for (const b of buildings) building(b.x, b.y, b.w, b.h, b.opts);
 
-  // Well in square center
+  // ---- Well (detailed) ----
   function well(cx, cy) {
+    // shadow
+    fill(cx - 18, cy + 12, 40, 8, C.shadow);
     // base ring
-    for (let yy = -10; yy <= 10; yy++) for (let xx = -12; xx <= 12; xx++) {
-      if (xx * xx / 144 + yy * yy / 100 > 1) continue;
-      px(cx + xx, cy + yy, (xx * xx + yy * yy) > 60 ? C.well : C.well2);
+    for (let yy = -12; yy <= 12; yy++) for (let xx = -16; xx <= 16; xx++) {
+      if (xx * xx / 256 + yy * yy / 144 > 1) continue;
+      px(cx + xx, cy + yy, (xx * xx + yy * yy) > 120 ? C.well : C.well2);
     }
     // inner water
-    for (let yy = -6; yy <= 6; yy++) for (let xx = -8; xx <= 8; xx++) {
-      if (xx * xx / 64 + yy * yy / 36 > 1) continue;
-      px(cx + xx, cy + yy, (r() < 0.3) ? C.wellWater : '#2a5a80');
+    for (let yy = -7; yy <= 7; yy++) for (let xx = -10; xx <= 10; xx++) {
+      if (xx * xx / 100 + yy * yy / 49 > 1) continue;
+      px(cx + xx, cy + yy, (r() < 0.25) ? C.wellWater : '#2a5070');
     }
-    // posts + roof
-    for (let t = 0; t < 26; t++) {
-      px(cx - 14, cy - 10 - t, C.timber);
-      px(cx + 14, cy - 10 - t, C.timber);
+    // water highlight
+    for (let i = 0; i < 6; i++) px(cx - 6 + i * 2, cy - 2, '#6a9ac0');
+    // posts
+    for (let t = 0; t < 30; t++) {
+      for (let w = 0; w < 3; w++) {
+        px(cx - 16 + w, cy - 12 - t, C.timber);
+        px(cx + 13 + w, cy - 12 - t, C.timber);
+      }
     }
     // crossbeam
-    for (let xx = -16; xx <= 16; xx++) px(cx + xx, cy - 36, C.timber2);
-    // bucket
-    for (let yy = 0; yy < 8; yy++) for (let xx = 0; xx < 6; xx++) px(cx - 3 + xx, cy - 28 + yy, C.pot);
-    // rope
-    for (let t = 0; t < 20; t++) px(cx, cy - 16 - t, '#b0a080');
+    for (let xx = -18; xx <= 18; xx++) for (let t = 0; t < 3; t++) px(cx + xx, cy - 42 + t, C.timber2);
+    // roof (small pitched)
+    for (let t = 0; t < 10; t++) {
+      const inset = Math.floor(t * 0.5);
+      for (let xx = -18 + inset; xx <= 18 - inset; xx++) px(cx + xx, cy - 42 - t, (xx < cx) ? C.roof : C.roof2);
+    }
+    // bucket + rope
+    for (let t = 0; t < 22; t++) px(cx + 2, cy - 14 - t, C.wellRope);
+    for (let yy = 0; yy < 8; yy++) for (let xx = 0; xx < 7; xx++) px(cx - 2 + xx, cy - 16 + yy, C.pot);
   }
   well(800, 490);
 
-  // Trees
+  // ---- Trees (richer, overlapping canopy clusters) ----
   function tree(cx, cy, size = 1) {
-    const trunkH = 18 * size;
-    for (let t = 0; t < trunkH; t++) {
-      for (let xx = -2 * size; xx <= 2 * size; xx++) px(cx + xx, cy - t, (xx === -2 * size || xx === 2 * size) ? C.treeTrunk : C.timber2);
+    const trunkH = Math.floor(20 * size);
+    const trunkW = Math.max(2, Math.floor(3 * size));
+    // shadow
+    fill(cx - Math.floor(6 * size), cy + 2, Math.floor(12 * size), 4, C.shadow);
+    // trunk
+    for (let t = 0; t < trunkH; t++) for (let xx = -Math.floor(trunkW / 2); xx <= Math.floor(trunkW / 2); xx++) {
+      px(cx + xx, cy - t, (xx < 0) ? C.treeTrunk : C.timber2);
     }
-    // canopy layers
-    const layers = [18, 14, 10];
-    for (let li = 0; li < layers.length; li++) {
-      const rad = layers[li] * size;
-      const yy0 = cy - trunkH - li * 6;
-      for (let dy = -rad; dy <= rad; dy++) for (let dx = -rad; dx <= rad; dx++) {
-        if (dx * dx + dy * dy > rad * rad) continue;
-        if (r() < 0.15) continue;
-        const col = (dx < -rad / 3) ? C.treeHi : (dy < -rad / 2 ? C.treeLeaf2 : (r() < 0.5 ? C.treeLeaf : C.treeLeaf3));
-        px(cx + dx, yy0 + dy, col);
+    // roots
+    for (let i = 0; i < 3; i++) {
+      const rx = cx + (i - 1) * 3;
+      px(rx, cy + 1, C.treeTrunk); px(rx + 1, cy + 2, C.treeTrunk);
+    }
+    // canopy layers (3 clusters overlapping)
+    const layers = [
+      { r: Math.floor(16 * size), offY: 0, col: C.treeLeaf3 },
+      { r: Math.floor(13 * size), offY: -4, col: C.treeLeaf },
+      { r: Math.floor(10 * size), offY: -8, col: C.treeLeaf2 },
+    ];
+    for (const L of layers) {
+      for (let dy = -L.r; dy <= L.r; dy++) for (let dx = -L.r; dx <= L.r; dx++) {
+        if (dx * dx + dy * dy > L.r * L.r) continue;
+        if (r() < 0.22) continue;
+        const col = (dx < -L.r / 3) ? C.treeHi : ((dy < -L.r / 2) ? C.treeLeaf2 : L.col);
+        px(cx + dx, cy - trunkH + L.offY + dy, col);
       }
+    }
+    const R = Math.floor(13 * size);
+    // highlight cluster top-left
+    for (let i = 0; i < Math.floor(6 * size); i++) {
+      px(cx - Math.floor(R / 2) + Math.floor(r() * 6), cy - trunkH - Math.floor(R * 0.6) + Math.floor(r() * 4), C.treeHi);
+    }
+    // shadow cluster bottom-right
+    for (let i = 0; i < Math.floor(6 * size); i++) {
+      px(cx + Math.floor(R / 3) + Math.floor(r() * 6), cy - trunkH + Math.floor(R * 0.3) + Math.floor(r() * 4), C.treeSh);
     }
   }
   const trees = [
-    [120, 160, 1.1], [260, 150, 0.9], [420, 140, 1.2], [1080, 160, 1], [1240, 150, 1.1], [1400, 170, 0.9],
-    [60, 600, 1], [200, 700, 1.1], [1450, 620, 1], [1500, 700, 0.9],
-    [500, 330, 0.8], [1080, 330, 0.8], [600, 620, 0.7], [950, 620, 0.7],
+    [110, 150, 1.1], [250, 140, 0.95], [410, 130, 1.25], [1090, 150, 1.05], [1250, 140, 1.15], [1410, 160, 0.95],
+    [50, 600, 1.0], [195, 690, 1.15], [1460, 610, 1.0], [1510, 690, 0.95],
+    [490, 320, 0.85], [1090, 320, 0.85], [590, 610, 0.75], [940, 610, 0.75],
+    [300, 300, 0.7], [760, 300, 0.7], [1200, 300, 0.7],
   ];
   for (const [tx, ty, sz] of trees) tree(tx, ty, sz);
 
-  // Stalls in square
-  function stall(cx, cy, canopyColor) {
+  // ---- Stalls (detailed) ----
+  function stall(cx, cy, canopyColor, canopyColor2) {
+    // shadow
+    fill(cx - 24, cy + 4, 52, 6, C.shadow);
     // posts
-    for (let t = 0; t < 30; t++) {
-      px(cx - 22, cy - t, C.timber);
-      px(cx + 22, cy - t, C.timber);
+    for (let t = 0; t < 32; t++) for (let w = 0; w < 3; w++) {
+      px(cx - 24 + w, cy - t, C.timber);
+      px(cx + 21 + w, cy - t, C.timber);
     }
-    // canopy
-    for (let yy = 0; yy < 10; yy++) for (let xx = -26; xx <= 26; xx++) {
-      if (Math.abs(xx) + yy > 30) continue;
-      px(cx + xx, cy - 30 + yy, (yy % 2 === 0) ? canopyColor : (canopyColor === C.stallCanopy ? C.stallCanopy2 : C.stallCanopy));
+    // canopy (pitched)
+    for (let t = 0; t < 12; t++) {
+      const inset = Math.floor(t * 0.5);
+      for (let xx = -26 + inset; xx <= 26 - inset; xx++) {
+        px(cx + xx, cy - 32 + t, (t % 2 === 0) ? canopyColor : canopyColor2);
+      }
     }
+    // canopy fringe
+    for (let xx = -26; xx <= 26; xx++) px(cx + xx, cy - 20, C.timber);
     // counter
-    for (let xx = -20; xx <= 20; xx++) for (let yy = 0; yy < 6; yy++) px(cx + xx, cy - 4 + yy, C.stall);
-    // goods
-    for (let i = 0; i < 8; i++) {
-      const gx = cx - 18 + i * 5;
-      px(gx, cy - 6, [C.flowerR, C.flowerY, C.flowerB, C.pot][Math.floor(r() * 4)]);
-      px(gx + 1, cy - 7, C.flowerY);
+    for (let yy = 0; yy < 7; yy++) for (let xx = -22; xx <= 22; xx++) {
+      px(cx + xx, cy - 6 + yy, (yy < 2) ? C.stall : C.dirt2);
+    }
+    // counter front panel
+    for (let xx = -22; xx <= 22; xx++) px(cx + xx, cy + 1, C.timber);
+    // goods on counter
+    for (let i = 0; i < 10; i++) {
+      const gx = cx - 20 + i * 4 + Math.floor(r() * 2);
+      const col = [C.flowerR, C.flowerY, C.flowerB, C.pot, C.flowerW, C.flowerP][Math.floor(r() * 6)];
+      px(gx, cy - 8, col); px(gx + 1, cy - 9, col);
+      px(gx, cy - 7, C.pot2);
+    }
+    // hanging items
+    for (let i = 0; i < 4; i++) {
+      const hx = cx - 18 + i * 12;
+      for (let yy = 0; yy < 8; yy++) px(hx, cy - 30 + yy, [C.laundry, C.laundry2, C.laundry3][Math.floor(r() * 3)]);
     }
   }
-  stall(600, 420, C.stallCanopy);
-  stall(720, 400, C.stallCanopy2);
-  stall(900, 410, C.stallCanopy);
-  stall(1000, 430, C.stallCanopy2);
+  stall(600, 420, C.stallCanopy, C.stallCanopy2);
+  stall(720, 400, C.stallCanopy2, C.stallCanopy3);
+  stall(900, 410, C.stallCanopy, C.stallCanopy3);
+  stall(1000, 430, C.stallCanopy3, C.stallCanopy2);
 
-  // Clotheslines
+  // ---- Clotheslines ----
   function clothesline(x0, y0, x1) {
-    // posts
-    for (let t = 0; t < 40; t++) { px(x0, y0 - t, C.timber); px(x1, y0 - t, C.timber); }
-    // line
+    for (let t = 0; t < 42; t++) for (let w = 0; w < 3; w++) {
+      px(x0 + w, y0 - t, C.timber);
+      px(x1 + w, y0 - t, C.timber);
+    }
     const steps = x1 - x0;
-    for (let i = 0; i <= steps; i++) px(x0 + i, y0 - 38, '#b0a080');
-    // clothes
-    const colors = [C.laundry, C.laundry2, C.flowerR, C.flowerB, C.flowerY, C.flowerP];
-    for (let i = 0; i < 12; i++) {
-      const cx = x0 + 6 + i * 12;
+    for (let i = 0; i <= steps; i++) px(x0 + i, y0 - 40, '#a09070');
+    const colors = [C.laundry, C.laundry2, C.laundry3, C.flowerR, C.flowerB, C.flowerY];
+    for (let i = 0; i < 14; i++) {
+      const cx = x0 + 6 + i * 11;
       const col = colors[Math.floor(r() * colors.length)];
-      for (let yy = 0; yy < 10; yy++) for (let xx = 0; xx < 7; xx++) px(cx + xx, y0 - 37 + yy, col);
+      const len = 8 + Math.floor(r() * 6);
+      for (let yy = 0; yy < len; yy++) for (let xx = 0; xx < 7; xx++) px(cx + xx, y0 - 39 + yy, col);
+      // pegs
+      px(cx, y0 - 40, C.timber2); px(cx + 6, y0 - 40, C.timber2);
     }
   }
   clothesline(150, 340, 290);
   clothesline(1120, 340, 1260);
   clothesline(300, 700, 440);
 
-  // Flowerpots scattered on paving
-  for (let i = 0; i < 24; i++) {
-    const cx = sqX0 + 20 + Math.floor(r() * (sqX1 - sqX0 - 40));
-    const cy = sqY0 + 20 + Math.floor(r() * (sqY1 - sqY0 - 40));
-    // avoid well
-    if (Math.hypot(cx - 800, cy - 490) < 60) continue;
-    for (let yy = 0; yy < 5; yy++) for (let xx = 0; xx < 4; xx++) px(cx + xx, cy + yy, C.pot);
-    for (let j = 0; j < 4; j++) px(cx + j, cy - 1 - Math.floor(r() * 2), [C.flowerR, C.flowerY, C.flowerB, C.flowerP][Math.floor(r() * 4)]);
+  // ---- Flowerpots on paving (clustered) ----
+  for (let i = 0; i < 28; i++) {
+    const cx = sqX0 + 24 + Math.floor(r() * (sqX1 - sqX0 - 48));
+    const cy = sqY0 + 24 + Math.floor(r() * (sqY1 - sqY0 - 48));
+    if (Math.hypot(cx - 800, cy - 490) < 70) continue;
+    // pot
+    for (let yy = 0; yy < 7; yy++) for (let xx = 0; xx < 5; xx++) px(cx + xx, cy + yy, (yy < 2) ? C.pot2 : C.pot);
+    for (let xx = 0; xx < 5; xx++) px(cx + xx, cy, C.pot2);
+    // plant cluster
+    const fcols = [C.flowerR, C.flowerY, C.flowerB, C.flowerP, C.flowerW];
+    for (let j = 0; j < 6; j++) {
+      const fx = cx + 1 + Math.floor(r() * 3);
+      const fy = cy - 1 - Math.floor(r() * 3);
+      px(fx, fy, fcols[Math.floor(r() * fcols.length)]);
+    }
+    for (let j = 0; j < 3; j++) px(cx + 1 + Math.floor(r() * 3), cy - 1, C.treeLeaf);
   }
 
-  // Carts
+  // ---- Carts ----
   function cart(cx, cy) {
-    // body
-    for (let yy = 0; yy < 12; yy++) for (let xx = 0; xx < 26; xx++) px(cx + xx, cy + yy, (yy < 2) ? C.cart : C.dirt);
+    fill(cx - 2, cy - 2, 30, 14, C.shadow);
+    for (let yy = 0; yy < 12; yy++) for (let xx = 0; xx < 28; xx++) {
+      px(cx + xx, cy + yy, (yy < 2) ? C.cart : (r() < 0.5 ? C.dirt : C.dirt2));
+    }
+    // side panel
+    for (let yy = 2; yy < 12; yy++) for (let t = 0; t < 3; t++) px(cx + t, cy + yy, C.timber);
+    for (let yy = 2; yy < 12; yy++) for (let t = 0; t < 3; t++) px(cx + 25 + t, cy + yy, C.timber);
     // wheels
     for (let a = 0; a < 2; a++) {
-      const wx = cx + (a === 0 ? 4 : 20);
+      const wx = cx + (a === 0 ? 5 : 21);
       const wy = cy + 14;
-      for (let dy = -4; dy <= 4; dy++) for (let dx = -4; dx <= 4; dx++) {
-        if (dx * dx + dy * dy > 16) continue;
-        px(wx + dx, wy + dy, (dx * dx + dy * dy) > 10 ? C.timber : C.timber2);
+      for (let dy = -5; dy <= 5; dy++) for (let dx = -5; dx <= 5; dx++) {
+        if (dx * dx + dy * dy > 25) continue;
+        px(wx + dx, wy + dy, (dx * dx + dy * dy) > 16 ? C.cartWheel : C.timber2);
       }
+      // hub
+      px(wx, wy, C.timberHi); px(wx + 1, wy, C.timberHi);
     }
+    // handle
+    for (let i = 0; i < 10; i++) px(cx + 28 + i, cy + 4, C.timber);
   }
   cart(340, 520);
   cart(1180, 520);
 
-  // Plants/bushes
-  for (let i = 0; i < 40; i++) {
-    const cx = Math.floor(r() * W);
-    const cy = 120 + Math.floor(r() * (H - 140));
-    // avoid buildings roughly by skipping if on cobble? allow
-    cluster(cx, cy, 6, 4, [C.treeLeaf, C.treeLeaf2, C.grass0, C.flowerP]);
-  }
-
-  // Entry cave marker (left): dark cave mouth
+  // ---- Entry cave mouth (left) ----
   function caveMouth(cx, cy) {
-    for (let yy = -30; yy <= 30; yy++) for (let xx = -20; xx <= 20; xx++) {
-      if (xx * xx / 400 + yy * yy / 900 > 1) continue;
-      px(cx + xx, cy + yy, (Math.abs(xx) < 6 && yy > -10) ? '#0a0a10' : C.rock2);
+    fill(cx - 24, cy - 34, 48, 68, C.shadow);
+    for (let yy = -30; yy <= 30; yy++) for (let xx = -22; xx <= 22; xx++) {
+      if (xx * xx / 484 + yy * yy / 900 > 1) continue;
+      const edge = (xx * xx / 484 + yy * yy / 900) > 0.85;
+      px(cx + xx, cy + yy, edge ? C.timber : (Math.abs(xx) < 8 && yy > -5 ? '#0a0a10' : C.dirt3));
     }
     // rock rim
-    for (let a = 0; a < 360; a += 4) {
+    for (let a = 0; a < 360; a += 3) {
       const rad = a * Math.PI / 180;
-      px(cx + Math.floor(Math.cos(rad) * 20), cy + Math.floor(Math.sin(rad) * 30), C.rock0);
+      px(cx + Math.floor(Math.cos(rad) * 22), cy + Math.floor(Math.sin(rad) * 30), C.timber);
+      px(cx + Math.floor(Math.cos(rad) * 21), cy + Math.floor(Math.sin(rad) * 29), C.dirt3);
     }
   }
   caveMouth(160, 460);
+
+  // ---- Bushes/plants in clusters (not noise) ----
+  for (let i = 0; i < 60; i++) {
+    const cx = Math.floor(r() * W);
+    const cy = Math.floor(r() * H);
+    // avoid central square interior? allow edges
+    const rw = 6 + Math.floor(r() * 8);
+    const rh = 4 + Math.floor(r() * 6);
+    cluster(cx, cy, rw, rh, [C.treeLeaf, C.treeLeaf2, C.treeLeaf3, C.flowerP]);
+  }
 }
 
 export default paintTown;
