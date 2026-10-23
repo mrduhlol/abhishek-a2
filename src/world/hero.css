@@ -1,0 +1,56 @@
+.adventure-hero-layer { position: fixed; inset: 0; z-index: 35; pointer-events: none; }
+.adventure-hero { position: absolute; top: 0; left: 0; width: 76px; height: 94px; will-change: transform; }
+.hero-person-button { display: block; width: 76px; height: 94px; padding: 0; border: 0; background: transparent; cursor: pointer; pointer-events: auto; touch-action: manipulation; border-radius: 50%; }
+.hero-person-button:hover { filter: drop-shadow(0 3px 3px #29271f25); }
+.hero-person-button:focus-visible { outline: 2px dashed #6f7952; outline-offset: 3px; }
+.traveller-character { display: block; width: 100%; height: 100%; overflow: visible; }
+.traveller-body { transform-origin: 45px 75px; }
+.traveller-head { transform-origin: 44px 44px; }
+.traveller-bag { transform-origin: 28px 53px; }
+.traveller-arm { transform-box: view-box; transform-origin: 45px 54px; }
+.traveller-leg { transform-box: view-box; transform-origin: 44px 76px; }
+.traveller-character[data-facing="left"] { transform: scaleX(-1); }
+.traveller-character[data-pose="idle"] .traveller-head { animation: traveller-look 6s ease-in-out infinite; }
+.traveller-character[data-pose="sit"] .traveller-leg-front { transform: translate(13px, -8px) rotate(-32deg); animation: traveller-dangle 2.4s ease-in-out infinite; }
+.traveller-character[data-pose="sit"] .traveller-leg-back { transform: translate(5px, -8px) rotate(-25deg); }
+.traveller-character[data-pose="sit"] .traveller-body { transform: translateY(7px); }
+.traveller-character[data-pose="jump"] .traveller-arm-front { transform: rotate(-140deg); }
+.traveller-character[data-pose="jump"] .traveller-arm-back { transform: rotate(100deg); }
+.traveller-character[data-pose="jump"] .traveller-leg-front { transform: rotate(40deg); }
+.traveller-character[data-pose="jump"] .traveller-leg-back { transform: rotate(-25deg); }
+.traveller-character[data-pose="climb"] .traveller-arm-front,
+.traveller-character[data-pose="swing"] .traveller-arm-front { transform: rotate(-152deg); }
+.traveller-character[data-pose="climb"] .traveller-arm-back { transform: rotate(105deg); }
+.traveller-character[data-pose="climb"] .traveller-leg-front { transform: rotate(35deg); }
+.traveller-character[data-pose="swing"] .traveller-body { animation: traveller-swing 3s ease-in-out infinite; }
+.traveller-character[data-pose="swim"] .traveller-body { transform: rotate(-65deg); }
+.traveller-character[data-pose="swim"] .traveller-arm-front { transform: rotate(-110deg); }
+.traveller-character[data-pose="slide"] .traveller-body { transform: rotate(-25deg); }
+.traveller-character[data-pose="slide"] .traveller-leg-front { transform: rotate(-70deg); }
+.traveller-character[data-pose="walk"] .traveller-leg-front { animation: traveller-step .8s ease-in-out infinite alternate; }
+.traveller-character[data-pose="walk"] .traveller-leg-back { animation: traveller-step .8s ease-in-out infinite alternate-reverse; }
+.traveller-character[data-pose="walk"] .traveller-bag { animation: traveller-pack .8s ease-in-out infinite alternate; }
+.traveller-character[data-pose="wave"] .traveller-arm-front { animation: traveller-wave .5s ease-in-out infinite alternate; }
+.traveller-character[data-pose="stare"] .traveller-face { transform: translateX(-4px); }
+.traveller-character[data-pose="hold"] .traveller-arm-front,
+.traveller-character[data-pose="stare"] .traveller-arm-front { transform: translate(7px, -4px) rotate(-28deg); }
+.hero-rope { position: absolute; width: 80px; height: 220px; left: 0; bottom: 73px; overflow: visible; }
+.hero-rope path { fill: none; stroke: #766850; stroke-width: 1.5; stroke-dasharray: 3 2; }
+.hero-intro-bubble { position: absolute; bottom: 100%; left: -106px; width: 218px; padding: 14px 17px; color: #29271f; background: #fffaf0; border: 1.5px solid #29271f; border-radius: 45% 40% 40% 8% / 15% 20% 20% 20%; font-family: var(--font-hand, cursive); font-size: 20px; line-height: 1.25; box-shadow: 0 5px 13px #29271f12; }
+.hero-dialog { position: fixed; top: 100px; left: 20px; width: min(280px, calc(100vw - 32px)); padding: 16px; border: 1px solid #8c826b; border-radius: 4px 14px 14px 14px; background: #fffaf0; color: #29271f; pointer-events: auto; box-shadow: 0 10px 30px #29271f17; font-family: var(--font-body, sans-serif); }
+.hero-dialog[hidden] { display: none; }
+.hero-dialog-heading { display: flex; align-items: center; justify-content: space-between; font-family: var(--font-hand, cursive); font-size: 20px; }
+.hero-dialog p { margin: 6px 0 14px; font-size: 13px; line-height: 1.6; }
+.hero-dialog button { min-height: 36px; cursor: pointer; color: inherit; background: transparent; border: 0; font: inherit; }
+.hero-dialog-heading button { width: 36px; margin: -8px -8px -8px 0; font: 24px/1 sans-serif; }
+.hero-dialog > button { display: flex; width: 100%; justify-content: space-between; align-items: center; padding: 8px 0; border-top: 1px solid #d5cdbb; text-align: left; font-size: 12px; }
+.hero-dialog button:hover { color: #556039; text-decoration: underline; text-underline-offset: 3px; }
+.hero-dialog button:focus-visible { outline: 2px solid #6f7952; outline-offset: 2px; }
+@keyframes traveller-dangle { 0%, 100% { transform: translate(13px, -8px) rotate(-32deg); } 50% { transform: translate(13px, -8px) rotate(-18deg); } }
+@keyframes traveller-look { 0%, 65%, 100% { transform: rotate(0); } 75%, 85% { transform: rotate(-7deg); } }
+@keyframes traveller-step { from { transform: rotate(-18deg); } to { transform: rotate(18deg); } }
+@keyframes traveller-pack { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
+@keyframes traveller-swing { 0%, 100% { transform: rotate(-9deg); } 50% { transform: rotate(9deg); } }
+@keyframes traveller-wave { from { transform: rotate(-130deg); } to { transform: rotate(-155deg); } }
+@media (prefers-reduced-motion: reduce) { .traveller-character * { animation: none !important; } .adventure-hero { will-change: auto; } }
+@media (max-width: 719px) { .adventure-hero, .hero-person-button { width: 62px; height: 78px; } .hero-intro-bubble { left: -155px; width: 205px; font-size: 19px; } }
