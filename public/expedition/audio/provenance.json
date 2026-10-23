@@ -1,0 +1,886 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-23",
+  "assetRoot": "/expedition/audio/",
+  "sources": {
+    "mountain": {
+      "title": "mountain wind heavy strong gusts Swiss Alps.flac",
+      "creator": "kyles",
+      "page": "https://freesound.org/people/kyles/sounds/454092/",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "licenseId": "CC0-1.0",
+      "licenseVerifiedAt": "2026-10-23",
+      "licenseEvidence": "Individual source page links to https://creativecommons.org/publicdomain/zero/1.0/",
+      "downloadUrl": "https://cdn.freesound.org/previews/454/454092_612689-hq.mp3",
+      "downloadedFilename": "mountain.mp3",
+      "downloadedSha256": "2205b22f08b43c5f4bbee344a62c3d3717938cd65d5cc1db2c3c20576d338013",
+      "downloadedBytes": 3964032,
+      "acquisition": "Freesound public full-length HQ MP3 preview",
+      "sourcePageSha256": "a44204a20d3c14a83244fbc23ac36a9f2bfab9dd322e5fb974abc1d6c68ebf4e",
+      "licenseEvidenceText": "Creative Commons 0"
+    },
+    "forest": {
+      "title": "Ambiance_Natural_Forest_Birds_Wind_Loop_Stereo.wav",
+      "creator": "Nox_Sound",
+      "page": "https://freesound.org/people/Nox_Sound/sounds/570492/",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "licenseId": "CC0-1.0",
+      "licenseVerifiedAt": "2026-10-23",
+      "licenseEvidence": "Individual source page links to https://creativecommons.org/publicdomain/zero/1.0/",
+      "downloadUrl": "https://cdn.freesound.org/previews/570/570492_9250976-hq.mp3",
+      "downloadedFilename": "forest.mp3",
+      "downloadedSha256": "37acac93eb34061005ee39d9bd0bd438ed7946937e039a2562dc8b6172dcb7bb",
+      "downloadedBytes": 681504,
+      "acquisition": "Freesound public full-length HQ MP3 preview",
+      "sourcePageSha256": "46c672d6302a3f0ab71506cbd101e2148187cf81e994ccc9e0ff84dcb0ff0abb",
+      "licenseEvidenceText": "Creative Commons 0"
+    },
+    "grass": {
+      "title": "Tall Grass Brushing Together in the Wind with Small Waterfall master",
+      "creator": "BenHarmSound (Ben Harmeyer)",
+      "page": "https://freesound.org/people/BenHarmSound/sounds/818505/",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "licenseId": "CC0-1.0",
+      "licenseVerifiedAt": "2026-10-23",
+      "licenseEvidence": "Individual source page links to https://creativecommons.org/publicdomain/zero/1.0/",
+      "downloadUrl": "https://cdn.freesound.org/previews/818/818505_17258992-hq.mp3",
+      "downloadedFilename": "grass.mp3",
+      "downloadedSha256": "d5aca75e1286b0c328ec905f65f1016ce0be2ce32186ab80db3577527e626a0f",
+      "downloadedBytes": 1173840,
+      "acquisition": "Freesound public full-length HQ MP3 preview",
+      "sourcePageSha256": "4cceb2ef16ba549b81a1d053d4562e33a694e78eb31fc68d7a073f42b02f2b3b",
+      "licenseEvidenceText": "Creative Commons 0"
+    },
+    "desert": {
+      "title": "Desert wind stereo",
+      "creator": "KasDonatov",
+      "page": "https://freesound.org/people/KasDonatov/sounds/402710/",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "licenseId": "CC0-1.0",
+      "licenseVerifiedAt": "2026-10-23",
+      "licenseEvidence": "Individual source page links to https://creativecommons.org/publicdomain/zero/1.0/",
+      "downloadUrl": "https://cdn.freesound.org/previews/402/402710_7791228-hq.mp3",
+      "downloadedFilename": "desert.mp3",
+      "downloadedSha256": "08e394c75b87293125b9cff6ec8e74e9084c3ed39140ac81dede712cff29e961",
+      "downloadedBytes": 987764,
+      "acquisition": "Freesound public full-length HQ MP3 preview",
+      "sourcePageSha256": "7f3d4b8dd7a5d48b9edfd0b8bd140673282b2a6b52aa8edc2da973644238382f",
+      "licenseEvidenceText": "Creative Commons 0"
+    },
+    "ocean": {
+      "title": "WATER OCEAN WAVES 01.wav",
+      "creator": "sengjinn",
+      "page": "https://freesound.org/people/sengjinn/sounds/174581/",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "licenseId": "CC0-1.0",
+      "licenseVerifiedAt": "2026-10-23",
+      "licenseEvidence": "Individual source page links to https://creativecommons.org/publicdomain/zero/1.0/",
+      "downloadUrl": "https://cdn.freesound.org/previews/174/174581_2979997-hq.mp3",
+      "downloadedFilename": "ocean.mp3",
+      "downloadedSha256": "82990e00cf657ef6df60209711c636c6bdec29a2c243c34c3c06faac32027d63",
+      "downloadedBytes": 2721600,
+      "acquisition": "Freesound public full-length HQ MP3 preview",
+      "sourcePageSha256": "4d738b5ba4add96059f67320b666cc14a19700624346afce6603ab1183fc2e43",
+      "licenseEvidenceText": "Creative Commons 0"
+    },
+    "cave": {
+      "title": "Cave Drips",
+      "creator": "everythingsounds",
+      "page": "https://freesound.org/people/everythingsounds/sounds/199515/",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "licenseId": "CC-BY-4.0",
+      "licenseVerifiedAt": "2026-10-23",
+      "licenseEvidence": "Individual source page links to https://creativecommons.org/licenses/by/4.0/",
+      "downloadUrl": "https://cdn.freesound.org/previews/199/199515_3272432-hq.mp3",
+      "downloadedFilename": "cave.mp3",
+      "downloadedSha256": "e4f40b31a2a9320ed118eef87bf420f3f4f1f8aba0a76f86f8768ef6898cad99",
+      "downloadedBytes": 2111242,
+      "acquisition": "Freesound public full-length HQ MP3 preview",
+      "sourcePageSha256": "dcb6c0760cd3f53fe6acc5dd6bb600eecc2570bfcd576382a36310b83b322521",
+      "licenseEvidenceText": "Attribution 4.0"
+    },
+    "volcano": {
+      "title": "Volcano.wav",
+      "creator": "morganpurkis",
+      "page": "https://freesound.org/people/morganpurkis/sounds/385098/",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "licenseId": "CC0-1.0",
+      "licenseVerifiedAt": "2026-10-23",
+      "licenseEvidence": "Individual source page links to https://creativecommons.org/publicdomain/zero/1.0/",
+      "downloadUrl": "https://cdn.freesound.org/previews/385/385098_5937039-hq.mp3",
+      "downloadedFilename": "volcano.mp3",
+      "downloadedSha256": "837cf753f900356fa2271ee8fb80638ec678310ff2560f0f17b7b304f33ed724",
+      "downloadedBytes": 1031607,
+      "acquisition": "Freesound public full-length HQ MP3 preview",
+      "sourcePageSha256": "4bb3c74bd96a5336c9e8fac84dfb8bb8c33f0615adfba0dbc3b29dd5a0e8cc8a",
+      "licenseEvidenceText": "Creative Commons 0"
+    },
+    "town": {
+      "title": "140802_Greenwich_FoodMarket_F.wav",
+      "creator": "blaukreuz",
+      "page": "https://freesound.org/people/blaukreuz/sounds/252697/",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "licenseId": "CC0-1.0",
+      "licenseVerifiedAt": "2026-10-23",
+      "licenseEvidence": "Individual source page links to https://creativecommons.org/publicdomain/zero/1.0/",
+      "downloadUrl": "https://cdn.freesound.org/previews/252/252697_623488-hq.mp3",
+      "downloadedFilename": "market.mp3",
+      "downloadedSha256": "57b5f65b74a5dd6e89c935459108fea41f706b1a7005b0f4c73b998fbb2bf8f1",
+      "downloadedBytes": 2391936,
+      "acquisition": "Freesound public full-length HQ MP3 preview",
+      "sourcePageSha256": "b2cdb897d8d140d4dd85c15e8d1ee053f8be6a4b5bf19f845098d25408149af5",
+      "licenseEvidenceText": "Creative Commons 0"
+    },
+    "steps": {
+      "title": "Different steps on wood, stone, leaves, gravel and mud",
+      "creator": "TinyWorlds",
+      "page": "https://opengameart.org/content/different-steps-on-wood-stone-leaves-gravel-and-mud",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "licenseId": "CC0-1.0",
+      "licenseVerifiedAt": "2026-10-23",
+      "licenseEvidence": "Individual source page links to https://creativecommons.org/publicdomain/zero/1.0/",
+      "downloadUrl": "https://opengameart.org/sites/default/files/%5Bkdd%5DDifferentSteps_0.zip",
+      "downloadedFilename": "steps.zip",
+      "downloadedSha256": "987d072b7deaa65177e005ddd8185f2351be7c9a76cd7575dea560549c39b33b",
+      "downloadedBytes": 77711,
+      "acquisition": "Original OpenGameArt ZIP; selected OGG members",
+      "sourcePageSha256": "f11eb89db937e3a1837be05474abfb0bf8fd63ff93783f6b6a36c39f207867f3",
+      "licenseEvidenceText": "CC0"
+    },
+    "male": {
+      "title": "Voice Clip Pack - Male Adventurer RPG",
+      "creator": "Brandon Song (wolfwoot)",
+      "page": "https://opengameart.org/content/voice-clip-pack-male-adventurer-rpg",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "licenseId": "CC0-1.0",
+      "licenseVerifiedAt": "2026-10-23",
+      "licenseEvidence": "Individual source page links to https://creativecommons.org/publicdomain/zero/1.0/",
+      "downloadUrl": "https://opengameart.org/sites/default/files/RPG%20Male%20Adventurer.zip",
+      "downloadedFilename": "male.zip",
+      "downloadedSha256": "eb874f027758ccf9eca0449d09dc3220dc44eb4095e8b0da93351d276e176f7f",
+      "downloadedBytes": 3717331,
+      "acquisition": "Original OpenGameArt ZIP; selected WAV members",
+      "sourcePageSha256": "faad25d1608133e24d20c91e1105062b16f06bb6fb02ceca0d0664930f6e18c4",
+      "licenseEvidenceText": "CC0"
+    },
+    "female": {
+      "title": "Female RPG Character voice pack",
+      "creator": "RiddlesYouThis",
+      "page": "https://opengameart.org/content/female-rpg-character-voice-pack",
+      "license": "https://creativecommons.org/licenses/by/3.0/",
+      "licenseId": "CC-BY-3.0",
+      "licenseVerifiedAt": "2026-10-23",
+      "licenseEvidence": "Individual source page links to https://creativecommons.org/licenses/by/3.0/",
+      "downloadUrl": "https://opengameart.org/sites/default/files/hello.ogg",
+      "downloadedFilename": "hello.ogg",
+      "downloadedSha256": "e2b629be630106a49a3e7e32799b9d1217e4507f76cc0ec669976c84b2ccff22",
+      "downloadedBytes": 23293,
+      "acquisition": "Original OpenGameArt OGG download",
+      "sourcePageSha256": "f08b2a841e49cab479ae430c489e0cf80a20bdae5b814f99d2d9d6014ce59ad8",
+      "licenseEvidenceText": "CC-BY 3.0"
+    },
+    "laugh": {
+      "title": "Laughing (male)",
+      "creator": "Daniel Alvarez (dastudiospr)",
+      "page": "https://freesound.org/people/dastudiospr/sounds/529818/",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "licenseId": "CC0-1.0",
+      "licenseVerifiedAt": "2026-10-23",
+      "licenseEvidence": "Individual source page links to https://creativecommons.org/publicdomain/zero/1.0/",
+      "downloadUrl": "https://cdn.freesound.org/previews/529/529818_10761583-hq.mp3",
+      "downloadedFilename": "laugh.mp3",
+      "downloadedSha256": "d29dbb5fc344c2f9a8741a02bc7e14088f4a964b90d4fb0b99005ed5073711a4",
+      "downloadedBytes": 86727,
+      "acquisition": "Freesound public full-length HQ MP3 preview",
+      "sourcePageSha256": "3c6ec8300881ead311f77fdbb67f901832f418172c3807af1d8a4df70a9dfc64",
+      "licenseEvidenceText": "Creative Commons 0"
+    },
+    "sigh": {
+      "title": "Sigh, male",
+      "creator": "giddster",
+      "page": "https://freesound.org/people/giddster/sounds/336539/",
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "licenseId": "CC0-1.0",
+      "licenseVerifiedAt": "2026-10-23",
+      "licenseEvidence": "Individual source page links to https://creativecommons.org/publicdomain/zero/1.0/",
+      "downloadUrl": "https://cdn.freesound.org/previews/336/336539_1738686-hq.mp3",
+      "downloadedFilename": "sigh.mp3",
+      "downloadedSha256": "35d8c43d9d17669b2d63389bfbe4d052ef5401fa67335240523ceb4f0f667446",
+      "downloadedBytes": 122412,
+      "acquisition": "Freesound public full-length HQ MP3 preview",
+      "sourcePageSha256": "762028fec90d024955cf9d6abb2110b315850f2e78858d080c1bc3f50daae372",
+      "licenseEvidenceText": "Creative Commons 0"
+    },
+    "drip": {
+      "title": "Ambient Water Drips",
+      "creator": "Blender Foundation; submitted by Lamoot",
+      "page": "https://opengameart.org/content/ambient-water-drips",
+      "license": "https://creativecommons.org/licenses/by/3.0/",
+      "licenseId": "CC-BY-3.0",
+      "licenseVerifiedAt": "2026-10-23",
+      "licenseEvidence": "Individual source page links to https://creativecommons.org/licenses/by/3.0/",
+      "downloadUrl": "https://opengameart.org/sites/default/files/amb_waterdrip_1.flac",
+      "downloadedFilename": "drip1.flac",
+      "downloadedSha256": "c19f99a1a9a6a2aecf294e3cdea87b223a4b165e3e23df9cea2985ab20a907d0",
+      "downloadedBytes": 42594,
+      "acquisition": "Original OpenGameArt FLAC download",
+      "sourcePageSha256": "b3c219ac3fed9140865786bb356d2c40f0d97d68253fe29d68ac871b9aa24b9f",
+      "licenseEvidenceText": "CC-BY 3.0"
+    }
+  },
+  "assets": [
+    {
+      "file": "ambient-mountain.mp3",
+      "role": "Mountain wind",
+      "sources": [
+        "mountain"
+      ],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "24-second excerpt; 1-second cyclic tail/head crossfade (23-second result); peak gain; MP3 transcode.",
+      "sourceMember": null,
+      "sourceExcerptSeconds": [
+        30,
+        54
+      ],
+      "filterGraph": "[0:a]atrim=start=30:duration=24,asetpts=PTS-STARTPTS,aresample=44100,asplit=3[b][t][h];[b]atrim=start=1:end=23,asetpts=PTS-STARTPTS[body];[t]atrim=start=23:end=24,asetpts=PTS-STARTPTS[tail];[h]atrim=start=0:end=1,asetpts=PTS-STARTPTS[head];[tail][head]acrossfade=d=1:c1=tri:c2=tri[join];[body][join]concat=n=2:v=0:a=1[a]",
+      "gainDb": 13.4,
+      "targetPeakDbfs": -9,
+      "durationSeconds": 23.0,
+      "containerDurationSeconds": 23.0,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 2,
+      "bitrate": 96000,
+      "bytes": 277010,
+      "sha256": "faad4b68731a75e30bdea4d70f270c0acae01a3230cef688306e5b5882b2e646",
+      "loop": true,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -9.4,
+        "meanDbfs": -29.4
+      }
+    },
+    {
+      "file": "ambient-forest.mp3",
+      "role": "Forest birds and wind",
+      "sources": [
+        "forest"
+      ],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "24-second excerpt; 1-second cyclic tail/head crossfade (23-second result); peak gain; MP3 transcode.",
+      "sourceMember": null,
+      "sourceExcerptSeconds": [
+        2,
+        26
+      ],
+      "filterGraph": "[0:a]atrim=start=2:duration=24,asetpts=PTS-STARTPTS,aresample=44100,asplit=3[b][t][h];[b]atrim=start=1:end=23,asetpts=PTS-STARTPTS[body];[t]atrim=start=23:end=24,asetpts=PTS-STARTPTS[tail];[h]atrim=start=0:end=1,asetpts=PTS-STARTPTS[head];[tail][head]acrossfade=d=1:c1=tri:c2=tri[join];[body][join]concat=n=2:v=0:a=1[a]",
+      "gainDb": 22.6,
+      "targetPeakDbfs": -9,
+      "durationSeconds": 23.0,
+      "containerDurationSeconds": 23.0,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 2,
+      "bitrate": 96000,
+      "bytes": 277026,
+      "sha256": "13dcc0873a8bae3383d8c6f2743a52a5de000f29453483bf640e93401e469ff4",
+      "loop": true,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -9.6,
+        "meanDbfs": -21.9
+      }
+    },
+    {
+      "file": "ambient-grass.mp3",
+      "role": "Grassland rustle",
+      "sources": [
+        "grass"
+      ],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "24-second excerpt; 1-second cyclic tail/head crossfade (23-second result); peak gain; MP3 transcode.",
+      "sourceMember": null,
+      "sourceExcerptSeconds": [
+        8,
+        32
+      ],
+      "filterGraph": "[0:a]atrim=start=8:duration=24,asetpts=PTS-STARTPTS,aresample=44100,asplit=3[b][t][h];[b]atrim=start=1:end=23,asetpts=PTS-STARTPTS[body];[t]atrim=start=23:end=24,asetpts=PTS-STARTPTS[tail];[h]atrim=start=0:end=1,asetpts=PTS-STARTPTS[head];[tail][head]acrossfade=d=1:c1=tri:c2=tri[join];[body][join]concat=n=2:v=0:a=1[a]",
+      "gainDb": -7.8,
+      "targetPeakDbfs": -9,
+      "durationSeconds": 23.0,
+      "containerDurationSeconds": 23.0,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 2,
+      "bitrate": 96000,
+      "bytes": 277042,
+      "sha256": "9307e1415792a55a9654af686f853e9e1657816e369c92c52eb76e4579704b11",
+      "loop": true,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -9.5,
+        "meanDbfs": -28.9
+      }
+    },
+    {
+      "file": "ambient-desert.mp3",
+      "role": "Desert wind",
+      "sources": [
+        "desert"
+      ],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "24-second excerpt; 1-second cyclic tail/head crossfade (23-second result); peak gain; MP3 transcode.",
+      "sourceMember": null,
+      "sourceExcerptSeconds": [
+        4,
+        28
+      ],
+      "filterGraph": "[0:a]atrim=start=4:duration=24,asetpts=PTS-STARTPTS,aresample=44100,asplit=3[b][t][h];[b]atrim=start=1:end=23,asetpts=PTS-STARTPTS[body];[t]atrim=start=23:end=24,asetpts=PTS-STARTPTS[tail];[h]atrim=start=0:end=1,asetpts=PTS-STARTPTS[head];[tail][head]acrossfade=d=1:c1=tri:c2=tri[join];[body][join]concat=n=2:v=0:a=1[a]",
+      "gainDb": -2.8,
+      "targetPeakDbfs": -9,
+      "durationSeconds": 23.0,
+      "containerDurationSeconds": 23.0,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 2,
+      "bitrate": 96000,
+      "bytes": 277018,
+      "sha256": "e555786c5d9fee6260b98e67a7ae5c836419fc183710d3d70a64742af5922fbd",
+      "loop": true,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -9.1,
+        "meanDbfs": -25.8
+      }
+    },
+    {
+      "file": "ambient-ocean.mp3",
+      "role": "Ocean water",
+      "sources": [
+        "ocean"
+      ],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "24-second excerpt; 1-second cyclic tail/head crossfade (23-second result); peak gain; MP3 transcode.",
+      "sourceMember": null,
+      "sourceExcerptSeconds": [
+        20,
+        44
+      ],
+      "filterGraph": "[0:a]atrim=start=20:duration=24,asetpts=PTS-STARTPTS,aresample=44100,asplit=3[b][t][h];[b]atrim=start=1:end=23,asetpts=PTS-STARTPTS[body];[t]atrim=start=23:end=24,asetpts=PTS-STARTPTS[tail];[h]atrim=start=0:end=1,asetpts=PTS-STARTPTS[head];[tail][head]acrossfade=d=1:c1=tri:c2=tri[join];[body][join]concat=n=2:v=0:a=1[a]",
+      "gainDb": 3.9,
+      "targetPeakDbfs": -9,
+      "durationSeconds": 23.0,
+      "containerDurationSeconds": 23.0,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 2,
+      "bitrate": 96000,
+      "bytes": 277014,
+      "sha256": "ac149578f7d9d9775e62a2310a8bbff00a9fe4f6ff2c37f30f24016c6b9b3652",
+      "loop": true,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -9.1,
+        "meanDbfs": -29.0
+      }
+    },
+    {
+      "file": "ambient-cave.mp3",
+      "role": "Cave drips",
+      "sources": [
+        "cave"
+      ],
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "24-second excerpt; 1-second cyclic tail/head crossfade (23-second result); peak gain; MP3 transcode.",
+      "sourceMember": null,
+      "sourceExcerptSeconds": [
+        10,
+        34
+      ],
+      "filterGraph": "[0:a]atrim=start=10:duration=24,asetpts=PTS-STARTPTS,aresample=44100,asplit=3[b][t][h];[b]atrim=start=1:end=23,asetpts=PTS-STARTPTS[body];[t]atrim=start=23:end=24,asetpts=PTS-STARTPTS[tail];[h]atrim=start=0:end=1,asetpts=PTS-STARTPTS[head];[tail][head]acrossfade=d=1:c1=tri:c2=tri[join];[body][join]concat=n=2:v=0:a=1[a]",
+      "gainDb": -5.7,
+      "targetPeakDbfs": -9,
+      "durationSeconds": 23.0,
+      "containerDurationSeconds": 23.0,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 2,
+      "bitrate": 96000,
+      "bytes": 277023,
+      "sha256": "71be90a966c661098ef1c9547a6e3eeb4bf6f8509e6a2d6520a4cd8d82f5344f",
+      "loop": true,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -9.4,
+        "meanDbfs": -37.8
+      }
+    },
+    {
+      "file": "ambient-volcano.mp3",
+      "role": "Volcano rumble",
+      "sources": [
+        "volcano"
+      ],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "24-second excerpt; 1-second cyclic tail/head crossfade (23-second result); peak gain; MP3 transcode.",
+      "sourceMember": null,
+      "sourceExcerptSeconds": [
+        8,
+        32
+      ],
+      "filterGraph": "[0:a]atrim=start=8:duration=24,asetpts=PTS-STARTPTS,aresample=44100,asplit=3[b][t][h];[b]atrim=start=1:end=23,asetpts=PTS-STARTPTS[body];[t]atrim=start=23:end=24,asetpts=PTS-STARTPTS[tail];[h]atrim=start=0:end=1,asetpts=PTS-STARTPTS[head];[tail][head]acrossfade=d=1:c1=tri:c2=tri[join];[body][join]concat=n=2:v=0:a=1[a]",
+      "gainDb": -0.9,
+      "targetPeakDbfs": -9,
+      "durationSeconds": 23.0,
+      "containerDurationSeconds": 23.0,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 2,
+      "bitrate": 96000,
+      "bytes": 277025,
+      "sha256": "51bed4528401441a1d79889f3d10d26dfebc5bb63dddc225d45518d8a6e4e912",
+      "loop": true,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -9.4,
+        "meanDbfs": -18.2
+      }
+    },
+    {
+      "file": "ambient-town.mp3",
+      "role": "Town bustle",
+      "sources": [
+        "town"
+      ],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "24-second excerpt; 1-second cyclic tail/head crossfade (23-second result); peak gain; MP3 transcode.",
+      "sourceMember": null,
+      "sourceExcerptSeconds": [
+        25,
+        49
+      ],
+      "filterGraph": "[0:a]atrim=start=25:duration=24,asetpts=PTS-STARTPTS,aresample=44100,asplit=3[b][t][h];[b]atrim=start=1:end=23,asetpts=PTS-STARTPTS[body];[t]atrim=start=23:end=24,asetpts=PTS-STARTPTS[tail];[h]atrim=start=0:end=1,asetpts=PTS-STARTPTS[head];[tail][head]acrossfade=d=1:c1=tri:c2=tri[join];[body][join]concat=n=2:v=0:a=1[a]",
+      "gainDb": 7.7,
+      "targetPeakDbfs": -9,
+      "durationSeconds": 23.0,
+      "containerDurationSeconds": 23.0,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 2,
+      "bitrate": 96000,
+      "bytes": 277016,
+      "sha256": "9d20658d57b65192076ca577e2604c79592b51bb078c795ecad5100278deedd9",
+      "loop": true,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -9.4,
+        "meanDbfs": -27.5
+      }
+    },
+    {
+      "file": "footstep-wood01.mp3",
+      "role": "Footstep wood01",
+      "sources": [
+        "steps"
+      ],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "Downmix to mono; peak gain; MP3 transcode.",
+      "sourceMember": "wood01.ogg",
+      "sourceExcerptSeconds": null,
+      "filterGraph": "[0:a]anull[a]",
+      "gainDb": 9.4,
+      "targetPeakDbfs": -12,
+      "durationSeconds": 0.241655,
+      "containerDurationSeconds": 0.241655,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 1,
+      "bitrate": 64000,
+      "bytes": 2764,
+      "sha256": "a5e4d5cf46badf28054a9ccbbf91db0c754bb1456e21e999c823697edf812995",
+      "loop": false,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -12.4,
+        "meanDbfs": -29.0
+      }
+    },
+    {
+      "file": "footstep-wood02.mp3",
+      "role": "Footstep wood02",
+      "sources": [
+        "steps"
+      ],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "Downmix to mono; peak gain; MP3 transcode.",
+      "sourceMember": "wood02.ogg",
+      "sourceExcerptSeconds": null,
+      "filterGraph": "[0:a]anull[a]",
+      "gainDb": 14.2,
+      "targetPeakDbfs": -12,
+      "durationSeconds": 0.241655,
+      "containerDurationSeconds": 0.241655,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 1,
+      "bitrate": 64000,
+      "bytes": 2764,
+      "sha256": "a44c5021274573be1fbcd4ceadb4f8902dab6ca2a48619fd9b1f24015aeb6a9c",
+      "loop": false,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -12.5,
+        "meanDbfs": -26.9
+      }
+    },
+    {
+      "file": "footstep-wood03.mp3",
+      "role": "Footstep wood03",
+      "sources": [
+        "steps"
+      ],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "Downmix to mono; peak gain; MP3 transcode.",
+      "sourceMember": "wood03.ogg",
+      "sourceExcerptSeconds": null,
+      "filterGraph": "[0:a]anull[a]",
+      "gainDb": 1.0,
+      "targetPeakDbfs": -12,
+      "durationSeconds": 0.317914,
+      "containerDurationSeconds": 0.317914,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 1,
+      "bitrate": 64000,
+      "bytes": 3391,
+      "sha256": "a05500e364bba7d6ec5e1d959d4f658b873ba86bd60c0a395c829ead9baff64a",
+      "loop": false,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -12.4,
+        "meanDbfs": -31.6
+      }
+    },
+    {
+      "file": "footstep-stone01.mp3",
+      "role": "Footstep stone01",
+      "sources": [
+        "steps"
+      ],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "Downmix to mono; peak gain; MP3 transcode.",
+      "sourceMember": "stone01.ogg",
+      "sourceExcerptSeconds": null,
+      "filterGraph": "[0:a]anull[a]",
+      "gainDb": -0.7,
+      "targetPeakDbfs": -12,
+      "durationSeconds": 0.293469,
+      "containerDurationSeconds": 0.293469,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 1,
+      "bitrate": 64000,
+      "bytes": 3183,
+      "sha256": "76cefeb5279d2d1d22b8e97d9870d63ec9d9cf6c3d48e408d95142545d8dda8d",
+      "loop": false,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -12.5,
+        "meanDbfs": -37.4
+      }
+    },
+    {
+      "file": "footstep-mud02.mp3",
+      "role": "Footstep mud02",
+      "sources": [
+        "steps"
+      ],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "Downmix to mono; peak gain; MP3 transcode.",
+      "sourceMember": "mud02.ogg",
+      "sourceExcerptSeconds": null,
+      "filterGraph": "[0:a]anull[a]",
+      "gainDb": 13.4,
+      "targetPeakDbfs": -12,
+      "durationSeconds": 0.259932,
+      "containerDurationSeconds": 0.259932,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 1,
+      "bitrate": 64000,
+      "bytes": 2763,
+      "sha256": "0d982d512682b5cdc75cbe79a54f90da8ab31437f393ca3503ee91e5cf319e4c",
+      "loop": false,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -12.5,
+        "meanDbfs": -36.1
+      }
+    },
+    {
+      "file": "footstep-leaves01.mp3",
+      "role": "Footstep leaves01",
+      "sources": [
+        "steps"
+      ],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "Downmix to mono; peak gain; MP3 transcode.",
+      "sourceMember": "leaves01.ogg",
+      "sourceExcerptSeconds": null,
+      "filterGraph": "[0:a]anull[a]",
+      "gainDb": 10.9,
+      "targetPeakDbfs": -12,
+      "durationSeconds": 0.39127,
+      "containerDurationSeconds": 0.39127,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 1,
+      "bitrate": 64000,
+      "bytes": 3811,
+      "sha256": "a6956a2fed3eb5c42e8c8f1130dd09c3cdc89a76b0c371501ec9c1ff16380d1b",
+      "loop": false,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -12.2,
+        "meanDbfs": -35.4
+      }
+    },
+    {
+      "file": "footstep-leaves02.mp3",
+      "role": "Footstep leaves02",
+      "sources": [
+        "steps"
+      ],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "Downmix to mono; peak gain; MP3 transcode.",
+      "sourceMember": "leaves02.ogg",
+      "sourceExcerptSeconds": null,
+      "filterGraph": "[0:a]anull[a]",
+      "gainDb": 18.2,
+      "targetPeakDbfs": -12,
+      "durationSeconds": 0.474286,
+      "containerDurationSeconds": 0.474286,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 1,
+      "bitrate": 64000,
+      "bytes": 4647,
+      "sha256": "f8affcddf7f6666845a857e59be6899f33d7805d1bf4255f7cc41b31a40c8dec",
+      "loop": false,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -13.4,
+        "meanDbfs": -33.9
+      }
+    },
+    {
+      "file": "footstep-gravel.mp3",
+      "role": "Footstep gravel",
+      "sources": [
+        "steps"
+      ],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "Downmix to mono; peak gain; MP3 transcode.",
+      "sourceMember": "gravel.ogg",
+      "sourceExcerptSeconds": null,
+      "filterGraph": "[0:a]anull[a]",
+      "gainDb": 4.2,
+      "targetPeakDbfs": -12,
+      "durationSeconds": 0.7039,
+      "containerDurationSeconds": 0.7039,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 1,
+      "bitrate": 64000,
+      "bytes": 6317,
+      "sha256": "93a5839f5571ecc5e45000a19ac5a846840cc78e0d5eb46ee9a0515073b8a693",
+      "loop": false,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -12.4,
+        "meanDbfs": -39.8
+      }
+    },
+    {
+      "file": "npc-greeting-male.mp3",
+      "role": "NPC greeting (male)",
+      "sources": [
+        "male"
+      ],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "Trim endpoint silence below -50 dB; downmix to mono; peak gain; MP3 transcode.",
+      "sourceMember": "RPG Male Adventurer/greet0.wav",
+      "sourceExcerptSeconds": null,
+      "filterGraph": "[0:a]silenceremove=start_periods=1:start_duration=0.01:start_threshold=-50dB:start_silence=0.015,areverse,silenceremove=start_periods=1:start_duration=0.01:start_threshold=-50dB:start_silence=0.06,areverse[a]",
+      "gainDb": -6.0,
+      "targetPeakDbfs": -6,
+      "durationSeconds": 0.565329,
+      "containerDurationSeconds": 0.565329,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 1,
+      "bitrate": 64000,
+      "bytes": 5273,
+      "sha256": "e39f78c27120177bb5820ad2be0cd664bbf831167823d857bdceaa125ab1cfd5",
+      "loop": false,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -6.4,
+        "meanDbfs": -23.7
+      }
+    },
+    {
+      "file": "npc-shout.mp3",
+      "role": "NPC nonverbal shout",
+      "sources": [
+        "male"
+      ],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "Trim endpoint silence below -50 dB; downmix to mono; peak gain; MP3 transcode.",
+      "sourceMember": "RPG Male Adventurer/attackbig0.wav",
+      "sourceExcerptSeconds": null,
+      "filterGraph": "[0:a]silenceremove=start_periods=1:start_duration=0.01:start_threshold=-50dB:start_silence=0.015,areverse,silenceremove=start_periods=1:start_duration=0.01:start_threshold=-50dB:start_silence=0.06,areverse[a]",
+      "gainDb": -4.0,
+      "targetPeakDbfs": -6,
+      "durationSeconds": 1.093741,
+      "containerDurationSeconds": 1.093741,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 1,
+      "bitrate": 64000,
+      "bytes": 9453,
+      "sha256": "af6598173d855d65ca8286b1e568f311e5dee5a7a13addb921572006dc4bb065",
+      "loop": false,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -6.2,
+        "meanDbfs": -25.2
+      }
+    },
+    {
+      "file": "npc-greeting-female.mp3",
+      "role": "NPC greeting (female)",
+      "sources": [
+        "female"
+      ],
+      "license": "https://creativecommons.org/licenses/by/3.0/",
+      "changes": "Trim endpoint silence below -50 dB; downmix to mono; peak gain; MP3 transcode.",
+      "sourceMember": null,
+      "sourceExcerptSeconds": null,
+      "filterGraph": "[0:a]silenceremove=start_periods=1:start_duration=0.01:start_threshold=-50dB:start_silence=0.015,areverse,silenceremove=start_periods=1:start_duration=0.01:start_threshold=-50dB:start_silence=0.06,areverse[a]",
+      "gainDb": -4.2,
+      "targetPeakDbfs": -6,
+      "durationSeconds": 1.010113,
+      "containerDurationSeconds": 1.010113,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 1,
+      "bitrate": 64000,
+      "bytes": 8809,
+      "sha256": "dfc30622a39870aad30ece921025f19fe70cadaefec5e27d9a0eb480126d6052",
+      "loop": false,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -6.4,
+        "meanDbfs": -19.1
+      }
+    },
+    {
+      "file": "npc-laugh.mp3",
+      "role": "NPC laugh",
+      "sources": [
+        "laugh"
+      ],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "Trim endpoint silence below -50 dB; downmix to mono; peak gain; MP3 transcode.",
+      "sourceMember": null,
+      "sourceExcerptSeconds": null,
+      "filterGraph": "[0:a]silenceremove=start_periods=1:start_duration=0.01:start_threshold=-50dB:start_silence=0.015,areverse,silenceremove=start_periods=1:start_duration=0.01:start_threshold=-50dB:start_silence=0.06,areverse[a]",
+      "gainDb": -5.8,
+      "targetPeakDbfs": -6,
+      "durationSeconds": 3.573787,
+      "containerDurationSeconds": 3.573787,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 1,
+      "bitrate": 64000,
+      "bytes": 29289,
+      "sha256": "568825b1a3619ffca0e1744c7aa2709fec5e0dab63c121ff5b9c97384d03ab51",
+      "loop": false,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -5.9,
+        "meanDbfs": -20.4
+      }
+    },
+    {
+      "file": "npc-annoyed.mp3",
+      "role": "NPC annoyed sigh",
+      "sources": [
+        "sigh"
+      ],
+      "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "changes": "Trim endpoint silence below -50 dB; downmix to mono; peak gain; MP3 transcode.",
+      "sourceMember": null,
+      "sourceExcerptSeconds": null,
+      "filterGraph": "[0:a]silenceremove=start_periods=1:start_duration=0.01:start_threshold=-50dB:start_silence=0.015,areverse,silenceremove=start_periods=1:start_duration=0.01:start_threshold=-50dB:start_silence=0.06,areverse[a]",
+      "gainDb": 20.9,
+      "targetPeakDbfs": -6,
+      "durationSeconds": 5.090227,
+      "containerDurationSeconds": 5.090227,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 1,
+      "bitrate": 64000,
+      "bytes": 41394,
+      "sha256": "531d3d708553c9c709dc1f511e77ecc12e69df6d931f7121b69ccab220cd6ea1",
+      "loop": false,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -6.2,
+        "meanDbfs": -28.5
+      }
+    },
+    {
+      "file": "cave-transition.mp3",
+      "role": "Cave entrance transition",
+      "sources": [
+        "mountain",
+        "drip"
+      ],
+      "license": "https://creativecommons.org/licenses/by/3.0/",
+      "changes": "Designed from recorded wind (40\u201342.4 seconds) plus Yo Frankie! water drip amb_waterdrip_1.flac; filtering, fades, delayed drip, echo tails, mix, peak gain and MP3 transcode.",
+      "sourceMember": "amb_waterdrip_1.flac",
+      "sourceExcerptSeconds": null,
+      "filterGraph": "[0:a]atrim=start=40:duration=2.4,asetpts=PTS-STARTPTS,aresample=44100,highpass=f=80,lowpass=f=1800,afade=t=in:d=0.7,afade=t=out:st=1.8:d=0.6,aecho=0.8:0.5:150|310|590:0.35|0.2|0.1,volume=0.4,apad=whole_dur=3.6[w];[1:a]aresample=44100,aformat=channel_layouts=stereo,adelay=1100|1100,aecho=0.8:0.5:190|430:0.3|0.15,apad=whole_dur=3.6[d];[w][d]amix=inputs=2:duration=longest:normalize=0,atrim=duration=3.6,afade=t=out:st=2.7:d=0.9[a]",
+      "gainDb": 14.5,
+      "targetPeakDbfs": -6,
+      "durationSeconds": 3.6,
+      "containerDurationSeconds": 3.6,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 2,
+      "bitrate": 96000,
+      "bytes": 44200,
+      "sha256": "361868b60742d8fad090a76deae1f9facdcc99066564a5527a3cada4940aae81",
+      "loop": false,
+      "validation": {
+        "decoded": true,
+        "peakDbfs": -6.6,
+        "meanDbfs": -30.8
+      }
+    }
+  ],
+  "totalAudioBytes": 2384232,
+  "tool": "ffmpeg version n9.0.2 Copyright (c) 2000-2026 the FFmpeg developers",
+  "validation": {
+    "checkedAt": "2026-10-23",
+    "fullDecode": "22/22 pass",
+    "metadata": "22/22 pass",
+    "sha256": "22/22 match",
+    "manifestCoverage": "22/22, no extra media",
+    "suppliedGtaLine": "SHA-256 unchanged",
+    "subjectiveAudition": false,
+    "browserPlaybackTested": false
+  }
+}

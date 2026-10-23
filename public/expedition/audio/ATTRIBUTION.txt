@@ -1,0 +1,23 @@
+EXPEDITION AUDIO CREDITS
+Verified 2026-10-23. File mapping, source/download hashes and edit details: provenance.json.
+
+REQUIRED ATTRIBUTION (keep with redistribution; expose via site credits when integrated):
+Cave Drips by everythingsounds — https://freesound.org/people/everythingsounds/sounds/199515/ — CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ . Edited to a 23-second cyclic crossfade, gain adjusted and transcoded to ambient-cave.mp3.
+Female RPG Character voice pack by RiddlesYouThis — https://opengameart.org/content/female-rpg-character-voice-pack — CC BY 3.0: https://creativecommons.org/licenses/by/3.0/ . hello.ogg trimmed, downmixed, gain adjusted and transcoded to npc-greeting-female.mp3.
+Ambient Water Drips from Yo Frankie! by Blender Foundation (submitted by Lamoot) — https://opengameart.org/content/ambient-water-drips — CC BY 3.0: https://creativecommons.org/licenses/by/3.0/ . amb_waterdrip_1.flac mixed with CC0 wind by kyles, delayed, echoed, faded, gain adjusted and transcoded to cave-transition.mp3.
+
+ADDITIONAL CC0 CREDITS (attribution voluntary):
+mountain wind heavy strong gusts Swiss Alps.flac — kyles — https://freesound.org/people/kyles/sounds/454092/ — https://creativecommons.org/publicdomain/zero/1.0/
+Ambiance_Natural_Forest_Birds_Wind_Loop_Stereo.wav — Nox_Sound — https://freesound.org/people/Nox_Sound/sounds/570492/ — https://creativecommons.org/publicdomain/zero/1.0/
+Tall Grass Brushing Together in the Wind with Small Waterfall master — BenHarmSound (Ben Harmeyer) — https://freesound.org/people/BenHarmSound/sounds/818505/ — https://creativecommons.org/publicdomain/zero/1.0/
+Desert wind stereo — KasDonatov — https://freesound.org/people/KasDonatov/sounds/402710/ — https://creativecommons.org/publicdomain/zero/1.0/
+WATER OCEAN WAVES 01.wav — sengjinn — https://freesound.org/people/sengjinn/sounds/174581/ — https://creativecommons.org/publicdomain/zero/1.0/
+Volcano.wav — morganpurkis — https://freesound.org/people/morganpurkis/sounds/385098/ — https://creativecommons.org/publicdomain/zero/1.0/
+140802_Greenwich_FoodMarket_F.wav — blaukreuz — https://freesound.org/people/blaukreuz/sounds/252697/ — https://creativecommons.org/publicdomain/zero/1.0/
+Different steps on wood, stone, leaves, gravel and mud — TinyWorlds — https://opengameart.org/content/different-steps-on-wood-stone-leaves-gravel-and-mud — https://creativecommons.org/publicdomain/zero/1.0/
+Voice Clip Pack - Male Adventurer RPG — Brandon Song (wolfwoot) — https://opengameart.org/content/voice-clip-pack-male-adventurer-rpg — https://creativecommons.org/publicdomain/zero/1.0/
+Laughing (male) — Daniel Alvarez (dastudiospr) — https://freesound.org/people/dastudiospr/sounds/529818/ — https://creativecommons.org/publicdomain/zero/1.0/
+Sigh, male — giddster — https://freesound.org/people/giddster/sounds/336539/ — https://creativecommons.org/publicdomain/zero/1.0/
+
+No creator endorsement is implied. The new processing/arrangement in cave-transition.mp3 is also offered under CC BY 3.0.
+The pre-existing /audio/here-we-go-again.mp3 is user-supplied, unchanged, outside this licensed collection, and has no license verification here.
