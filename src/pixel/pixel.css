@@ -333,7 +333,14 @@
     bottom: 242px;
   }
   .pixel-adventure .exp-notice {
-    bottom: 240px;
+    top: 70%;
+    bottom: auto;
+    width: calc(100% - 32px);
+    max-width: 360px;
+    padding: 10px 14px;
+    font-size: 16px;
+    line-height: 1.4;
+    text-align: center;
   }
 }
 @media (prefers-reduced-motion: reduce) {
