@@ -21,7 +21,7 @@ export default function buildBiome({ THREE, kit, index }) {
     }),
   ];
 
-  // Closed, irregular cross sections leave the entire top of the cavern open.
+  // The scene camera faces from +z: tall rock stays behind the walking route.
   function wall(side) {
     const positions = [];
     const colors = [];
@@ -34,10 +34,10 @@ export default function buildBiome({ THREE, kit, index }) {
       const t = i / (count - 1);
       const endFade = Math.sin(Math.PI * t) ** 0.4;
       const ridge = Math.sin(x * 0.43 + side) * 0.7 + Math.cos(x * 0.91) * 0.4;
-      const height = side > 0
+      const height = side < 0
         ? 5.8 + endFade * 4.7 + ridge
-        : 1.15 + endFade * 1.6 + ridge * 0.4;
-      const toe = (side > 0 ? 6.6 : 9.4) + Math.sin(x * 0.27) * 0.6;
+        : 0.65 + endFade * 0.65 + ridge * 0.2;
+      const toe = (side < 0 ? 6.6 : 9.4) + Math.sin(x * 0.27) * 0.6;
       const distances = [toe, toe - 0.5, toe + 0.25, toe + 1.3, toe + 3.2, toe + 5, toe + 5.5];
       const elevations = [-0.12, height * 0.29, height * 0.76, height, height * 0.89, height * 0.42, -0.12];
       for (let j = 0; j < ringSize; j += 1) {
@@ -175,10 +175,10 @@ export default function buildBiome({ THREE, kit, index }) {
 
   // Three intentional mineral gardens, each with a different silhouette.
   const gardens = [
-    { x: -16.2, side: 1, gap: 3.1, size: 1.1, tone: 0 },
-    { x: 1.8, side: 1, gap: 3.7, size: 1.65, tone: 1 },
-    { x: 16.8, side: -1, gap: 3.2, size: 0.9, tone: 0 },
-    { x: -3.8, side: -1, gap: 5.7, size: 0.65, tone: 2 },
+    { x: -16.2, side: -1, gap: 3.1, size: 1.1, tone: 0 },
+    { x: 1.8, side: -1, gap: 3.7, size: 1.65, tone: 1 },
+    { x: 16.8, side: 1, gap: 3.2, size: 0.9, tone: 0 },
+    { x: -3.8, side: 1, gap: 5.7, size: 0.65, tone: 2 },
   ];
   for (const garden of gardens) {
     const z = outsideZ(garden.x, garden.side, garden.gap, 2.5, 1.2);
@@ -203,11 +203,11 @@ export default function buildBiome({ THREE, kit, index }) {
 
   // Broken buttresses anchor the wall; smaller scree gives a readable scale.
   for (let i = 0; i < 52; i += 1) {
-    const side = i % 4 === 0 ? -1 : 1;
+    const side = i % 4 === 0 ? 1 : -1;
     const x = -21.2 + random() * 42.4;
     const large = i < 13;
     const sx = large ? 1 + random() * 1.3 : 0.22 + random() * 0.58;
-    const sy = large ? 1.1 + random() * 2.4 : 0.18 + random() * 0.4;
+    const sy = (large ? 1.1 + random() * 2.4 : 0.18 + random() * 0.4) * (side > 0 ? 0.42 : 1);
     const sz = large ? 0.9 + random() * 0.8 : 0.2 + random() * 0.45;
     const z = outsideZ(x, side, large ? 5.1 : 2.25 + random() * 3.4, sx, sz);
     rocks.push({
@@ -217,11 +217,11 @@ export default function buildBiome({ THREE, kit, index }) {
   }
 
   for (let i = 0; i < 38; i += 1) {
-    const side = i % 5 === 0 ? -1 : 1;
+    const side = i % 5 === 0 ? 1 : -1;
     const x = -21 + random() * 42;
     const r = 0.25 + random() * 0.55;
     const z = outsideZ(x, side, 3.1 + random() * 2.6, r, r);
-    const tall = 0.9 + random() ** 2 * 4.2;
+    const tall = (0.9 + random() ** 2 * 4.2) * (side > 0 ? 0.3 : 1);
     formations.push({
       position: [x, kit.height(x, z) - 0.04, z], scale: [r, tall, r * 0.83],
       rotation: [0, random() * 6.28, 0], color: i % 3 ? 0xabb5a8 : 0x768c89,
@@ -235,13 +235,13 @@ export default function buildBiome({ THREE, kit, index }) {
 
   // Hanging teeth attach to solid rear-wall shelves, never an invisible roof.
   for (const x of [-18, -10, 0, 9, 18]) {
-    const z = outsideZ(x, 1, 6.2, 1.7, 0.9);
+    const z = outsideZ(x, -1, 6.2, 1.7, 0.9);
     const y = kit.height(x, z) + 6.2 + Math.sin(x * 0.3) * 0.6;
-    rocks.push({ position: [x, y, z + 0.6], scale: [2.1, 1.0, 1.65], rotation: [0.1, 0.2, -0.1] });
+    rocks.push({ position: [x, y, z - 0.6], scale: [2.1, 1.0, 1.65], rotation: [0.1, 0.2, -0.1] });
     for (let j = 0; j < 4; j += 1) {
       const r = 0.24 + random() * 0.18;
       formations.push({
-        position: [x - 1.2 + j * 0.75, y - 0.2, z - 0.35],
+        position: [x - 1.2 + j * 0.75, y - 0.2, z + 0.35],
         scale: [r, 1.1 + random() * 1.65, r], rotation: [Math.PI, j, 0], color: 0x889c99,
       });
     }
@@ -260,7 +260,7 @@ export default function buildBiome({ THREE, kit, index }) {
   const ripples = [];
 
   function pool(cx, radiusX, radiusZ, phase) {
-    const cz = outsideZ(cx, -1, 2.7, radiusX + 0.55, radiusZ + 0.55);
+    const cz = outsideZ(cx, 1, 2.7, radiusX + 0.55, radiusZ + 0.55);
     const count = 56;
     const outline = [];
     let surfaceY = kit.height(cx, cz) + 0.09;
