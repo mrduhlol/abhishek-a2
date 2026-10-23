@@ -12,6 +12,11 @@ const GROUND = ['#78877b', '#526f43', '#91a65d', '#d2a366', '#8dafa0', '#686778'
 const SKY = ['#bacdd2', '#b9caba', '#cbd7bd', '#e7caa4', '#b9d9dd', '#a1aabf', '#d9b6a3'].map(c => new THREE.Color(c));
 const VIEW = [[9, 12, 24], [7, 10, 23], [6, 9, 26], [9, 11, 25], [7, 12, 28], [5, 9, 23], [9, 13, 26]];
 const DAMP = (rate, dt) => 1 - Math.exp(-rate * dt);
+const RENDER_QUALITY = [
+  { name: 'high', dpr: 1.25, shadowSize: 1024 },
+  { name: 'balanced', dpr: .8, shadowSize: 512 },
+  { name: 'low', dpr: .6, shadowSize: 512 },
+];
 const positionOf = (value, fallback = [0, 0, 0]) => {
   if (Array.isArray(value)) return new THREE.Vector3(value[0] || 0, value[1] || 0, value[2] || 0);
   return new THREE.Vector3(value?.x ?? fallback[0], value?.y ?? fallback[1], value?.z ?? fallback[2]);
@@ -277,6 +282,7 @@ export default function ExpeditionScene({ progress = 0, world = 'trail', reduced
     let assetsPrepared = false, assetError = false;
     let renderer, raf = 0, disposed = false, failed = false, visible = true, ready = false;
     let lastStamp = 0, time = 0, activeWorld = null, dirty = true, lastPositionAt = -1;
+    let qualityIndex = 0, frameAverage = 0, frameSamples = 0, slowSeconds = 0, renderedLastFrame = false;
     let resizeObserver, intersectionObserver, hovered = null, pointerDown = null;
     let hero = null, town = null, girl = null, stareUntil = 0, townWalk = 0;
     const disposers = [], actors = [], biomes = [], landmarks = [];
@@ -289,6 +295,8 @@ export default function ExpeditionScene({ progress = 0, world = 'trail', reduced
     const previousHero = new THREE.Vector3(), heroPosition = new THREE.Vector3();
     const pointer = new THREE.Vector2(10, 10), raycaster = new THREE.Raycaster();
     const screen = new THREE.Vector3(), cameraDirection = new THREE.Vector3();
+    const cameraFrustum = new THREE.Frustum(), viewProjection = new THREE.Matrix4();
+    const actorBounds = new THREE.Sphere();
     const bg = SKY[0].clone();
     scene.background = bg;
     scene.fog = new THREE.Fog(bg.clone(), 40, 110);
@@ -483,8 +491,12 @@ export default function ExpeditionScene({ progress = 0, world = 'trail', reduced
       scene.updateMatrixWorld(true);
       raycaster.setFromCamera(pointer, camera);
       const root = activeWorld === 'town' ? village : trail;
-      const hits = raycaster.intersectObject(root, true);
-      if (activeWorld === 'town' && hero) hits.push(...raycaster.intersectObject(hero.root, true));
+      // Raycaster traverses invisible groups by default; exclude culled actors and
+      // habitats before doing triangle tests, including the periodic NPC hit probes.
+      const targets = [];
+      root.traverseVisible(object => { if (object.isMesh) targets.push(object); });
+      if (activeWorld === 'town' && hero) hero.root.traverseVisible(object => { if (object.isMesh) targets.push(object); });
+      const hits = raycaster.intersectObjects(targets, false);
       hits.sort((a, b) => a.distance - b.distance);
       for (const hit of hits) {
         let object = hit.object, action = null, hidden = false;
@@ -554,9 +566,21 @@ export default function ExpeditionScene({ progress = 0, world = 'trail', reduced
       if (!renderer || disposed) return;
       const { width, height } = host.getBoundingClientRect();
       if (width < 1 || height < 1) return;
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+      const quality = RENDER_QUALITY[qualityIndex];
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, quality.dpr));
       renderer.setSize(width, height, false);
-      sun.shadow.mapSize.set(width < 750 ? 1024 : 2048, width < 750 ? 1024 : 2048);
+      if (sun.shadow.mapSize.x !== quality.shadowSize) {
+        // Changing mapSize alone does not resize an existing Three.js shadow target.
+        sun.shadow.map?.dispose();
+        sun.shadow.map = null;
+        sun.shadow.mapPass?.dispose();
+        sun.shadow.mapPass = null;
+        sun.shadow.mapSize.setScalar(quality.shadowSize);
+        sun.shadow.needsUpdate = true;
+        renderer.shadowMap.needsUpdate = true;
+      }
+      renderer.domElement.dataset.renderQuality = quality.name;
+      renderer.domElement.dataset.renderDpr = String(renderer.getPixelRatio());
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       dirty = true;
@@ -565,6 +589,10 @@ export default function ExpeditionScene({ progress = 0, world = 'trail', reduced
     function resume() {
       cancelAnimationFrame(raf);
       lastStamp = 0;
+      frameAverage = 0;
+      frameSamples = 0;
+      slowSeconds = 0;
+      renderedLastFrame = false;
       if (!disposed && !failed && visible && !document.hidden) raf = requestAnimationFrame(frame);
     }
 
@@ -578,14 +606,19 @@ export default function ExpeditionScene({ progress = 0, world = 'trail', reduced
     const rim = new THREE.DirectionalLight('#c4e1ec', .65);
     rim.position.set(-8, 9, -14);
     sun.castShadow = true;
-    sun.shadow.mapSize.set(2048, 2048);
+    sun.shadow.mapSize.set(1024, 1024);
     Object.assign(sun.shadow.camera, { left: -27, right: 27, top: 26, bottom: -26, near: 1, far: 95 });
     sun.shadow.normalBias = .045;
     sun.shadow.bias = -.00012;
     scene.add(sun, sun.target, fill, rim);
 
     function animateActor(actor, dt, moving, speed, lookAt) {
-      actor.avatar.update?.(dt, { moving, speed, time, working: Boolean(actor.descriptor.working), lookAt });
+      // The avatar caps individual updates at .1s. Substeps preserve its full
+      // distance-driven stride when a slow rendered frame advances the root .25s.
+      const steps = Math.max(1, Math.ceil(dt / .1));
+      for (let step = 0; step < steps; step++) {
+        actor.avatar.update?.(dt / steps, { moving, speed, time: time - dt + (step + 1) * dt / steps, working: Boolean(actor.descriptor.working), lookAt });
+      }
     }
 
     function face(actor, direction, dt, snap) {
@@ -598,10 +631,25 @@ export default function ExpeditionScene({ progress = 0, world = 'trail', reduced
     const movement = new THREE.Vector3(), npcDirection = new THREE.Vector3(), viewOffset = new THREE.Vector3();
     function frame(stamp) {
       if (disposed || failed || !visible || document.hidden) return;
-      const dt = lastStamp ? Math.min((stamp - lastStamp) / 1000, .05) : 1 / 60;
+      const rawDt = lastStamp ? Math.max(0, (stamp - lastStamp) / 1000) : 1 / 60;
+      const dt = Math.min(rawDt, .25);
       lastStamp = stamp;
       const props = latest.current;
       const quiet = Boolean(props.reducedMotion);
+      if (ready && renderedLastFrame && !quiet && qualityIndex < RENDER_QUALITY.length - 1) {
+        frameAverage = frameSamples ? THREE.MathUtils.lerp(frameAverage, rawDt, .25) : rawDt;
+        frameSamples++;
+        const slow = frameAverage > (qualityIndex === 0 ? .055 : .075);
+        slowSeconds = slow ? slowSeconds + rawDt : 0;
+        if (frameSamples >= 6 && slowSeconds >= 1.2) {
+          qualityIndex++;
+          frameAverage = 0;
+          frameSamples = 0;
+          slowSeconds = 0;
+          resize();
+        }
+      }
+      renderedLastFrame = false;
       if (quiet !== frame.previousQuiet) dirty = true;
       frame.previousQuiet = quiet;
       const nextWorld = props.world === 'town' ? 'town' : 'trail';
@@ -686,7 +734,7 @@ export default function ExpeditionScene({ progress = 0, world = 'trail', reduced
               else npcDirection.set(-1, 0, 1);
             }
             face(actor, npcDirection, dt, quiet);
-            animateActor(actor, quiet ? 0 : dt, !paused && npcDirection.length() > .001 && actor !== girl, quiet ? 0 : actor.root.position.distanceTo(actor.previous) / dt, actor === girl && time < stareUntil ? camera.position : undefined);
+            if (actor.root.visible) animateActor(actor, quiet ? 0 : dt, !paused && npcDirection.length() > .001 && actor !== girl, quiet ? 0 : actor.root.position.distanceTo(actor.previous) / dt, actor === girl && time < stareUntil ? camera.position : undefined);
           }
           if (girl) {
             const end = girl.root.position;
@@ -714,6 +762,7 @@ export default function ExpeditionScene({ progress = 0, world = 'trail', reduced
         renderer.domElement.dataset.heroX = heroPosition.x.toFixed(5);
         renderer.domElement.dataset.progress = String(p);
         renderer.domElement.dataset.reducedMotion = String(quiet);
+        renderer.domElement.dataset.townArrived = String(activeWorld === 'town' && Boolean(girl) && townWalk === 1);
         scene.fog.color.copy(bg);
         // Preserve a useful horizontal view on phones without shrinking the guide away.
         const narrow = clamp((1.25 - camera.aspect) / 1.25);
@@ -728,8 +777,21 @@ export default function ExpeditionScene({ progress = 0, world = 'trail', reduced
         sun.position.copy(heroPosition).add(new THREE.Vector3(-15, 26, 16));
         sun.target.position.copy(heroPosition);
         camera.updateMatrixWorld();
+        if (activeWorld === 'town') {
+          viewProjection.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+          cameraFrustum.setFromProjectionMatrix(viewProjection);
+          for (const actor of actors) {
+            if (actor === hero || actor.disposed) continue;
+            actorBounds.center.copy(actor.root.position);
+            actorBounds.center.y += actor.height / 2;
+            // Generous margin retains offscreen silhouettes that cast nearby shadows.
+            actorBounds.radius = actor.height + 2;
+            actor.root.visible = actor === girl || cameraFrustum.intersectsSphere(actorBounds);
+          }
+        }
         if (!quiet || dirty || changedProgress || changedWorld || !ready) {
           renderer.render(scene, camera);
+          renderedLastFrame = true;
           dirty = false;
           if (!ready && assetsPrepared) {
             ready = true;
