@@ -87,7 +87,8 @@ export default function PixelScene(props) {
     launchCanvas.className = "pixel-launch-hero";
     launchCanvas.setAttribute("aria-hidden", "true");
     launchCanvas.hidden = true;
-    node.closest("main").append(launchCanvas);
+    const root = node.closest("main");
+    root.append(launchCanvas);
     const launchContext = launchCanvas.getContext("2d");
     const texture = (image) => {
       const t = new THREE.CanvasTexture(image);
@@ -818,6 +819,8 @@ export default function PixelScene(props) {
         });
       }
       renderer.render(scene, camera);
+      // Transfer visibility only after the replacement has actually rendered.
+      root.dataset.travelerReady = String(entered);
       const el = renderer.domElement;
       Object.assign(el.dataset, {
         world,
@@ -913,6 +916,7 @@ export default function PixelScene(props) {
       disposed = true;
       cancelAnimationFrame(frame);
       launchCanvas.remove();
+      delete root.dataset.travelerReady;
       observer.disconnect();
       node.removeEventListener("pointermove", move);
       node.removeEventListener("pointerleave", leave);

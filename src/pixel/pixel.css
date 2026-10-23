@@ -357,7 +357,7 @@
 .pixel-launch-hero[hidden] {
   display: none;
 }
-.is-exploring .opening-pixel-hero {
+.pixel-adventure[data-traveler-ready="true"] .opening-pixel-hero {
   visibility: hidden;
 }
 .pixel-adventure .exp-speech {
