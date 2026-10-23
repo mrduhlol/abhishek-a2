@@ -1,234 +1,326 @@
-import { test, expect } from "@playwright/test";
-import { mkdir } from "node:fs/promises";
-const review = ".impeccable/review";
+import { test, expect } from '@playwright/test';
+import { mkdir } from 'node:fs/promises';
+import { PROJECTS } from '../src/data/projects.js';
+import { projectProgress, routeAt } from '../src/expedition/route.js';
 
-test("opening, guide dialogue, map navigation and once-per-session audio", async ({
-  page,
-}) => {
+const review = '.impeccable/review';
+const scene = page => page.locator('.expedition-scene');
+const canvas = page => scene(page).locator('canvas');
+const progress = page => page.getByRole('progressbar', { name: 'Journey progress' });
+const mapButton = page => page.getByRole('button', { name: 'Map', exact: true });
+const mapDialog = page => page.getByRole('dialog', { name: 'The expedition', exact: true });
+const escape = value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+function recordErrors(page) {
   const errors = [];
-  page.on("pageerror", (e) => errors.push(e.message));
+  page.on('pageerror', error => errors.push(error.message));
+  page.on('console', message => {
+    if (/Expedition .+ fallback:/.test(message.text())) errors.push(message.text());
+  });
+  return errors;
+}
+
+async function openExpedition(page) {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'ABHISHEK', exact: true })).toBeVisible();
+  await expect(canvas(page)).toHaveAttribute('data-ready', 'true', { timeout: 30000 });
+}
+
+async function assetsReady(page) {
+  await expect(canvas(page)).toHaveAttribute('data-assets-ready', 'true', { timeout: 60000 });
+  await expect(canvas(page)).toHaveAttribute('data-assets-state', 'loaded');
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    await Promise.all([...document.images].map(image => image.decode().catch(() => {})));
+  });
+}
+
+async function capture(page, name) {
+  await assetsReady(page);
+  await expect(page.getByRole('status').filter({ hasText: 'Ah shit, here we go again.' })).toHaveCount(0, { timeout: 7000 });
+  await mkdir(review, { recursive: true });
+  await page.screenshot({ path: `${review}/expedition-${name}.png` });
+  const context = await canvas(page).evaluate(element => ({
+    reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
+    viewport: { width: innerWidth, height: innerHeight },
+    scene: { ...element.dataset },
+  }));
+  await test.info().attach(`expedition-${name}-capture-context`, {
+    body: JSON.stringify(context, null, 2), contentType: 'application/json',
+  });
+}
+
+async function travelTo(page, index) {
+  await mapButton(page).click();
+  await expect(mapDialog(page)).toBeVisible();
+  await mapDialog(page).getByRole('button', {
+    name: new RegExp(`^Travel to ${escape(PROJECTS[index].name)},`),
+  }).click();
+  await expect(mapDialog(page)).toBeHidden();
+  await expect(page.getByRole('heading', { name: PROJECTS[index].name, exact: true })).toBeVisible();
+  await expect(progress(page)).toHaveAttribute('aria-valuenow', String(Math.round(projectProgress(index) * 100)));
+  await expect(canvas(page)).toHaveAttribute('data-chapter', String(index), { timeout: 15000 });
+  await expect.poll(async () => Math.abs(Number(await canvas(page).getAttribute('data-hero-x')) - routeAt(projectProgress(index)).x),
+    { message: 'The guide should arrive at the selected destination', timeout: 15000 }).toBeLessThan(.12);
+}
+
+
+async function verifyLandmarkHover(page, project) {
+  const pointForProject = () => canvas(page).evaluate((element, id) =>
+    JSON.parse(element.dataset.projectPoints || '[]').find(point => point.id === id), project.id);
+  await expect.poll(async () => Boolean((await pointForProject())?.visible), { timeout: 15000 }).toBe(true);
+  const resting = await pointForProject();
+  await capture(page, `${project.id}-rest`);
+  const bounds = await canvas(page).boundingBox();
+  await page.mouse.move(bounds.x + resting.x * bounds.width, bounds.y + resting.y * bounds.height);
+  await expect.poll(async () => (await pointForProject())?.height ?? resting.restHeight)
+    .toBeGreaterThan(resting.restHeight + .1);
+  await capture(page, `${project.id}-hover`);
+  // Moving onto the header leaves the canvas and must reverse the reveal.
+  await mapButton(page).hover();
+  await expect.poll(async () => Math.abs((await pointForProject())?.height - resting.restHeight)).toBeLessThan(.02);
+  await capture(page, `${project.id}-restored`);
+}
+
+async function enterTown(page) {
+  await travelTo(page, 6);
+  await expect(page.getByRole('button', { name: 'Enter the cave' })).toBeHidden();
+  await page.getByRole('button', { name: 'Next terrain' }).click();
+  await expect(progress(page)).toHaveAttribute('aria-valuenow', '100');
+  await expect(page.locator('main')).toHaveAttribute('data-world', 'trail');
+  await expect(page.getByRole('heading', { name: 'Abhishek World', exact: true })).toBeHidden();
+  // Reaching the end, scrolling farther, and pressing an arrow must never enter the town.
+  const stage = await canvas(page).boundingBox();
+  await page.mouse.move(stage.x + stage.width * .7, stage.y + stage.height * .5);
+  await page.mouse.wheel(0, 2000);
+  await page.keyboard.press('ArrowRight');
+  await expect(page.locator('main')).toHaveAttribute('data-world', 'trail');
+  await page.getByRole('button', { name: 'Enter the cave', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Abhishek World', exact: true })).toBeVisible();
+  await expect(canvas(page)).toHaveAttribute('data-world', 'town');
+  // Let the deliberate cave crossing and its fade finish before interacting or capturing.
+  await page.waitForTimeout(2000);
+}
+
+
+async function waitForTownArrival(page) {
+  // Keep this functional check at normal motion; the runtime signals actual completed simulation.
+  await expect(canvas(page)).toHaveAttribute('data-reduced-motion', 'false');
+  await expect(canvas(page)).toHaveAttribute('data-town-arrived', 'true', { timeout: 90000 });
+}
+
+test('desktop entry opts into real audio, walks with the wheel, and plays the introduction once', async ({ page }, testInfo) => {
+  test.setTimeout(90000);
+  const errors = recordErrors(page);
   await page.addInitScript(() => {
-    window.audioCalls = [];
-    const play = HTMLMediaElement.prototype.play;
-    HTMLMediaElement.prototype.play = function () {
-      const item = { muted: this.muted, ok: false };
-      window.audioCalls.push(item);
-      return play.call(this).then(() => {
-        item.ok = true;
+    window.expeditionAudio = [];
+    const original = HTMLMediaElement.prototype.play;
+    HTMLMediaElement.prototype.play = function (...args) {
+      const call = { src: this.src, muted: this.muted, volume: this.volume, ok: false, element: this };
+      window.expeditionAudio.push(call);
+      // Record the real browser promise. No fake media success or muted autoplay unlock.
+      return original.apply(this, args).then(value => { call.ok = true; return value; }, error => {
+        call.error = error.message;
+        throw error;
       });
     };
   });
-  await page.goto("/");
-  await page.evaluate(() => document.fonts.ready);
-  await expect(page.locator("#hero-name")).toBeVisible();
-  await expect(page.locator(".adventure-hero")).toHaveAttribute(
-    "data-pose",
-    "sit",
-  );
-  await page
-    .getByRole("button", { name: "Talk to your adventure guide" })
-    .click();
-  await expect(
-    page.getByRole("dialog", { name: "Your adventure guide" }),
-  ).toBeVisible();
-  await page.keyboard.press("Escape");
-  await expect(
-    page.getByRole("dialog", { name: "Your adventure guide" }),
-  ).toBeHidden();
-  await page.getByRole("button", { name: "Map", exact: true }).click();
-  await expect(page.locator("#world-map a")).toHaveCount(9);
-  await page.keyboard.press("Escape");
-  await expect(page.locator(".map-toggle")).toBeFocused();
-  await mkdir(review, { recursive: true });
-  await page.screenshot({ path: `${review}/desktop.png` });
-  await page.getByRole("button", { name: "Sound off" }).click();
-  await expect
-    .poll(() =>
-      page.evaluate(() => window.audioCalls.some((c) => c.muted && c.ok)),
-    )
-    .toBe(true);
-  await page.mouse.wheel(0, 140);
-  await expect(page.locator(".hero-intro-bubble")).toContainText(
-    "Ah shit, here we go again.",
-  );
-  await expect
-    .poll(() =>
-      page.evaluate(() => window.audioCalls.some((c) => !c.muted && c.ok)),
-    )
-    .toBe(true);
-  await expect(page.locator(".adventure-hero")).toHaveAttribute(
-    "data-pose",
-    "sit",
-  );
-  await expect(page.locator(".adventure-hero")).toHaveAttribute(
-    "data-pose",
-    "jump",
-    { timeout: 5000 },
-  );
-  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
-  await page.waitForTimeout(1200);
-  await page.mouse.wheel(0, 150);
-  await expect
-    .poll(() =>
-      page.evaluate(() => window.audioCalls.filter((c) => !c.muted).length),
-    )
-    .toBe(1);
-  await expect(page.locator(".project-links a")).toHaveCount(7);
+  await openExpedition(page);
+  await capture(page, 'opening');
+  expect(await page.evaluate(() => window.expeditionAudio.length)).toBe(0);
+  await page.getByRole('button', { name: 'Enter with sound', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Sound on', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await expect.poll(() => page.evaluate(() => window.expeditionAudio.some(call =>
+    call.src.endsWith('/ambient-mountain.mp3') && call.ok && !call.muted && call.volume > 0 && call.element.currentTime > .1,
+  ))).toBe(true);
+  await expect.poll(() => page.evaluate(() => window.expeditionAudio.filter(call =>
+    call.src.endsWith('/here-we-go-again.mp3') && call.ok && !call.muted,
+  ).length)).toBe(1);
+  await expect(progress(page)).toHaveAttribute('aria-valuenow', '0');
+  await page.mouse.move(900, 450);
+  await page.mouse.wheel(0, 1300);
+  await expect(progress(page)).toHaveAttribute('aria-valuenow', '10');
+  await page.mouse.wheel(0, -1300);
+  await expect(progress(page)).toHaveAttribute('aria-valuenow', '0');
+  await page.mouse.wheel(0, 1300);
+  await expect(progress(page)).toHaveAttribute('aria-valuenow', '10');
+  await travelTo(page, 1);
+  await expect.poll(() => page.evaluate(() => window.expeditionAudio.some(call =>
+    call.src.endsWith('/ambient-forest.mp3') && call.ok && call.element.currentTime > .1,
+  ))).toBe(true);
+  expect(await page.evaluate(() => window.expeditionAudio.filter(call => call.src.endsWith('/here-we-go-again.mp3')).length)).toBe(1);
+  await page.getByRole('button', { name: 'Sound on', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Sound off', exact: true })).toHaveAttribute('aria-pressed', 'false');
+  await expect.poll(() => page.evaluate(() => window.expeditionAudio.every(call => call.element.paused))).toBe(true);
+  const recording = await page.evaluate(() => window.expeditionAudio.map(({ element, ...call }) => ({
+    ...call, time: element.currentTime, paused: element.paused, readyState: element.readyState,
+  })));
+  await testInfo.attach('actual-audio-play-recording', { body: JSON.stringify(recording, null, 2), contentType: 'application/json' });
+  expect(recording.filter(call => call.error)).toEqual([]);
   expect(errors).toEqual([]);
 });
 
-test("seven terrain scenes render and town residents respond", async ({
-  page,
-}) => {
-  const errors = [];
-  page.on("pageerror", (e) => errors.push(e.message));
-  await page.goto("/");
-  for (const id of [
-    "orbit",
-    "voxlink",
-    "github-widgets",
-    "inkora",
-    "docutype",
-    "stikr",
-    "black-jack",
-  ]) {
-    const section = page.locator(`#project-${id}`);
-    await section.evaluate((el) =>
-      el.scrollIntoView({ behavior: "instant", block: "start" }),
-    );
-    await expect(section.locator(".terrain-scene")).toHaveAttribute(
-      "data-fallback",
-      "false",
-    );
-    await page
-      .locator(".hero-intro-bubble")
-      .waitFor({ state: "hidden", timeout: 6000 });
-    await page.waitForTimeout(180);
-    await page.screenshot({ path: `${review}/desktop-${id}.png` });
+test('the map reaches all seven real terrains and their sources (reduced-motion review captures)', async ({ page }) => {
+  test.setTimeout(180000);
+  const errors = recordErrors(page);
+  // Deterministic composition captures avoid software-GPU damping delays; normal movement has separate coverage.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await openExpedition(page);
+  await page.getByRole('button', { name: 'Explore quietly', exact: true }).click();
+  for (const [index, project] of PROJECTS.entries()) {
+    await travelTo(page, index);
+    await capture(page, project.terrain);
+    if (project.id === 'inkora') await verifyLandmarkHover(page, project);
+    await page.getByRole('button', { name: `Discover ${project.name}`, exact: true }).click();
+    const details = page.getByRole('dialog', { name: project.name, exact: true });
+    await expect(details).toBeVisible();
+    await expect(details).toContainText(project.description);
+    for (const technology of project.tech) await expect(details.getByRole('listitem').filter({ hasText: technology })).toBeVisible();
+    await expect(details.getByRole('link', { name: 'Explore the source' })).toHaveAttribute('href', project.github);
+    await expect(details.getByRole('link', { name: 'Explore the source' })).toHaveAttribute('target', '_blank');
+    if (project.live) await expect(details.getByRole('link', { name: 'Explore project' })).toHaveAttribute('href', project.live);
+    else await expect(details.getByRole('link', { name: 'Explore project' })).toHaveCount(0);
+    const before = await progress(page).getAttribute('aria-valuenow');
+    await details.getByRole('heading').hover();
+    await page.mouse.wheel(0, 500);
+    await expect(progress(page)).toHaveAttribute('aria-valuenow', before);
+    await page.keyboard.press('Escape');
+    await expect(details).toBeHidden();
   }
-  await page
-    .locator("#town")
-    .evaluate((el) => el.scrollIntoView({ behavior: "instant" }));
-  await expect(page.locator(".town-couple")).toBeVisible();
-  const gardener = page.getByRole("button", {
-    name: "Talk to the gardener",
-    exact: true,
+  await mapButton(page).click();
+  await expect(mapDialog(page).getByRole('navigation', { name: 'Project destinations' }).getByRole('button')).toHaveCount(7);
+  await expect(mapDialog(page).getByRole('button', { name: /^Travel to Black Jack,/ })).toHaveAttribute('aria-current', 'location');
+  await capture(page, 'map');
+  await page.keyboard.press('Escape');
+  await expect(mapDialog(page)).toBeHidden();
+  await expect(mapButton(page)).toBeFocused();
+  expect(errors).toEqual([]);
+});
+
+test('the final cave needs a deliberate click; town residents support pointer and keyboard, then return preserves progress', async ({ page }) => {
+  test.setTimeout(180000);
+  const errors = recordErrors(page);
+  await openExpedition(page);
+  await page.getByRole('button', { name: 'Explore quietly', exact: true }).click();
+  await enterTown(page);
+  await waitForTownArrival(page);
+  await assetsReady(page);
+  // Runtime-projected, raycast-verified targets track camera and moving residents.
+  await expect.poll(async () => {
+    const points = JSON.parse(await canvas(page).getAttribute('data-npc-points') || '[]');
+    return points.some(point => point.id.endsWith('gardener') && point.visible);
+  }, { timeout: 45000 }).toBe(true);
+  const gardener = await canvas(page).evaluate(element => JSON.parse(element.dataset.npcPoints).find(point => point.id.endsWith('gardener') && point.visible));
+  const bounds = await canvas(page).boundingBox();
+  await page.mouse.click(bounds.x + gardener.x * bounds.width, bounds.y + gardener.y * bounds.height);
+  const speech = page.getByRole('status').filter({ has: page.getByRole('button', { name: 'Close conversation' }) });
+  await expect(speech).toContainText(gardener.name);
+  await expect(speech.locator('p')).not.toBeEmpty();
+  await page.getByRole('button', { name: 'Close conversation' }).click();
+  await expect(speech).toBeHidden();
+  const people = page.getByText('People nearby', { exact: true });
+  await people.focus();
+  await page.keyboard.press('Enter');
+  const talk = page.getByRole('button', { name: new RegExp(`^Talk to ${escape(gardener.name)}\\b`, 'i') });
+  await talk.focus();
+  await page.keyboard.press('Enter');
+  await expect(speech).toContainText(gardener.name);
+  await page.getByRole('button', { name: 'Close conversation' }).click();
+  await people.click();
+  await capture(page, 'town');
+  await page.getByRole('button', { name: 'Return through the cave', exact: true }).click();
+  await expect(page.locator('main')).toHaveAttribute('data-world', 'trail');
+  await expect(canvas(page)).toHaveAttribute('data-world', 'trail');
+  await expect(progress(page)).toHaveAttribute('aria-valuenow', '100');
+  await expect(page.getByRole('button', { name: 'Enter the cave' })).toBeVisible();
+  expect(errors).toEqual([]);
+});
+
+test.describe('mobile', () => {
+  test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  test('quiet entry, touch travel, map, contact and town fit the phone', async ({ page, context }) => {
+    test.setTimeout(180000);
+    const errors = recordErrors(page);
+    const noOverflow = async () => expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await openExpedition(page);
+    await capture(page, 'mobile-opening');
+    await noOverflow();
+    await page.getByRole('button', { name: 'Explore quietly', exact: true }).click();
+    await expect(progress(page)).toHaveAttribute('aria-valuenow', '0');
+    const session = await context.newCDPSession(page);
+    const box = await canvas(page).boundingBox();
+    const x = box.x + box.width * .55, y = box.y + box.height * .6;
+    await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });
+    for (let step = 1; step <= 5; step++) await session.send('Input.dispatchTouchEvent', {
+      type: 'touchMove', touchPoints: [{ x, y: y - step * 30 }],
+    });
+    await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    await session.detach();
+    await expect.poll(async () => Number(await progress(page).getAttribute('aria-valuenow'))).toBeGreaterThan(0);
+    await travelTo(page, 2);
+    await capture(page, 'mobile-world');
+    await noOverflow();
+    await page.getByRole('button', { name: 'Contact', exact: true }).click();
+    const contact = page.getByRole('dialog', { name: 'Let’s make something.', exact: true });
+    await expect(contact.getByRole('link', { name: 'abhishek.a2534@gmail.com' })).toHaveAttribute('href', 'mailto:abhishek.a2534@gmail.com');
+    await noOverflow();
+    await contact.getByRole('button', { name: 'Close details' }).click();
+    await enterTown(page);
+    await waitForTownArrival(page);
+    await capture(page, 'mobile-town');
+    await noOverflow();
+    await page.getByRole('button', { name: 'Return through the cave' }).click();
+    await expect(progress(page)).toHaveAttribute('aria-valuenow', '100');
+    expect(errors).toEqual([]);
   });
-  await gardener.focus();
-  await page.keyboard.press("Enter");
-  await expect(page.locator(".town-live")).toHaveText(
-    "Careful! Those are my seedlings.",
-  );
-  await page.keyboard.press("Enter");
-  await expect(page.locator(".town-live")).toContainText("watering can");
-  await page.keyboard.press("Escape");
-  await page
-    .getByRole("button", {
-      name: "Talk to the hero and his companion",
-      exact: true,
-    })
-    .click();
-  await expect(page.locator(".town-couple")).toHaveAttribute(
-    "data-staring",
-    "true",
-  );
-  await page.evaluate(() =>
-    window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" }),
-  );
-  await page.screenshot({ path: `${review}/desktop-town.png` });
-  await page.keyboard.press("Escape");
-  await expect(page.locator(".town-couple")).toHaveAttribute(
-    "data-staring",
-    "false",
-  );
+});
+
+test('reduced motion keeps keyboard navigation, immediate scene positioning and project details usable', async ({ page }) => {
+  test.setTimeout(90000);
+  const errors = recordErrors(page);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await openExpedition(page);
+  await assetsReady(page);
+  await page.getByRole('button', { name: 'Explore quietly', exact: true }).click();
+  await expect(canvas(page)).toHaveAttribute('data-reduced-motion', 'true');
+  await page.keyboard.press('ArrowRight');
+  await expect(progress(page)).toHaveAttribute('aria-valuenow', '3');
+  await expect.poll(async () => Math.abs(Number(await canvas(page).getAttribute('data-hero-x')) - routeAt(.025).x)).toBeLessThan(.01);
+  await page.keyboard.press('ArrowLeft');
+  await expect(progress(page)).toHaveAttribute('aria-valuenow', '0');
+  await travelTo(page, 4);
+  await page.getByRole('button', { name: 'Discover DocuType', exact: true }).click();
+  await expect(page.getByRole('dialog', { name: 'DocuType', exact: true }).getByRole('link', { name: 'Explore the source' })).toHaveAttribute('href', PROJECTS[4].github);
+  await page.keyboard.press('Escape');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await expect(canvas(page)).toHaveAttribute('data-reduced-motion', 'false');
   expect(errors).toEqual([]);
 });
 
-test("mobile layout, contact, and village stay usable without horizontal page overflow", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
-  await page.evaluate(() => document.fonts.ready);
-  await page.screenshot({ path: `${review}/mobile.png` });
-  for (const id of [
-    "project-orbit",
-    "project-github-widgets",
-    "project-docutype",
-    "contact",
-    "town",
-  ]) {
-    await page
-      .locator(`#${id}`)
-      .evaluate((el) => el.scrollIntoView({ behavior: "instant" }));
-    await expect
-      .poll(() =>
-        page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
-      )
-      .toBe(true);
-    if (id.startsWith("project-")) {
-      await expect(page.locator(`#${id} .terrain-scene`)).toHaveAttribute(
-        "data-fallback",
-        "false",
-      );
-      await expect(page.locator(`#${id} canvas`)).toBeVisible();
-    }
-    await page
-      .locator(".hero-intro-bubble")
-      .waitFor({ state: "hidden", timeout: 6000 });
-    await page.waitForTimeout(id === "town" ? 1000 : 300);
-    await page.screenshot({ path: `${review}/mobile-${id}.png` });
-  }
-  await expect(page.locator(".town-couple__hero")).toBeInViewport();
-  await page
-    .getByRole("button", {
-      name: "Talk to the hero and his companion",
-      exact: true,
-    })
-    .click();
-  await expect(page.locator(".town-couple")).toHaveAttribute(
-    "data-staring",
-    "true",
-  );
-  await page
-    .locator("#contact")
-    .evaluate((el) => el.scrollIntoView({ behavior: "instant" }));
-  await expect(page.locator(".email-link")).toHaveAttribute(
-    "href",
-    "mailto:abhishek.a2534@gmail.com",
-  );
-});
-
-test("reduced motion and unavailable WebGL preserve content and navigation", async ({
-  page,
-}) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
+test('unavailable WebGL preserves every project source, the map and contact', async ({ page }) => {
   await page.addInitScript(() => {
-    const get = HTMLCanvasElement.prototype.getContext;
+    const original = HTMLCanvasElement.prototype.getContext;
     HTMLCanvasElement.prototype.getContext = function (kind, ...args) {
-      if (
-        kind === "webgl" ||
-        kind === "webgl2" ||
-        kind === "experimental-webgl"
-      )
-        return null;
-      return get.call(this, kind, ...args);
+      if (['webgl', 'webgl2', 'experimental-webgl'].includes(kind)) return null;
+      return original.call(this, kind, ...args);
     };
   });
-  await page.goto("/#project-orbit");
-  await expect(page.locator(".adventure-hero-layer")).toHaveAttribute(
-    "data-reduced-motion",
-    "true",
-  );
-  const section = page.locator("#project-orbit");
-  await section.evaluate((el) => el.scrollIntoView({ behavior: "instant" }));
-  await expect(section.locator(".terrain-scene")).toHaveAttribute(
-    "data-fallback",
-    "true",
-  );
-  await expect(section.locator(".terrain-scene__fallback")).toBeVisible();
-  await expect(
-    section.getByRole("link", { name: "Explore the source" }),
-  ).toBeVisible();
-  await page.screenshot({ path: `${review}/reduced-motion-fallback.png` });
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'The scenic route is unavailable.', exact: true })).toBeVisible();
+  for (const project of PROJECTS) {
+    await page.getByRole('button', { name: `${project.name} →`, exact: true }).click();
+    const details = page.getByRole('dialog', { name: project.name, exact: true });
+    await expect(details).toContainText(project.description);
+    await expect(details.getByRole('link', { name: 'Explore the source' })).toHaveAttribute('href', project.github);
+    await details.getByRole('button', { name: 'Close details' }).click();
+  }
+  await mapButton(page).click();
+  await expect(mapDialog(page).getByRole('navigation', { name: 'Project destinations' }).getByRole('button')).toHaveCount(7);
+  await mapDialog(page).getByRole('button', { name: /^Travel to Inkora,/ }).click();
+  await expect(page.getByRole('heading', { name: 'Inkora', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Contact', exact: true }).click();
+  await expect(page.getByRole('dialog', { name: 'Let’s make something.', exact: true }).getByRole('link', { name: 'abhishek.a2534@gmail.com' })).toHaveAttribute('href', 'mailto:abhishek.a2534@gmail.com');
+  expect(errors).toEqual([]);
 });
