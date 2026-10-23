@@ -8,11 +8,16 @@
 //
 // Poses: idle | walk (frames 0-3) | jump | crouch | sit | work | hold | stare
 //        | hold-stare
-//        'torch' is an idle alias, 'draw' reaches back toward the pack.
+//        'torch' is an idle alias. 'draw' uses four clamped extraction frames:
+//        0 reach back, no torch; 1 grasp an unlit torch at the pack;
+//        2 extract/raise the unlit torch; 3 raised and lit, ready for idle/walk.
+//        Caller: frame=floor(elapsed/1.2*4), torch=frame>=1 for elapsed<1.2s;
+//        then idle/walk with torch=true. World glow may start at frame>=2.
 // Directions: 1 faces right, -1 faces left, mirrored on the 32px axis.
 //             'stare' always faces the viewer and intentionally ignores direction.
 //             'hold-stare' faces the viewer while the holding arm follows direction.
-// Torch: torch=true puts a lit torch in the forward hand for every pose.
+// Torch: torch=true shows the held torch; 'draw' controls its visibility/flame
+//        as above and preserves the extraction arm. Other poses keep a lit torch.
 // Kinds: hero, girl, woman, man, child, boy, elder, baker, farmer, smith,
 //        fisher, guard, merchant, vendor, musician, gardener, explorer, npc.
 //        'girl' is a teenager by default, sized for a partner beside the hero.
@@ -31,7 +36,7 @@ export const HOLD_HAND = Object.freeze({ x: 31, y: 26 });
 export const SIT_SEAT = Object.freeze({ x: 16, y: 40 });
 export const JUMP_CLEARANCE = 5;
 export const ACTOR_POSES = Object.freeze([
-  'idle', 'walk', 'jump', 'crouch', 'sit', 'work', 'hold', 'stare', 'hold-stare',
+  'idle', 'walk', 'jump', 'crouch', 'sit', 'work', 'hold', 'stare', 'hold-stare', 'draw',
 ]);
 export const ACTOR_KINDS = Object.freeze([
   'hero', 'girl', 'woman', 'man', 'child', 'boy', 'elder', 'baker', 'farmer',
@@ -472,14 +477,26 @@ function poseLayout(figure, style, pose, frame, torch) {
     legNear = { dx: 2, lift: 0, kneeDX: 0, kneeDY: 0 };
     legFar = { dx: -2, lift: 0, kneeDX: 0, kneeDY: 0 };
   } else if (pose === 'draw') {
-    headDY = 1;
-    torsoDX = -1;
-    nearArmHand = { x: torsoX - 1, y: torsoY + 4 };
-    nearElbow = { x: torsoX + 2, y: shoulderY + 2 };
-    farArmHand = { x: cx + 5, y: hipY - 1 };
-    farElbow = { x: cx + 6, y: shoulderY + 4 };
-    legNear = { dx: 1, lift: 0, kneeDX: 0, kneeDY: 0 };
-    legFar = { dx: -2, lift: 0, kneeDX: 0, kneeDY: 0 };
+    const phase = Math.min(frame, 3);
+    headDY = phase < 2 ? 1 : 0;
+    torsoDX = phase < 2 ? -1 : 0;
+    const hands = [
+      { x: torsoX - 1, y: torsoY + 5 },
+      { x: torsoX - 4, y: torsoY + 2 },
+      { x: torsoX + metrics.torsoW + 1, y: shoulderY - 4 },
+      { x: torsoX + metrics.torsoW + 3, y: shoulderY + 1 },
+    ];
+    const elbows = [
+      { x: torsoX + 2, y: shoulderY + 6 },
+      { x: torsoX, y: shoulderY + 5 },
+      { x: torsoX + metrics.torsoW + 2, y: shoulderY + 1 },
+      { x: torsoX + metrics.torsoW + 2, y: shoulderY + 4 },
+    ];
+    nearArmHand = hands[phase];
+    nearElbow = elbows[phase];
+    // Match the settled idle torch pose at the end of the extraction.
+    legNear = { dx: 2, lift: 0, kneeDX: 1, kneeDY: 0 };
+    legFar = { dx: -2, lift: 0, kneeDX: -1, kneeDY: 0 };
   } else {
     // idle: a quiet one-pixel breath and weight shift.
     bodyDY = f % 2 ? -1 : 0;
@@ -495,7 +512,7 @@ function poseLayout(figure, style, pose, frame, torch) {
   // The shoulder is the arm origin. Torch handling replaces the forward arm
   // with a raised grip, except in hold where the off hand carries the torch.
   let torchArm = null;
-  if (torch) {
+  if (torch && pose !== 'draw') {
     if (pose === 'hold') torchArm = 'far';
     else torchArm = 'near';
     if (torchArm === 'near') {
@@ -552,7 +569,12 @@ function drawStandingActor(ctx, figure, style, pose, frame, torch) {
   drawArm(ctx, figure, style, layout.nearArm, false, pose);
   drawHead(ctx, figure, style, layout, pose, frame);
   drawStraps(ctx, figure, style, layout);
-  if (torch) drawTorchAt(ctx, style, layout.torchArm === 'far' ? layout.farArm.hand : layout.nearArm.hand, frame);
+  if (pose === 'draw') {
+    const phase = Math.min(frame, 3);
+    if (torch && phase >= 1) drawTorchAt(ctx, style, layout.nearArm.hand, phase, phase === 3);
+  } else if (torch) {
+    drawTorchAt(ctx, style, layout.torchArm === 'far' ? layout.farArm.hand : layout.nearArm.hand, frame);
+  }
   drawTool(ctx, style, layout, pose, frame);
 }
 
@@ -1141,7 +1163,7 @@ function drawHatSide(ctx, style, hx, hy, hw) {
   }
 }
 
-function drawTorchAt(ctx, style, hand, frame) {
+function drawTorchAt(ctx, style, hand, frame, lit = true) {
   const f = wrap(frame, 4);
   const x = hand.x + 1;
   const top = hand.y - 8 - (f === 1 ? 1 : 0);
@@ -1150,6 +1172,12 @@ function drawTorchAt(ctx, style, hand, frame) {
   px(ctx, '#8a5b34', x, top + 2, 1, 7);
   px(ctx, style.goldDark, x - 1, top + 5, 3, 1);
   px(ctx, style.gold, x, top + 5, 1, 1);
+  if (!lit) {
+    // Wrapped dark wick remains visible while the shaft leaves the backpack.
+    px(ctx, style.strap, x - 1, top - 2, 3, 3);
+    px(ctx, style.packLight, x, top - 2, 1, 2);
+    return;
+  }
   // Layered flat flame clusters (never a gradient).
   const flick = f === 0 ? 0 : f === 1 ? 1 : f === 2 ? -1 : 0;
   px(ctx, style.flameOuter, x - 2 + flick, top - 4, 3, 4);
