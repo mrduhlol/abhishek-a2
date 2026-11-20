@@ -1,0 +1,19 @@
+# Pixel adventure v3
+
+User-pinned direction: the supplied pixel village reference, teenage pixel backpack hero, angled 2.5D pixel environments and town. This replaces the shaded 3D characters. Preserve verified project copy, links, portrait, audio opt-in, map, intentional cave entry/return and social ending.
+
+All work belongs to `feat/pixel-adventure-v3`. Commit completed batches under `flock .git/adventure-commit.lock`, staging only owned files. Push ONLY this branch. Never push main. One PR will contain all commits; parent creates it.
+
+## Shared painting API
+
+Three.js renders orthographic nearest-filtered canvas textures and pixel sprites in a layered XY world. Original code-authored pixel artwork, no borrowed unlicensed image. Source reference is art direction, not an asset to copy. Each region has a 768×512 painting, displayed at 120×80 world units. Canvas X goes right; canvas Y goes down. Region i starts at world X i*120. Painting pixel position maps to world (i*120 + x/6.4, -y/6.4). Character feet follow the path supplied by parent. Paintings should be rich top-down/three-quarter RPG scenery, with distinct roof/ground/wall surfaces, clustered pixels, no gradients or antialiasing. Landmarks and characters are separate interactive sprites.
+
+Biome painters export `paintBiome(ctx, {width=768,height=512,index,random,pathY})`; pathY(pixelX) gives center of the travel corridor in pixel Y, generally 300 ±35. Keep a 36-pixel wide path clear. Painter fills full canvas; use deterministic random. No DOM, Three imports, events or UI text in painters. Parent creates canvas and passes context. Seven modules under src/pixel/biomes: mountain, forest, grassland, desert, ocean, cave, volcano. Ocean is WATER along path, boat travel, islands away from route; forest is NIGHT and hero carries torch; desert is truck travel. Layers of foreground/background props should convey depth.
+
+Actor painter exports `drawActor(ctx, {kind='hero',frame=0,direction=1,pose='idle',torch=false,age='teen'})` from src/pixel/actors.js. Canvas is 32×48 transparent, feet baseline y=46. Poses idle/walk/jump/crouch/sit/work/hold/stare. Hero visibly teenage, messy dark hair, backpack, sneakers; no adult beard. NPC variants include child/elder/woman/man and job variants. Coordinates pixel aligned. Parent handles movement, animation and sprite textures. Export `drawVehicle(ctx,{kind='boat',frame=0})`, transparent 96×64 canvas, from src/pixel/vehicles.js. Boat seat and truck cab leave hero visible, feet seat at vehicle center. Export may include constants if documented.
+
+Town painter `paintTown(ctx,{width=1536,height=768,random})` in src/pixel/town.js plus `TOWN_NPCS` array of {id,name,kind,x,y,working,dialogue} in pixel coordinates. Town reference: cobbles, orange tile roofs, cream plaster/timber buildings, trees, flowerpots, stalls, wells, laundry, varied sizes. Central walkable square (x550–1050,y360–620). Entry cave at pixel(160,460); hero starts(200,500), girl(820,510). All resident positions on visible clear paving. Name town Abhishek World in HTML, no baked text. Parent owns dialogue and movement.
+
+Parent owns runtime, route/gameplay, App/CSS integration, opening, map adaptation, tests coordination. Space jumps; Shift crouches; touch controls and assisted travel keep content reachable. Ground obstacles block until required action, boat/truck stretches use their own movement. Opening centered supplied cutout with huge stone-textured name, seated pixel hero, scroll-triggered jump into world. World moves horizontally with vertical path variation. Project marks enlarged moderately, hover reveal/reset and NPC welcomes.
+
+Validation must cover actual obstacle blocking/release, keyboard and touch, water/boat, truck, torch/night, all seven NPC welcome lines, map and cave roundtrip, pixel social ending, fallback, reduced motion and real audio. Review fresh desktop/mobile rendered evidence before PR completion.

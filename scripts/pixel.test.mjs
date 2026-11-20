@@ -1,0 +1,142 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import {
+  START_X,
+  END_X,
+  SEGMENT,
+  OBSTACLES,
+  resolveTravel,
+  pathY,
+  chapterAt,
+  projectProgress,
+} from "../src/pixel/route.js";
+import { PROJECTS } from "../src/data/projects.js";
+test("route centers cover seven distinct projects and join continuously", () => {
+  assert.equal(PROJECTS.length, 7);
+  for (let i = 0; i < 7; i++) {
+    assert.equal(chapterAt(projectProgress(i)), i);
+    assert.ok(Number.isFinite(pathY(i * SEGMENT)));
+    if (i)
+      assert.ok(
+        Math.abs(pathY(i * SEGMENT - 0.001) - pathY(i * SEGMENT + 0.001)) <
+          0.01,
+      );
+  }
+  assert.ok(END_X - START_X > 800);
+});
+test("jump obstacle blocks intent without sufficient clearance", () => {
+  const o = OBSTACLES[0];
+  const r = resolveTravel(o.x - 10, o.x + 10);
+  assert.equal(r.blocked.id, o.id);
+  assert.equal(r.x, o.x - 2.8);
+  assert.equal(resolveTravel(r.x, o.x + 5, { jump: 2 }).blocked, null);
+});
+test("crouch obstacle requires a held crouch", () => {
+  const o = OBSTACLES[1];
+  assert.equal(resolveTravel(o.x - 10, o.x + 10, { jump: 5 }).blocked.id, o.id);
+  assert.equal(
+    resolveTravel(o.x - 10, o.x + 10, { crouch: true }).blocked,
+    null,
+  );
+});
+test("backtracking also blocks from the correct approach edge", () => {
+  const o = OBSTACLES[0];
+  const r = resolveTravel(o.x + 10, o.x - 10);
+  assert.equal(r.x, o.x + 2.8);
+  assert.equal(r.blocked.id, o.id);
+  assert.equal(resolveTravel(r.x, o.x - 5, { jump: 3 }).blocked, null);
+});
+test("assisted route can reach content without timing and clamps bounds", () => {
+  assert.equal(resolveTravel(START_X, END_X + 10, { assisted: true }).x, END_X);
+  assert.equal(resolveTravel(END_X, -100, { assisted: true }).x, START_X);
+  assert.equal(resolveTravel(START_X, END_X, { assisted: true }).blocked, null);
+});
+test("water and truck routes do not have on-foot obstacles", () => {
+  assert.equal(
+    OBSTACLES.some((o) => o.chapter === 3 || o.chapter === 4),
+    false,
+  );
+  assert.ok(OBSTACLES.length >= 10);
+});
+function context(width = 1536, height = 768) {
+  const calls = [];
+  const ctx = new Proxy(
+    { canvas: { width, height } },
+    {
+      get(target, key) {
+        if (key in target) return target[key];
+        return (...args) => {
+          for (const value of args)
+            if (typeof value === "number")
+              assert.ok(
+                Number.isFinite(value),
+                `${key} has non-finite coordinate`,
+              );
+          calls.push([key, ...args]);
+        };
+      },
+      set(target, key, value) {
+        target[key] = value;
+        calls.push([key, value]);
+        return true;
+      },
+    },
+  );
+  return {
+    ctx,
+    hash: () =>
+      createHash("sha256").update(JSON.stringify(calls)).digest("hex"),
+    count: () => calls.length,
+  };
+}
+test("production atlas has eight 3:2 cells and town is a 2:1 image", () => {
+  const atlas = readFileSync(
+    new URL("../public/pixel/terrain-atlas.png", import.meta.url),
+  );
+  const town = readFileSync(
+    new URL("../public/pixel/town.png", import.meta.url),
+  );
+  assert.equal(atlas.toString("ascii", 1, 4), "PNG");
+  assert.ok(
+    Math.abs(atlas.readUInt32BE(16) / 2 / (atlas.readUInt32BE(20) / 4) - 1.5) <
+      0.01,
+  );
+  assert.ok(Math.abs(town.readUInt32BE(16) / town.readUInt32BE(20) - 2) < 0.01);
+});
+test("pixel actor poses and vehicle painters produce finite output", async () => {
+  const { drawActor } = await import("../src/pixel/actors.js");
+  const { drawVehicle } = await import("../src/pixel/vehicles.js");
+  for (const kind of ["hero", "girl", "child", "elder", "smith", "gardener"])
+    for (const pose of [
+      "idle",
+      "walk",
+      "jump",
+      "crouch",
+      "sit",
+      "work",
+      "hold",
+      "hold-stare",
+    ]) {
+      const c = context(32, 48);
+      drawActor(c.ctx, { kind, pose, frame: 2, direction: -1, torch: true });
+      assert.ok(c.count() > 10, `${kind} ${pose} should paint a figure`);
+    }
+  for (const kind of ["boat", "truck"]) {
+    const c = context(96, 64);
+    drawVehicle(c.ctx, { kind, frame: 1 });
+    assert.ok(c.count() > 20, `${kind} should paint a vehicle`);
+  }
+});
+test("town has varied ages, workers and teenage partner on the square", async () => {
+  const { TOWN_NPCS } = await import("../src/pixel/town.js");
+  assert.ok(TOWN_NPCS.length >= 9);
+  assert.ok(TOWN_NPCS.some((p) => p.kind === "girl" && p.age === "teen"));
+  assert.ok(TOWN_NPCS.some((p) => p.kind === "child"));
+  assert.ok(TOWN_NPCS.some((p) => p.kind === "elder"));
+  assert.ok(TOWN_NPCS.filter((p) => p.working).length >= 3);
+  for (const p of TOWN_NPCS) {
+    assert.ok(p.x > 0 && p.x < 1536 && p.y > 0 && p.y < 768);
+  }
+});
