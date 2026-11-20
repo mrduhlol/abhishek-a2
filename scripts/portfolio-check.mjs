@@ -14,12 +14,14 @@ try {
     await page.screenshot({ path: `/tmp/portfolio-${width}.png`, fullPage: true })
   }
   assert.equal(await page.locator('article').count(), 7)
-  for (const [name, count] of [['Desktop', 2], ['Android', 3], ['Web', 2], ['All projects', 7]]) {
+  assert.equal(await page.getByRole('heading', { name: 'Pulp', exact: true }).count(), 1)
+  assert.equal(await page.getByRole('heading', { name: 'Orbit', exact: true }).count(), 0)
+  for (const [name, count] of [['Desktop', 1], ['Android', 3], ['Web', 3], ['All projects', 7]]) {
     await page.getByRole('button', { name, exact: true }).click()
     assert.equal(await page.locator('article').count(), count, name)
     assert.equal(await page.getByRole('button', { name, exact: true }).getAttribute('aria-pressed'), 'true')
   }
-  for (const image of await page.locator('img').all()) {
+  for (const image of await page.locator('img:visible').all()) {
     await image.scrollIntoViewIfNeeded()
     await image.evaluate(element => element.decode())
     assert.equal(await image.evaluate(element => element.naturalWidth > 0), true)
