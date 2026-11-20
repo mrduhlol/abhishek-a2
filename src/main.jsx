@@ -1,9 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import ExpeditionApp from './pixel/PixelApp.jsx'
+import Portfolio from './Portfolio.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <ExpeditionApp />
+    <Portfolio />
   </StrictMode>,
 )
