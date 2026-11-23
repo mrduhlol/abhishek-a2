@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { flushSync } from 'react-dom'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ReactLenis } from 'lenis/react'
@@ -62,21 +61,33 @@ function SmoothScroll() {
   return enabled ? <ReactLenis root options={lenisOptions} /> : null
 }
 
-function projectFromHash() {
-  return projects.find(project => location.hash === `#project-${project.id}`)
-}
-
-function ProjectDetail({ project }) {
-  const detail = useRef(null)
+function Intro() {
+  const intro = useRef(null)
 
   useGSAP(() => {
     const media = gsap.matchMedia()
     media.add('(prefers-reduced-motion: no-preference)', () => {
-      gsap.from('.project-emblem', { y: 10, duration: 0.55, ease: 'expo.out' })
+      gsap.from('.intro-art', { y: 10, duration: 0.7, ease: 'expo.out' })
     })
     return () => media.revert()
-  }, { scope: detail })
+  }, { scope: intro })
 
+  return (
+    <section className="intro wrap" aria-labelledby="intro-title" ref={intro}>
+      <div className="intro-copy">
+        <h1 id="intro-title">Abhishek A</h1>
+        <p>I build apps for Android, Linux, and the web.</p>
+        <div className="intro-links">
+          <a className="primary-link" href="#work">Browse projects</a>
+          <a className="text-link" href={`mailto:${email}`}>Email me</a>
+        </div>
+      </div>
+      <img className="intro-art" src={projectAsset('studio-art.webp')} alt="" width={1280} height={960} fetchPriority="high" />
+    </section>
+  )
+}
+
+function ProjectDetail({ project }) {
   const [expanded, setExpanded] = useState(false)
   const [unavailable, setUnavailable] = useState(false)
   const file = logos[project.id]
@@ -89,16 +100,15 @@ function ProjectDetail({ project }) {
       className="project-detail"
       data-project={project.id}
       id={`project-${project.id}`}
-      aria-labelledby="project-title"
-      ref={detail}
+      aria-labelledby={`title-${project.id}`}
       tabIndex={-1}
     >
-      <div className="project-cover">
+      <div className="project-header">
+        <img className="project-emblem" src={projectAsset(file)} alt="" width={52} height={52} decoding="async" />
         <div className="project-title">
-          <h3 id="project-title">{project.name}</h3>
+          <h3 id={`title-${project.id}`}>{project.name}</h3>
           <span>{category(project)}</span>
         </div>
-        <img className="project-emblem" src={projectAsset(file)} alt="" width={120} height={120} />
       </div>
       <div className="project-info">
         <button
@@ -135,28 +145,18 @@ function ProjectDetail({ project }) {
 }
 
 export default function Portfolio() {
-  const view = useRef(null)
   const [filter, setFilter] = useState('All projects')
-  const [selection, setSelection] = useState(() => projectFromHash()?.id ?? projects[0].id)
+  const visibleProjects = projects.filter(project => filter === 'All projects' || category(project) === filter)
 
   useEffect(() => {
-    const followLink = () => {
-      const project = projectFromHash()
-      if (!project) return
-      setFilter('All projects')
-      setSelection(project.id)
+    const revealLinkedProject = () => {
+      if (projects.some(project => location.hash === `#project-${project.id}`)) {
+        setFilter('All projects')
+      }
     }
-    window.addEventListener('hashchange', followLink)
-    return () => window.removeEventListener('hashchange', followLink)
+    window.addEventListener('hashchange', revealLinkedProject)
+    return () => window.removeEventListener('hashchange', revealLinkedProject)
   }, [])
-  const visibleProjects = projects.filter(project => filter === 'All projects' || category(project) === filter)
-  const activeProject = visibleProjects.find(project => project.id === selection) ?? visibleProjects[0]
-
-  function openProject(id) {
-    flushSync(() => setSelection(id))
-    view.current.focus({ preventScroll: true })
-    view.current.scrollIntoView({ block: 'start' })
-  }
 
   return (
     <>
@@ -172,12 +172,9 @@ export default function Portfolio() {
         <a className="header-github" href={github}>GitHub</a>
       </header>
       <main id="main" tabIndex={-1}>
-        <section className="intro wrap" aria-labelledby="intro-title">
-          <h1 id="intro-title">Abhishek A</h1>
-          <p>I build apps for Android, Linux, and the web.</p>
-        </section>
-        <section className="workspace wrap" id="work" aria-labelledby="work-title">
-          <div className="workspace-toolbar">
+        <Intro />
+        <section className="projects wrap" id="work" aria-labelledby="work-title">
+          <div className="projects-header">
             <h2 id="work-title">Projects</h2>
             <div className="filters" role="group" aria-label="Filter projects by platform">
               {filters.map(item => (
@@ -187,27 +184,9 @@ export default function Portfolio() {
               ))}
             </div>
           </div>
-          <p className="sr-only" role="status">{visibleProjects.length} projects. Showing {activeProject.name}.</p>
-          <div className="workspace-body">
-            <div className="project-picker" role="group" aria-label="Choose a project">
-              {visibleProjects.map(project => (
-                <button
-                  className="project-choice"
-                  key={project.id}
-                  type="button"
-                  data-project={project.id}
-                  aria-pressed={project.id === activeProject.id}
-                  aria-controls="project-view"
-                  onClick={() => openProject(project.id)}
-                >
-                  <img src={projectAsset(logos[project.id])} alt="" width={80} height={80} />
-                  <span>{project.name}</span>
-                </button>
-              ))}
-            </div>
-            <div className="project-view" id="project-view" ref={view} tabIndex={-1}>
-              <ProjectDetail key={activeProject.id} project={activeProject} />
-            </div>
+          <p className="sr-only" role="status">{visibleProjects.length} projects shown</p>
+          <div className="project-list">
+            {visibleProjects.map(project => <ProjectDetail key={project.id} project={project} />)}
           </div>
         </section>
         <section className="about-section wrap" id="about" aria-labelledby="about-title">
