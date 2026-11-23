@@ -13,21 +13,18 @@ try {
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `Overflow at ${width}px`)
     await page.screenshot({ path: `/tmp/portfolio-${width}.png`, fullPage: true })
   }
-  const picker = page.getByRole('group', { name: 'Choose a project' })
-  assert.equal(await picker.getByRole('button').count(), 8)
-  assert.equal(await picker.getByRole('button', { name: 'Orbit', exact: true }).count(), 0)
+  const projects = page.locator('.project-list article')
+  assert.equal(await projects.count(), 8)
+  assert.equal(await page.getByRole('heading', { name: 'Pulp', exact: true }).count(), 1)
+  assert.equal(await page.getByRole('heading', { name: 'Orbit', exact: true }).count(), 0)
   for (const [name, count] of [['Desktop', 1], ['Android', 3], ['Web', 4], ['All projects', 8]]) {
     await page.getByRole('button', { name, exact: true }).click()
-    assert.equal(await picker.getByRole('button').count(), count, name)
-    assert.equal(await picker.locator('[aria-pressed="true"]').count(), 1, name)
+    assert.equal(await projects.count(), count, name)
     assert.equal(await page.getByRole('button', { name, exact: true }).getAttribute('aria-pressed'), 'true')
   }
-  for (const choice of await picker.getByRole('button').all()) {
-    const name = await choice.innerText()
-    await choice.press('Enter')
-    assert.equal(await choice.getAttribute('aria-pressed'), 'true')
-    const row = page.locator('.project-detail')
-    assert.equal(await row.getByRole('heading', { name, exact: true }).count(), 1)
+  await page.locator('.intro-art').evaluate(image => image.decode())
+  for (const row of await projects.all()) {
+    const name = await row.getByRole('heading').innerText()
     await row.locator('.project-emblem').evaluate(image => image.decode())
     const disclosure = row.getByRole('button')
     const screenshot = row.locator('.project-screenshot img')
@@ -44,7 +41,7 @@ try {
   await page.getByRole('link', { name: 'Contact', exact: true }).click()
   assert.ok(page.url().endsWith('#contact'))
   assert.deepEqual(errors, [])
-  console.log('PASS: four viewport widths, project selection and filters, all screenshots, contact navigation, no runtime errors')
+  console.log('PASS: four viewport widths, project filters and images, all screenshots, contact navigation, no runtime errors')
 } finally {
   await browser.close()
 }
