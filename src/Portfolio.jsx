@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ReactLenis } from 'lenis/react'
@@ -61,7 +62,7 @@ function SmoothScroll() {
   return enabled ? <ReactLenis root options={lenisOptions} /> : null
 }
 
-function Hero() {
+function Hero({ showAllProjects }) {
   const hero = useRef(null)
 
   useGSAP(() => {
@@ -81,13 +82,20 @@ function Hero() {
         <p>I build apps for Android, Linux, and the web.</p>
         <a className="work-link" href="#work">Browse projects</a>
       </div>
-      <div className="icon-board" aria-hidden="true">
+      <nav className="icon-board" aria-label="Jump to a project">
         {projects.map(project => (
-          <div className="icon-board-slot" key={project.id}>
+          <a
+            className="icon-board-slot"
+            href={`#project-${project.id}`}
+            aria-label={project.name}
+            title={project.name}
+            key={project.id}
+            onClick={showAllProjects}
+          >
             <img src={projectAsset(logos[project.id])} alt="" width={72} height={72} />
-          </div>
+          </a>
         ))}
-      </div>
+      </nav>
     </section>
   )
 }
@@ -101,7 +109,7 @@ function ProjectRow({ project }) {
   const screenshotId = `${project.id}-screenshot`
 
   return (
-    <article className="project-row">
+    <article className="project-row" id={`project-${project.id}`} tabIndex={-1}>
       <div className="project-identity">
         <img
           className="project-icon"
@@ -168,7 +176,9 @@ export default function Portfolio() {
         <a className="header-github" href={github}>GitHub</a>
       </header>
       <main id="main" tabIndex={-1}>
-        <Hero />
+        <Hero showAllProjects={() => {
+          if (filter !== 'All projects') flushSync(() => setFilter('All projects'))
+        }} />
         <section className="work-section wrap" id="work" aria-labelledby="work-title">
           <div className="work-header">
             <h2 id="work-title">Projects</h2>
