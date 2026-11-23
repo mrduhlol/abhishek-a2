@@ -4,7 +4,7 @@ import { basename, extname } from 'node:path'
 const dist = new URL('../dist/', import.meta.url)
 const output = new URL('../portfolio.html', import.meta.url)
 const iconDirectory = new URL('project-icons/', dist)
-const mimeTypes = { '.png': 'image/png', '.svg': 'image/svg+xml', '.ttf': 'font/ttf' }
+const mimeTypes = { '.png': 'image/png', '.svg': 'image/svg+xml', '.ttf': 'font/ttf', '.webp': 'image/webp' }
 
 async function asDataUrl(file) {
   const mime = mimeTypes[extname(file.pathname)]
