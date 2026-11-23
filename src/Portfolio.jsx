@@ -16,7 +16,14 @@ const pulp = {
   tech: ['TypeScript', 'Web Audio'],
   github: 'https://github.com/mrduhlol/pulp',
 }
-const projects = [pulp, ...ARCHIVE_PROJECTS.filter(project => project.id !== 'orbit')]
+const aurevia = {
+  id: 'aurevia',
+  name: 'Aurevia',
+  description: 'An Android-first web app for meeting people on the same flight. The current build previews onboarding and lets users create profiles and record flights.',
+  tech: ['Next.js', 'TypeScript', 'Tailwind CSS'],
+  github: 'https://github.com/mrduhlol/Aurevia',
+}
+const projects = [aurevia, pulp, ...ARCHIVE_PROJECTS.filter(project => project.id !== 'orbit')]
 const filters = ['All projects', 'Desktop', 'Android', 'Web']
 const category = project => {
   if (project.id === 'voxlink') return 'Desktop'
@@ -24,6 +31,7 @@ const category = project => {
   return 'Web'
 }
 const logos = {
+  aurevia: 'aurevia.png',
   pulp: 'pulp.svg',
   voxlink: 'voxlink.png',
   'github-widgets': 'github-widgets.svg',
