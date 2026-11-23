@@ -3,13 +3,13 @@
   font-family: Manrope, sans-serif;
   font-synthesis: none;
   color: #16181c;
-  background: #f5f6f9;
-  scrollbar-color: #a4a5a3 #f5f6f9;
+  background: #f4f2e9;
+  scrollbar-color: #a4a5a3 #f4f2e9;
   scroll-padding-top: 1.5rem;
   --ink: #16181c;
   --muted: #54575d;
-  --line: #d8dad8;
-  --wash: #f1f2f0;
+  --line: #ccc9bc;
+  --wash: #eae7db;
   --accent: #203e91;
 }
 
@@ -44,14 +44,33 @@ p { line-height: 1.65; }
 
 .portfolio-main {
   display: grid;
-  grid-template-columns: minmax(12rem, 1fr) minmax(0, 3fr);
-  gap: 0 clamp(2rem, 7vw, 7rem);
-  padding-top: clamp(2rem, 6vw, 5rem);
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 0 clamp(2rem, 5vw, 5rem);
+  padding-top: clamp(2rem, 5vw, 4rem);
 }
-.intro { position: sticky; top: 2rem; align-self: start; padding-top: .25rem; }
-.intro h1 { font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1; letter-spacing: -.04em; }
-.intro p { margin-top: 1rem; color: var(--muted); max-width: 24ch; }
-.intro a { margin-right: 1rem; }
+.intro {
+  position: sticky;
+  top: 2rem;
+  align-self: start;
+  padding: clamp(1.5rem, 3.5vw, 3.5rem);
+  background: #213789;
+  color: #fffaf0;
+}
+.intro h1 {
+  max-width: 6ch;
+  font: 800 clamp(4rem, 8vw, 6rem)/.88 'Barlow Condensed', sans-serif;
+  letter-spacing: -.025em;
+  text-transform: uppercase;
+}
+.intro p {
+  max-width: 25ch;
+  margin-top: clamp(2rem, 6vw, 5rem);
+  padding-top: 1.25rem;
+  border-top: 1px solid #8293d2;
+  color: #f1f2ff;
+  font-size: 1.125rem;
+}
+.intro .text-link { margin: .75rem 1.25rem 0 0; color: #e5eea4; }
 .projects, .about-section, .contact-section { grid-column: 2; }
 
 .projects-header {
@@ -61,7 +80,7 @@ p { line-height: 1.65; }
   flex-wrap: wrap;
   gap: .75rem 1.25rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
 }
 .projects-header h2, .about-section h2, .contact-section h2 {
   font-size: clamp(2rem, 4.5vw, 3rem);
@@ -81,7 +100,7 @@ p { line-height: 1.65; }
   cursor: pointer;
 }
 .filters button:hover { background: var(--wash); color: var(--ink); }
-.filters button[aria-pressed='true'] { border-color: var(--ink); color: var(--ink); font-weight: 600; }
+.filters button[aria-pressed='true'] { border-color: var(--ink); background: var(--ink); color: #fff; font-weight: 600; }
 
 .project-list {
   display: grid;
@@ -90,7 +109,7 @@ p { line-height: 1.65; }
 }
 .project-detail {
   min-width: 0;
-  display: grid; grid-template-columns: minmax(11rem, .8fr) minmax(0, 1.7fr); gap: 1rem 2rem; align-items: start; padding-block: 1.625rem 1.375rem;
+  display: grid; grid-template-columns: minmax(9rem, .85fr) minmax(0, 1.35fr); gap: 1rem 2rem; align-items: start; padding-block: 1.625rem 1.375rem;
   border-bottom: 1px solid var(--line);
 }
 .project-detail:target { border-top: 2px solid var(--accent); }
@@ -104,6 +123,7 @@ p { line-height: 1.65; }
 .project-title > span { display: block; margin-top: .125rem; color: var(--muted); font-size: .875rem; }
 .project-emblem { display: block; width: 3.25rem; height: 3.25rem; object-fit: contain; border-radius: 12px; }
 .project-info { min-width: 0; }
+.project-detail:has([aria-expanded="true"]) { background: var(--wash); }
 .project-description {
   display: grid;
   gap: .625rem;
@@ -184,7 +204,9 @@ p { line-height: 1.65; }
   .site-header .header-github { display: none; }
   .site-header nav { gap: .875rem; }
   .portfolio-main, .project-detail, .about-section { grid-template-columns: minmax(0, 1fr); }
-  .intro { position: static; padding-bottom: 2rem; }
+  .intro { position: static; margin-bottom: 2rem; }
+  .intro h1 { max-width: none; font-size: clamp(3.75rem, 13vw, 5rem); }
+  .intro p { margin-top: 1.5rem; }
   .projects, .about-section, .contact-section { grid-column: 1; }
   .filters button { padding-inline: .625rem; }
 }
