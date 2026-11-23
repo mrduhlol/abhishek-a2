@@ -22,7 +22,6 @@ try {
     assert.equal(await projects.count(), count, name)
     assert.equal(await page.getByRole('button', { name, exact: true }).getAttribute('aria-pressed'), 'true')
   }
-  await page.locator('.intro-art').evaluate(image => image.decode())
   for (const row of await projects.all()) {
     const name = await row.getByRole('heading').innerText()
     await row.locator('.project-emblem').evaluate(image => image.decode())
