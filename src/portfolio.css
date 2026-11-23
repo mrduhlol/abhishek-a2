@@ -92,6 +92,11 @@ p { line-height: 1.65; }
   border: 1px solid #645678;
   border-radius: 12px;
   background: #44365e;
+  text-decoration: none;
+}
+.icon-board-slot:hover, .icon-board-slot:focus-visible {
+  border-color: var(--accent);
+  background: #55456f;
 }
 .icon-board-slot img {
   display: block;
@@ -139,7 +144,7 @@ p { line-height: 1.65; }
 .project-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  align-items: start;
+  grid-template-rows: auto 1fr;
   column-gap: .75rem;
   min-width: 0;
   padding: clamp(1rem, 2vw, 1.5rem);
@@ -147,7 +152,7 @@ p { line-height: 1.65; }
   border-radius: 12px;
   background: var(--panel);
 }
-.project-row:has(.project-description[aria-expanded='true']) { border-color: #756495; }
+.project-row:target, .project-row:has(.project-description[aria-expanded='true']) { border-color: #756495; }
 .project-identity {
   display: grid;
   grid-template-columns: 3.25rem minmax(0, 1fr);
@@ -168,7 +173,14 @@ p { line-height: 1.65; }
   overflow-wrap: anywhere;
 }
 .project-title > span { color: var(--muted); font-size: .8125rem; }
-.project-info { grid-column: 1 / -1; grid-row: 2; margin-top: .875rem; }
+.project-info {
+  display: flex;
+  flex-direction: column;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  gap: .875rem;
+  margin-top: .875rem;
+}
 .project-description {
   display: grid;
   justify-items: start;
@@ -201,7 +213,6 @@ p { line-height: 1.65; }
 .project-description[aria-expanded='true'] .screenshot-label::after { transform: rotate(225deg); }
 .project-description:hover .screenshot-label { text-decoration: underline; }
 .project-screenshot {
-  margin-top: .875rem;
   padding: .75rem;
   border-radius: 8px;
   background: #151421;
@@ -219,7 +230,7 @@ p { line-height: 1.65; }
   display: flex;
   flex-wrap: wrap;
   gap: .25rem .875rem;
-  margin: .875rem 0 0;
+  margin: auto 0 0;
   padding: .75rem 0 0;
   border-top: 1px solid var(--line);
   list-style: none;
@@ -253,6 +264,9 @@ p { line-height: 1.65; }
 .skip-link:focus { transform: none; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
+@media (min-width: 881px) {
+  .project-row { min-height: 17rem; }
+}
 @media (max-width: 880px) {
   .wrap { width: calc(100% - 3rem); }
   .hero { gap: 1.75rem; }
