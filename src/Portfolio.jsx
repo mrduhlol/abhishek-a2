@@ -1,13 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
+import { useEffect, useState } from 'react'
 import { ReactLenis } from 'lenis/react'
 import { PROJECTS as ARCHIVE_PROJECTS } from './data/projects'
 import 'lenis/dist/lenis.css'
 import './fonts.css'
 import './portfolio.css'
-
-gsap.registerPlugin(useGSAP)
 
 const pulp = {
   id: 'pulp',
@@ -62,27 +58,12 @@ function SmoothScroll() {
 }
 
 function Intro() {
-  const intro = useRef(null)
-
-  useGSAP(() => {
-    const media = gsap.matchMedia()
-    media.add('(prefers-reduced-motion: no-preference)', () => {
-      gsap.from('.intro-art', { y: 10, duration: 0.7, ease: 'expo.out' })
-    })
-    return () => media.revert()
-  }, { scope: intro })
-
   return (
-    <section className="intro wrap" aria-labelledby="intro-title" ref={intro}>
-      <div className="intro-copy">
-        <h1 id="intro-title">Abhishek A</h1>
-        <p>I build apps for Android, Linux, and the web.</p>
-        <div className="intro-links">
-          <a className="primary-link" href="#work">Browse projects</a>
-          <a className="text-link" href={`mailto:${email}`}>Email me</a>
-        </div>
-      </div>
-      <img className="intro-art" src={projectAsset('studio-art.webp')} alt="" width={1280} height={960} fetchPriority="high" />
+    <section className="intro" aria-labelledby="intro-title">
+      <h1 id="intro-title">Abhishek A</h1>
+      <p>I make software for Android, Linux, and the web.</p>
+      <a className="text-link" href={github}>GitHub</a>
+      <a className="text-link" href={`mailto:${email}`}>Email</a>
     </section>
   )
 }
@@ -171,9 +152,9 @@ export default function Portfolio() {
         </nav>
         <a className="header-github" href={github}>GitHub</a>
       </header>
-      <main id="main" tabIndex={-1}>
+      <main id="main" className="portfolio-main wrap" tabIndex={-1}>
         <Intro />
-        <section className="projects wrap" id="work" aria-labelledby="work-title">
+        <section className="projects" id="work" aria-labelledby="work-title">
           <div className="projects-header">
             <h2 id="work-title">Projects</h2>
             <div className="filters" role="group" aria-label="Filter projects by platform">
@@ -189,15 +170,15 @@ export default function Portfolio() {
             {visibleProjects.map(project => <ProjectDetail key={project.id} project={project} />)}
           </div>
         </section>
-        <section className="about-section wrap" id="about" aria-labelledby="about-title">
+        <section className="about-section" id="about" aria-labelledby="about-title">
           <h2 id="about-title">About</h2>
           <div>
-            <p>I make tools for things I use every day, like music in the browser, notes that work offline, and audio on Linux.</p>
+            <p>I build the tools I want to use, like a browser equalizer, an offline notebook, and a way to use my phone as a Linux microphone.</p>
             <a className="text-link" href={github}>Find me on GitHub</a>
           </div>
         </section>
         <section className="contact-section" id="contact" aria-labelledby="contact-title">
-          <div className="wrap contact-inner">
+          <div className="contact-inner">
             <h2 id="contact-title">Get in touch</h2>
             <a className="contact-email" href={`mailto:${email}`}>{email}</a>
           </div>
