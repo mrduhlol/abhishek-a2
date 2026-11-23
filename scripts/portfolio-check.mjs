@@ -26,6 +26,18 @@ try {
     await image.evaluate(element => element.decode())
     assert.equal(await image.evaluate(element => element.naturalWidth > 0), true)
   }
+  for (const row of await page.locator('.project-row').all()) {
+    const disclosure = row.getByRole('button')
+    const screenshot = row.locator('.project-screenshot img')
+    assert.equal(await disclosure.getAttribute('aria-expanded'), 'false')
+    assert.equal(await screenshot.count(), 0)
+    await disclosure.click()
+    assert.equal(await disclosure.getAttribute('aria-expanded'), 'true')
+    await screenshot.evaluate(image => image.decode())
+    await disclosure.press('Enter')
+    assert.equal(await screenshot.count(), 0)
+    assert.equal(await disclosure.getAttribute('aria-expanded'), 'false')
+  }
   await page.getByRole('link', { name: 'Contact', exact: true }).click()
   assert.ok(page.url().endsWith('#contact'))
   assert.deepEqual(errors, [])
