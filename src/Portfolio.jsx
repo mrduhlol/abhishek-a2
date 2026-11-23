@@ -42,6 +42,7 @@ const logos = {
 }
 const embeddedIcons = document.getElementById('portfolio-icons')
 const iconUrls = embeddedIcons ? JSON.parse(embeddedIcons.textContent) : {}
+const projectAsset = file => iconUrls[file] ?? `${import.meta.env.BASE_URL}project-icons/${file}`
 const lenisOptions = { autoRaf: true, anchors: false }
 const email = 'abhishek.a2534@gmail.com'
 const github = 'https://github.com/mrduhlol'
@@ -61,20 +62,32 @@ function SmoothScroll() {
 }
 
 function Hero() {
-  const title = useRef(null)
+  const hero = useRef(null)
 
   useGSAP(() => {
     const media = gsap.matchMedia()
     media.add('(prefers-reduced-motion: no-preference)', () => {
-      gsap.from(title.current, { y: 8, duration: 0.65, ease: 'expo.out' })
+      gsap.timeline({ defaults: { ease: 'expo.out' } })
+        .from('#hero-title', { y: 12, duration: 0.7 })
+        .from('.icon-board img', { y: 14, duration: 0.55, stagger: 0.035 }, 0.06)
     })
     return () => media.revert()
-  })
+  }, { scope: hero })
 
   return (
-    <section className="hero wrap" aria-labelledby="hero-title">
-      <h1 id="hero-title" ref={title}>Abhishek A</h1>
-      <p>I build apps for Android, Linux, and the web.</p>
+    <section className="hero wrap" aria-labelledby="hero-title" ref={hero}>
+      <div>
+        <h1 id="hero-title">Abhishek A</h1>
+        <p>I build apps for Android, Linux, and the web.</p>
+        <a className="work-link" href="#work">Browse projects</a>
+      </div>
+      <div className="icon-board" aria-hidden="true">
+        {projects.map(project => (
+          <div className="icon-board-slot" key={project.id}>
+            <img src={projectAsset(logos[project.id])} alt="" width={72} height={72} />
+          </div>
+        ))}
+      </div>
     </section>
   )
 }
@@ -92,7 +105,7 @@ function ProjectRow({ project }) {
       <div className="project-identity">
         <img
           className="project-icon"
-          src={iconUrls[file] ?? `${import.meta.env.BASE_URL}project-icons/${file}`}
+          src={projectAsset(file)}
           alt=""
           width={56}
           height={56}
@@ -119,7 +132,7 @@ function ProjectRow({ project }) {
             <p role="status">Image unavailable.</p>
           ) : (
             <img
-              src={iconUrls[screenshot] ?? `${import.meta.env.BASE_URL}project-icons/${screenshot}`}
+              src={projectAsset(screenshot)}
               alt={`${project.name} ${mediaType}`}
               decoding="async"
               onError={() => setUnavailable(true)}
@@ -131,7 +144,7 @@ function ProjectRow({ project }) {
         </ul>
       </div>
       <a className="source-link" href={project.github} aria-label={`View ${project.name} source on GitHub`}>
-        Source
+        View source
       </a>
     </article>
   )
@@ -175,7 +188,7 @@ export default function Portfolio() {
         <section className="about-section wrap" id="about" aria-labelledby="about-title">
           <h2 id="about-title">About</h2>
           <div>
-            <p>I work on browser extensions and apps for Android and Linux. Most of the code for my projects is on GitHub.</p>
+            <p>I make tools for things I use every day, like music in the browser, notes that work offline, and audio on Linux.</p>
             <a className="text-link" href={github}>Find me on GitHub</a>
           </div>
         </section>
