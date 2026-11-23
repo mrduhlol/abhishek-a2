@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { flushSync } from 'react-dom'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ReactLenis } from 'lenis/react'
@@ -62,46 +61,21 @@ function SmoothScroll() {
   return enabled ? <ReactLenis root options={lenisOptions} /> : null
 }
 
-function Hero({ showAllProjects }) {
-  const hero = useRef(null)
+function projectFromHash() {
+  return projects.find(project => location.hash === `#project-${project.id}`)
+}
+
+function ProjectDetail({ project }) {
+  const detail = useRef(null)
 
   useGSAP(() => {
     const media = gsap.matchMedia()
     media.add('(prefers-reduced-motion: no-preference)', () => {
-      gsap.timeline({ defaults: { ease: 'expo.out' } })
-        .from('#hero-title', { y: 12, duration: 0.7 })
-        .from('.icon-board img', { y: 14, duration: 0.55, stagger: 0.035 }, 0.06)
+      gsap.from('.project-emblem', { y: 10, duration: 0.55, ease: 'expo.out' })
     })
     return () => media.revert()
-  }, { scope: hero })
+  }, { scope: detail })
 
-  return (
-    <section className="hero wrap" aria-labelledby="hero-title" ref={hero}>
-      <div className="hero-intro">
-        <h1 id="hero-title">Abhishek A</h1>
-        <div>
-          <p>I build apps for Android, Linux, and the web.</p>
-          <a className="work-link" href="#work">Browse projects</a>
-        </div>
-      </div>
-      <nav className="icon-board" aria-label="Jump to a project">
-        {projects.map(project => (
-          <a
-            className="icon-board-slot"
-            href={`#project-${project.id}`}
-            key={project.id}
-            onClick={showAllProjects}
-          >
-            <img src={projectAsset(logos[project.id])} alt="" width={56} height={56} />
-            <span>{project.name}</span>
-          </a>
-        ))}
-      </nav>
-    </section>
-  )
-}
-
-function ProjectRow({ project }) {
   const [expanded, setExpanded] = useState(false)
   const [unavailable, setUnavailable] = useState(false)
   const file = logos[project.id]
@@ -110,20 +84,20 @@ function ProjectRow({ project }) {
   const screenshotId = `${project.id}-screenshot`
 
   return (
-    <article className="project-row" id={`project-${project.id}`} tabIndex={-1}>
-      <div className="project-identity">
-        <img
-          className="project-icon"
-          src={projectAsset(file)}
-          alt=""
-          width={56}
-          height={56}
-          decoding="async"
-        />
+    <article
+      className="project-detail"
+      data-project={project.id}
+      id={`project-${project.id}`}
+      aria-labelledby="project-title"
+      ref={detail}
+      tabIndex={-1}
+    >
+      <div className="project-cover">
         <div className="project-title">
-          <h3>{project.name}</h3>
+          <h3 id="project-title">{project.name}</h3>
           <span>{category(project)}</span>
         </div>
+        <img className="project-emblem" src={projectAsset(file)} alt="" width={120} height={120} />
       </div>
       <div className="project-info">
         <button
@@ -151,17 +125,30 @@ function ProjectRow({ project }) {
         <ul className="tech-list" aria-label={`${project.name} technologies`}>
           {project.tech.map(tech => <li key={tech}>{tech}</li>)}
         </ul>
+        <a className="source-link" href={project.github} aria-label={`View ${project.name} source on GitHub`}>
+          View source
+        </a>
       </div>
-      <a className="source-link" href={project.github} aria-label={`View ${project.name} source on GitHub`}>
-        View source
-      </a>
     </article>
   )
 }
 
 export default function Portfolio() {
   const [filter, setFilter] = useState('All projects')
+  const [selection, setSelection] = useState(() => projectFromHash()?.id ?? projects[0].id)
+
+  useEffect(() => {
+    const followLink = () => {
+      const project = projectFromHash()
+      if (!project) return
+      setFilter('All projects')
+      setSelection(project.id)
+    }
+    window.addEventListener('hashchange', followLink)
+    return () => window.removeEventListener('hashchange', followLink)
+  }, [])
   const visibleProjects = projects.filter(project => filter === 'All projects' || category(project) === filter)
+  const activeProject = visibleProjects.find(project => project.id === selection) ?? visibleProjects[0]
 
   return (
     <>
@@ -177,11 +164,12 @@ export default function Portfolio() {
         <a className="header-github" href={github}>GitHub</a>
       </header>
       <main id="main" tabIndex={-1}>
-        <Hero showAllProjects={() => {
-          if (filter !== 'All projects') flushSync(() => setFilter('All projects'))
-        }} />
-        <section className="work-section wrap" id="work" aria-labelledby="work-title">
-          <div className="work-header">
+        <section className="intro wrap" aria-labelledby="intro-title">
+          <h1 id="intro-title">Abhishek A</h1>
+          <p>I build apps for Android, Linux, and the web.</p>
+        </section>
+        <section className="workspace wrap" id="work" aria-labelledby="work-title">
+          <div className="workspace-toolbar">
             <h2 id="work-title">Projects</h2>
             <div className="filters" role="group" aria-label="Filter projects by platform">
               {filters.map(item => (
@@ -191,9 +179,26 @@ export default function Portfolio() {
               ))}
             </div>
           </div>
-          <p className="sr-only" role="status">{visibleProjects.length} projects shown</p>
-          <div className="project-list">
-            {visibleProjects.map(project => <ProjectRow key={project.id} project={project} />)}
+          <p className="sr-only" role="status">{visibleProjects.length} projects. Showing {activeProject.name}.</p>
+          <div className="workspace-body">
+            <div className="project-picker" role="group" aria-label="Choose a project">
+              {visibleProjects.map(project => (
+                <button
+                  className="project-choice"
+                  key={project.id}
+                  type="button"
+                  aria-pressed={project.id === activeProject.id}
+                  aria-controls="project-view"
+                  onClick={() => setSelection(project.id)}
+                >
+                  <img src={projectAsset(logos[project.id])} alt="" width={36} height={36} />
+                  <span>{project.name}</span>
+                </button>
+              ))}
+            </div>
+            <div className="project-view" id="project-view">
+              <ProjectDetail key={activeProject.id} project={activeProject} />
+            </div>
           </div>
         </section>
         <section className="about-section wrap" id="about" aria-labelledby="about-title">
