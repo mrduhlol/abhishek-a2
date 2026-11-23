@@ -83,7 +83,8 @@ function ProjectRow({ project }) {
   const [expanded, setExpanded] = useState(false)
   const [unavailable, setUnavailable] = useState(false)
   const file = logos[project.id]
-  const screenshot = `${project.id}-screenshot.webp`
+  const mediaType = project.id === 'inkora' ? 'app preview' : 'screenshot'
+  const screenshot = project.id === 'inkora' ? 'inkora-preview.webp' : `${project.id}-screenshot.webp`
   const screenshotId = `${project.id}-screenshot`
 
   return (
@@ -111,15 +112,15 @@ function ProjectRow({ project }) {
           onClick={() => setExpanded(!expanded)}
         >
           <span>{project.description}</span>
-          <span className="screenshot-label">{expanded ? 'Hide screenshot' : 'Show screenshot'}</span>
+          <span className="screenshot-label">{expanded ? 'Hide' : 'Show'} {mediaType}</span>
         </button>
         <div id={screenshotId} className="project-screenshot" hidden={!expanded}>
           {expanded && (unavailable ? (
-            <p role="status">Screenshot unavailable.</p>
+            <p role="status">Image unavailable.</p>
           ) : (
             <img
               src={iconUrls[screenshot] ?? `${import.meta.env.BASE_URL}project-icons/${screenshot}`}
-              alt={`Screenshot of ${project.name}`}
+              alt={`${project.name} ${mediaType}`}
               decoding="async"
               onError={() => setUnavailable(true)}
             />
