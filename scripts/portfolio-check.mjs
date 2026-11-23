@@ -13,10 +13,10 @@ try {
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `Overflow at ${width}px`)
     await page.screenshot({ path: `/tmp/portfolio-${width}.png`, fullPage: true })
   }
-  assert.equal(await page.locator('article').count(), 7)
+  assert.equal(await page.locator('article').count(), 8)
   assert.equal(await page.getByRole('heading', { name: 'Pulp', exact: true }).count(), 1)
   assert.equal(await page.getByRole('heading', { name: 'Orbit', exact: true }).count(), 0)
-  for (const [name, count] of [['Desktop', 1], ['Android', 3], ['Web', 3], ['All projects', 7]]) {
+  for (const [name, count] of [['Desktop', 1], ['Android', 3], ['Web', 4], ['All projects', 8]]) {
     await page.getByRole('button', { name, exact: true }).click()
     assert.equal(await page.locator('article').count(), count, name)
     assert.equal(await page.getByRole('button', { name, exact: true }).getAttribute('aria-pressed'), 'true')
