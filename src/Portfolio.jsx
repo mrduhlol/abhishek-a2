@@ -34,7 +34,6 @@ const logos = {
 }
 const embeddedIcons = document.getElementById('portfolio-icons')
 const iconUrls = embeddedIcons ? JSON.parse(embeddedIcons.textContent) : {}
-const equalizer = [38, 53, 67, 55, 36, 47, 69, 79, 62, 44]
 const lenisOptions = { autoRaf: true, anchors: false }
 const email = 'abhishek.a2534@gmail.com'
 const github = 'https://github.com/mrduhlol'
@@ -53,67 +52,53 @@ function SmoothScroll() {
   return enabled ? <ReactLenis root options={lenisOptions} /> : null
 }
 
-function ProjectArtwork({ project, featured }) {
-  const artwork = useRef(null)
+function Hero() {
+  const title = useRef(null)
 
   useGSAP(() => {
-    if (!featured) return
-
     const media = gsap.matchMedia()
     media.add('(prefers-reduced-motion: no-preference)', () => {
-      gsap.timeline({ defaults: { ease: 'expo.out' } })
-        .from('.equalizer-level', { scaleY: 0.35, duration: 0.6, stagger: 0.018 })
-        .from('.project-icon', { y: 10, duration: 0.65 }, 0.04)
-    }, artwork)
+      gsap.from(title.current, { y: 8, duration: 0.65, ease: 'expo.out' })
+    })
     return () => media.revert()
-  }, { scope: artwork })
+  })
 
-  const file = logos[project.id]
   return (
-    <div className={`project-mark mark-${project.id}`} ref={artwork} aria-hidden="true">
-      <img
-        className="project-icon"
-        src={iconUrls[file] ?? `${import.meta.env.BASE_URL}project-icons/${file}`}
-        alt=""
-        width={featured ? 112 : 64}
-        height={featured ? 112 : 64}
-        loading={featured ? 'eager' : 'lazy'}
-        decoding="async"
-      />
-      {featured && (
-        <div className="equalizer">
-          <div className="equalizer-bands">
-            {equalizer.map((level, band) => (
-              <span className="equalizer-band" key={band}>
-                <span className="equalizer-level" style={{ '--level': `${level}%` }} />
-              </span>
-            ))}
-          </div>
-          <div className="equalizer-range"><span>32 Hz</span><span>16 kHz</span></div>
-        </div>
-      )}
-    </div>
+    <section className="hero wrap" aria-labelledby="hero-title">
+      <h1 id="hero-title" ref={title}>Abhishek A</h1>
+      <p>I build apps for Android, Linux, and the web.</p>
+    </section>
   )
 }
 
 function ProjectRow({ project }) {
-  const featured = project.id === 'pulp'
+  const file = logos[project.id]
+
   return (
-    <article className={`project-row${featured ? ' project-feature' : ''}`}>
-      <ProjectArtwork project={project} featured={featured} />
-      <div className="project-info">
+    <article className="project-row">
+      <div className="project-identity">
+        <img
+          className="project-icon"
+          src={iconUrls[file] ?? `${import.meta.env.BASE_URL}project-icons/${file}`}
+          alt=""
+          width={56}
+          height={56}
+          decoding="async"
+        />
         <div className="project-title">
           <h3>{project.name}</h3>
           <span>{category(project)}</span>
         </div>
+      </div>
+      <div className="project-info">
         <p>{project.description}</p>
         <ul className="tech-list" aria-label={`${project.name} technologies`}>
           {project.tech.map(tech => <li key={tech}>{tech}</li>)}
         </ul>
-        <a className="source-link" href={project.github} aria-label={`View ${project.name} source on GitHub`}>
-          View source
-        </a>
       </div>
+      <a className="source-link" href={project.github} aria-label={`View ${project.name} source on GitHub`}>
+        Source
+      </a>
     </article>
   )
 }
@@ -136,16 +121,10 @@ export default function Portfolio() {
         <a className="header-github" href={github}>GitHub</a>
       </header>
       <main id="main" tabIndex={-1}>
-        <section className="hero wrap" aria-labelledby="hero-title">
-          <h1 id="hero-title">Abhishek A</h1>
-          <div className="hero-intro">
-            <p>I build apps for Android, Linux, and the web.</p>
-            <a className="text-link" href="#work">Browse my projects</a>
-          </div>
-        </section>
+        <Hero />
         <section className="work-section wrap" id="work" aria-labelledby="work-title">
           <div className="work-header">
-            <h2 id="work-title">Selected work</h2>
+            <h2 id="work-title">Projects</h2>
             <div className="filters" role="group" aria-label="Filter projects by platform">
               {filters.map(item => (
                 <button key={item} type="button" aria-pressed={filter === item} onClick={() => setFilter(item)}>
@@ -162,7 +141,7 @@ export default function Portfolio() {
         <section className="about-section wrap" id="about" aria-labelledby="about-title">
           <h2 id="about-title">About</h2>
           <div>
-            <p>I like making tools for small, everyday tasks. That includes turning an Android phone into a Linux mic and making an equalizer you can open right in your browser.</p>
+            <p>I work on browser extensions and apps for Android and Linux. Most of the code for my projects is on GitHub.</p>
             <a className="text-link" href={github}>Find me on GitHub</a>
           </div>
         </section>
