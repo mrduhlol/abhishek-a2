@@ -3,14 +3,14 @@
   font-family: Manrope, sans-serif;
   font-synthesis: none;
   color: #16181c;
-  background: #fbfbf9;
-  scrollbar-color: #a4a5a3 #fbfbf9;
+  background: #f5f6f9;
+  scrollbar-color: #a4a5a3 #f5f6f9;
   scroll-padding-top: 1.5rem;
   --ink: #16181c;
   --muted: #54575d;
   --line: #d8dad8;
   --wash: #f1f2f0;
-  --accent: #2345ba;
+  --accent: #203e91;
 }
 
 * { box-sizing: border-box; }
@@ -42,48 +42,17 @@ p { line-height: 1.65; }
 .site-header nav, .site-footer div { display: flex; flex-wrap: wrap; gap: 0 clamp(1rem, 3vw, 2rem); }
 .site-header nav, .header-github, .site-footer { color: var(--muted); font-size: .875rem; }
 
-.intro {
+.portfolio-main {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-  align-items: center;
-  gap: clamp(1.5rem, 6vw, 6rem);
-  padding-block: clamp(2.5rem, 6vw, 5rem);
+  grid-template-columns: minmax(12rem, 1fr) minmax(0, 3fr);
+  gap: 0 clamp(2rem, 7vw, 7rem);
+  padding-top: clamp(2rem, 6vw, 5rem);
 }
-.intro-copy h1 {
-  font-size: clamp(3rem, 7vw, 6rem);
-  font-weight: 600;
-  line-height: 1.02;
-  letter-spacing: -.04em;
-}
-.intro-copy p {
-  max-width: 30ch;
-  margin-top: 1.125rem;
-  color: var(--muted);
-  font-size: clamp(1.125rem, 2vw, 1.375rem);
-}
-.intro-links { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.25rem; margin-top: 1.5rem; }
-.primary-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 46px;
-  padding-inline: 1rem;
-  border-radius: 4px;
-  background: var(--ink);
-  color: #fff;
-  font-size: .875rem;
-  font-weight: 600;
-  text-decoration: none;
-}
-.primary-link:hover { background: var(--accent); }
-.intro-art {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  background: #15161a;
-  border-radius: 4px;
-}
+.intro { position: sticky; top: 2rem; align-self: start; padding-top: .25rem; }
+.intro h1 { font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1; letter-spacing: -.04em; }
+.intro p { margin-top: 1rem; color: var(--muted); max-width: 24ch; }
+.intro a { margin-right: 1rem; }
+.projects, .about-section, .contact-section { grid-column: 2; }
 
 .projects-header {
   display: flex;
@@ -116,12 +85,12 @@ p { line-height: 1.65; }
 
 .project-list {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 0 clamp(1.75rem, 5vw, 4rem);
 }
 .project-detail {
   min-width: 0;
-  padding-block: 1.625rem 1.375rem;
+  display: grid; grid-template-columns: minmax(11rem, .8fr) minmax(0, 1.7fr); gap: 1rem 2rem; align-items: start; padding-block: 1.625rem 1.375rem;
   border-bottom: 1px solid var(--line);
 }
 .project-detail:target { border-top: 2px solid var(--accent); }
@@ -134,7 +103,7 @@ p { line-height: 1.65; }
 .project-title h3 { font-size: clamp(1.125rem, 2vw, 1.5rem); font-weight: 600; letter-spacing: -.025em; overflow-wrap: anywhere; }
 .project-title > span { display: block; margin-top: .125rem; color: var(--muted); font-size: .875rem; }
 .project-emblem { display: block; width: 3.25rem; height: 3.25rem; object-fit: contain; border-radius: 12px; }
-.project-info { margin-top: .875rem; }
+.project-info { min-width: 0; }
 .project-description {
   display: grid;
   gap: .625rem;
@@ -199,7 +168,7 @@ p { line-height: 1.65; }
 .about-section p { max-width: 54ch; color: var(--muted); font-size: 1.125rem; }
 .about-section .text-link { margin-top: .5rem; }
 .contact-section { background: #17191e; color: #f9faf8; }
-.contact-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; padding-block: 2.5rem; }
+.contact-inner { padding-inline: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; padding-block: 2.5rem; }
 .contact-email { display: inline-flex; align-items: center; min-height: 44px; color: #d9e2ff; overflow-wrap: anywhere; }
 .site-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .5rem 1.5rem; padding-block: 1.125rem; }
 .skip-link { position: fixed; top: .75rem; left: 1rem; z-index: 2; padding: .75rem; color: #fff; background: var(--accent); transform: translateY(calc(-100% - 1rem)); }
@@ -214,8 +183,8 @@ p { line-height: 1.65; }
   .site-header { min-height: 4.25rem; }
   .site-header .header-github { display: none; }
   .site-header nav { gap: .875rem; }
-  .intro, .project-list, .about-section { grid-template-columns: minmax(0, 1fr); }
-  .intro-art { aspect-ratio: 16 / 9; }
-  .intro-copy h1 { font-size: clamp(2.75rem, 12vw, 4.5rem); }
+  .portfolio-main, .project-detail, .about-section { grid-template-columns: minmax(0, 1fr); }
+  .intro { position: static; padding-bottom: 2rem; }
+  .projects, .about-section, .contact-section { grid-column: 1; }
   .filters button { padding-inline: .625rem; }
 }
