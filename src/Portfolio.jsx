@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ReactLenis } from 'lenis/react'
@@ -134,6 +135,7 @@ function ProjectDetail({ project }) {
 }
 
 export default function Portfolio() {
+  const view = useRef(null)
   const [filter, setFilter] = useState('All projects')
   const [selection, setSelection] = useState(() => projectFromHash()?.id ?? projects[0].id)
 
@@ -149,6 +151,12 @@ export default function Portfolio() {
   }, [])
   const visibleProjects = projects.filter(project => filter === 'All projects' || category(project) === filter)
   const activeProject = visibleProjects.find(project => project.id === selection) ?? visibleProjects[0]
+
+  function openProject(id) {
+    flushSync(() => setSelection(id))
+    view.current.focus({ preventScroll: true })
+    view.current.scrollIntoView({ block: 'start' })
+  }
 
   return (
     <>
@@ -187,16 +195,17 @@ export default function Portfolio() {
                   className="project-choice"
                   key={project.id}
                   type="button"
+                  data-project={project.id}
                   aria-pressed={project.id === activeProject.id}
                   aria-controls="project-view"
-                  onClick={() => setSelection(project.id)}
+                  onClick={() => openProject(project.id)}
                 >
-                  <img src={projectAsset(logos[project.id])} alt="" width={36} height={36} />
+                  <img src={projectAsset(logos[project.id])} alt="" width={80} height={80} />
                   <span>{project.name}</span>
                 </button>
               ))}
             </div>
-            <div className="project-view" id="project-view">
+            <div className="project-view" id="project-view" ref={view} tabIndex={-1}>
               <ProjectDetail key={activeProject.id} project={activeProject} />
             </div>
           </div>
