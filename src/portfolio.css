@@ -51,6 +51,7 @@ p { line-height: 1.65; }
 .intro {
   position: sticky;
   top: 2rem;
+  container-type: inline-size;
   align-self: start;
   padding: clamp(1.5rem, 3.5vw, 3.5rem);
   background: #213789;
@@ -58,7 +59,7 @@ p { line-height: 1.65; }
 }
 .intro h1 {
   max-width: 6ch;
-  font: 800 clamp(4rem, 8vw, 6rem)/.88 'Barlow Condensed', sans-serif;
+  font: 800 min(22cqi, 6rem)/.88 'Barlow Condensed', sans-serif;
   letter-spacing: -.025em;
   text-transform: uppercase;
 }
