@@ -112,7 +112,7 @@ p { line-height: 1.6; }
   cursor: pointer;
 }
 .project-choice:nth-child(4n + 1) { grid-column: span 4; }
-.project-choice:nth-child(4n + 2) { grid-column: span 2; }
+.project-choice:nth-child(2), .project-choice:nth-child(7) { grid-column: span 2; }
 .project-picker:not(:has(.project-choice:nth-child(5))) .project-choice { grid-column: span 3; }
 .project-picker:has(.project-choice:nth-child(3):last-child) .project-choice { grid-column: span 4; }
 .project-picker:has(.project-choice:only-child) .project-choice { grid-column: 1 / -1; }
