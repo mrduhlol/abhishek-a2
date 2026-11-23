@@ -80,7 +80,11 @@ function Hero() {
 }
 
 function ProjectRow({ project }) {
+  const [expanded, setExpanded] = useState(false)
+  const [unavailable, setUnavailable] = useState(false)
   const file = logos[project.id]
+  const screenshot = `${project.id}-screenshot.webp`
+  const screenshotId = `${project.id}-screenshot`
 
   return (
     <article className="project-row">
@@ -99,7 +103,28 @@ function ProjectRow({ project }) {
         </div>
       </div>
       <div className="project-info">
-        <p>{project.description}</p>
+        <button
+          className="project-description"
+          type="button"
+          aria-expanded={expanded}
+          aria-controls={screenshotId}
+          onClick={() => setExpanded(!expanded)}
+        >
+          <span>{project.description}</span>
+          <span className="screenshot-label">{expanded ? 'Hide screenshot' : 'Show screenshot'}</span>
+        </button>
+        <div id={screenshotId} className="project-screenshot" hidden={!expanded}>
+          {expanded && (unavailable ? (
+            <p role="status">Screenshot unavailable.</p>
+          ) : (
+            <img
+              src={iconUrls[screenshot] ?? `${import.meta.env.BASE_URL}project-icons/${screenshot}`}
+              alt={`Screenshot of ${project.name}`}
+              decoding="async"
+              onError={() => setUnavailable(true)}
+            />
+          ))}
+        </div>
         <ul className="tech-list" aria-label={`${project.name} technologies`}>
           {project.tech.map(tech => <li key={tech}>{tech}</li>)}
         </ul>
