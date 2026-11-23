@@ -77,22 +77,23 @@ function Hero({ showAllProjects }) {
 
   return (
     <section className="hero wrap" aria-labelledby="hero-title" ref={hero}>
-      <div>
+      <div className="hero-intro">
         <h1 id="hero-title">Abhishek A</h1>
-        <p>I build apps for Android, Linux, and the web.</p>
-        <a className="work-link" href="#work">Browse projects</a>
+        <div>
+          <p>I build apps for Android, Linux, and the web.</p>
+          <a className="work-link" href="#work">Browse projects</a>
+        </div>
       </div>
       <nav className="icon-board" aria-label="Jump to a project">
         {projects.map(project => (
           <a
             className="icon-board-slot"
             href={`#project-${project.id}`}
-            aria-label={project.name}
-            title={project.name}
             key={project.id}
             onClick={showAllProjects}
           >
-            <img src={projectAsset(logos[project.id])} alt="" width={72} height={72} />
+            <img src={projectAsset(logos[project.id])} alt="" width={56} height={56} />
+            <span>{project.name}</span>
           </a>
         ))}
       </nav>
