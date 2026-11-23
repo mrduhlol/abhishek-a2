@@ -119,7 +119,38 @@ p { line-height: 1.65; }
   overflow-wrap: anywhere;
 }
 .project-title > span { color: var(--muted); font-size: .8125rem; }
-.project-info > p { max-width: 65ch; }
+.project-description {
+  display: grid;
+  justify-items: start;
+  gap: .375rem;
+  max-width: 65ch;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: start;
+  line-height: 1.65;
+  cursor: pointer;
+}
+
+.screenshot-label {
+  color: var(--accent);
+  font-size: .8125rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+.project-description:hover .screenshot-label { text-decoration-thickness: 2px; }
+.project-screenshot { margin-top: .75rem; }
+.project-screenshot img {
+  display: block;
+  max-width: 100%;
+  max-height: 34rem;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: .5rem;
+}
 .tech-list {
   display: flex;
   flex-wrap: wrap;
