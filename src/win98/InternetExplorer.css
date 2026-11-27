@@ -1,0 +1,100 @@
+.win98-ie {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background: #c0c0c0;
+  color: #111;
+  font: 12px Tahoma, Arial, sans-serif;
+}
+
+.win98-ie-toolbar,
+.win98-ie-address {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  border-block: 1px solid;
+  border-top-color: #fff;
+  border-bottom-color: #808080;
+}
+
+.win98-ie-toolbar button,
+.win98-ie-search button {
+  min-height: 25px;
+  padding: 3px 9px;
+  border: 0;
+  background: #c0c0c0;
+  box-shadow: inset 1px 1px #fff, inset -1px -1px #333, inset -2px -2px #808080;
+}
+
+.win98-ie-toolbar button { min-width: 56px; }
+.win98-ie-toolbar button:disabled { color: #515151; cursor: default; }
+.win98-ie-toolbar button:active:not(:disabled),
+.win98-ie-search button:active { box-shadow: inset 1px 1px #555, inset -1px -1px #fff; }
+
+.win98-ie-address input,
+.win98-ie-search input {
+  min-width: 0;
+  min-height: 25px;
+  padding: 2px 5px;
+  border: 1px solid #808080;
+  background: #fff;
+  color: #111;
+  font: inherit;
+}
+
+.win98-ie-address input { flex: 1 1 140px; }
+
+.win98-ie-page {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: clamp(26px, 8vh, 68px) 12px 24px;
+  background: #fff;
+  text-align: center;
+  font: 14px Arial, sans-serif;
+}
+
+.win98-ie-wordmark {
+  margin: 0 0 12px;
+  font: bold clamp(46px, 10vw, 78px)/1 Georgia, 'Times New Roman', serif;
+  letter-spacing: -.035em;
+  color: #2049b8;
+}
+
+.win98-ie-wordmark span:nth-child(2),
+.win98-ie-wordmark span:nth-child(6) { color: #b1251d; }
+.win98-ie-wordmark span:nth-child(3) { color: #956700; }
+.win98-ie-wordmark span:nth-child(5) { color: #257731; }
+
+.win98-ie-search { max-width: 480px; margin: 0 auto; }
+.win98-ie-search label { display: block; margin-bottom: 7px; }
+.win98-ie-search > div { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; }
+.win98-ie-search input { flex: 1 1 150px; }
+.win98-ie-search button { font: 12px Tahoma, Arial, sans-serif; }
+
+.win98-ie-results-page { padding-top: 16px; }
+.win98-ie-results-page .win98-ie-wordmark { font-size: 45px; }
+.win98-ie-results { max-width: 580px; margin: 18px auto 0; text-align: left; }
+.win98-ie-result-count { margin: 0; padding: 5px 7px; background: #e9edf9; overflow-wrap: anywhere; }
+.win98-ie-results ul { margin: 0; padding: 0 7px; list-style: none; }
+.win98-ie-results li { margin-top: 15px; }
+.win98-ie-results li p { margin: 3px 0; line-height: 1.4; }
+.win98-ie-results li button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 16px;
+  text-align: left;
+  text-decoration: underline;
+}
+
+.win98-ie-tech { color: #286029; font-size: 12px; }
+.win98-ie-results li button,
+.win98-ie-google-link { color: #000080; }
+.win98-ie-google-link { display: inline-block; margin-top: 16px; }
+.win98-ie :is(button, a, input):focus-visible { outline: 2px solid #000080; outline-offset: 2px; }

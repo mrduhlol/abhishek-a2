@@ -9,3 +9,5 @@
 ## Windows 98 desktop icons
 
 The PNGs in public/win98-icons come from https://win98.si/icons/. Abhishek confirmed permission to reproduce the reference design.
+
+The boot logos and splash use https://win98.si/splash/. The desktop uses https://win98.si/wallpapers/windows98.jpg. The project screenshots link to their pinned GitHub source files from their individual project windows.

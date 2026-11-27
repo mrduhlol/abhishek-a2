@@ -1,0 +1,119 @@
+.win98-boot {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: #c0c0c0;
+  background: #000;
+}
+
+.win98-boot-console {
+  --cell-width: min(1.25vw, 2.4dvh);
+  --cell-height: min(4dvh, calc(var(--cell-width) * 2));
+  --font-size: min(var(--cell-height), calc(var(--cell-width) / 0.6));
+  position: relative;
+  width: calc(var(--cell-width) * 80);
+  height: calc(var(--cell-height) * 25);
+  overflow: hidden;
+  font: var(--font-size) / var(--cell-height) "Courier New", monospace;
+  letter-spacing: calc(var(--cell-width) - var(--font-size) * 0.6);
+  white-space: pre;
+}
+
+@supports (width: round(down, 10.5px, 1px)) {
+  .win98-boot-console {
+    --cell-width: min(round(down, 1.25vw, 1px), round(down, calc(round(down, 4dvh, 1px) * 0.6), 1px));
+    --cell-height: min(round(down, 4dvh, 1px), calc(var(--cell-width) * 2));
+  }
+}
+
+.win98-boot-row { height: var(--cell-height); }
+.win98-boot-row strong { color: #fff; font-weight: inherit; }
+
+.win98-boot-award,
+.win98-boot-energy {
+  position: absolute;
+  top: 0;
+  image-rendering: pixelated;
+}
+
+.win98-boot-award {
+  left: 0;
+  width: calc(var(--cell-width) * 3);
+  height: calc(var(--cell-height) * 2);
+}
+
+.win98-boot-energy {
+  left: calc(var(--cell-width) * 63);
+  width: calc(var(--cell-width) * 17);
+  height: calc(var(--cell-height) * 5);
+}
+
+.win98-boot-dos {
+  position: absolute;
+  inset: 0;
+  padding: 4px 8px;
+  font: 16px/18px "Courier New", monospace;
+}
+
+.win98-boot-dos::after {
+  content: "_";
+  animation: win98-boot-caret 1s steps(1) infinite;
+}
+
+.win98-boot-splash {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: max(100vw, 177.778dvh);
+  aspect-ratio: 16 / 9;
+  transform: translateX(-50%);
+  overflow: hidden;
+  background: url('/win98-system/logo.webp') 0 0 / 100% 100%;
+}
+
+.win98-boot-splash-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 1.79104%;
+  background: url('/win98-system/logo.webp') 0 100% / 50% 5583.33% repeat-x;
+  animation: win98-boot-progress 6.4s steps(160) infinite;
+}
+
+.win98-boot-skip {
+  position: absolute;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  min-height: 36px;
+  padding: 4px 10px;
+  border: 1px solid #aaa;
+  border-radius: 0;
+  background: #000;
+  color: #fff;
+  font: 12px "Courier New", monospace;
+}
+
+.win98-boot-skip:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+:root .win98-desktop {
+  background: #008080 url('/win98-system/windows98.jpg') center / cover no-repeat;
+}
+
+@media (orientation: portrait) {
+  .win98-boot-splash { width: 100vw; bottom: 50%; transform: translate(-50%, 50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .win98-boot-dos::after,
+  .win98-boot-splash-bar { animation: none; }
+}
+
+@keyframes win98-boot-caret { 50% { visibility: hidden; } }
+@keyframes win98-boot-progress {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}

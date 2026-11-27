@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { PROJECTS } from '../data/projects.js';
+import logoManifest from '../data/project-logos.json';
 import { createKit, disposeGroup } from './kit.js';
 import { chapterAt, clamp, END_X, groundHeight, pathY, pathZ, routeAt, SEGMENT, START_X } from './route.js';
 
@@ -286,7 +287,6 @@ export default function ExpeditionScene({ progress = 0, world = 'trail', reduced
     let resizeObserver, intersectionObserver, hovered = null, pointerDown = null;
     let hero = null, town = null, girl = null, stareUntil = 0, townWalk = 0, handBlend = 0;
     const disposers = [], actors = [], biomes = [], landmarks = [];
-    const pending = new AbortController();
     const scene = new THREE.Scene();
     const trail = new THREE.Group(), village = new THREE.Group();
     scene.add(trail, village);
@@ -457,17 +457,13 @@ export default function ExpeditionScene({ progress = 0, world = 'trail', reduced
     async function loadLogos() {
       try {
         const base = `${import.meta.env.BASE_URL}expedition/logos/`;
-        const response = await fetch(`${base}manifest.json`, { signal: pending.signal });
-        if (!response.ok) return;
-        const manifest = await response.json();
         if (disposed) return;
-        const entries = manifest.projects || manifest.logos || manifest;
+        const entries = logoManifest.projects;
         const loader = new THREE.TextureLoader();
         const textureLoads = [];
         for (const landmark of landmarks) {
           const project = PROJECTS[landmark.index];
-          const entry = Array.isArray(entries) ? entries.find(e => e.id === project.id || e.project === project.id) : entries[project.id];
-          const source = typeof entry === 'string' ? entry : entry?.src || entry?.file || entry?.path || entry?.logo || entry?.url;
+          const source = entries[project.id];
           if (typeof source !== 'string') continue;
           const url = /^(https?:|data:|\/)/.test(source) ? source : `${base}${source}`;
           textureLoads.push(new Promise(resolve => loader.load(url, texture => {
@@ -483,7 +479,7 @@ export default function ExpeditionScene({ progress = 0, world = 'trail', reduced
           }, undefined, () => { assetError = true; resolve(); })));
         }
         await Promise.all(textureLoads);
-      } catch { /* Missing manifests and aborted requests retain the project names. */ }
+      } catch { /* Keep the project names if a logo cannot be loaded. */ }
     }
 
     function pick() {
@@ -963,7 +959,6 @@ export default function ExpeditionScene({ progress = 0, world = 'trail', reduced
     return () => {
       disposed = true;
       actionsRef.current = null;
-      pending.abort();
       cancelAnimationFrame(raf);
       resizeObserver?.disconnect();
       intersectionObserver?.disconnect();

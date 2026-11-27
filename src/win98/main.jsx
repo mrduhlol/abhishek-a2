@@ -1,10 +1,22 @@
-﻿import { StrictMode, useEffect, useRef, useState } from 'react'
+﻿import { StrictMode, useCallback, useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
+import BootSequence from './BootSequence.jsx'
+import InternetExplorer from './InternetExplorer.jsx'
 import PortfolioContent from './PortfolioContent.jsx'
+import ProjectContent, { projectApps } from './ProjectContent.jsx'
 import './desktop.css'
 
 const base = import.meta.env.BASE_URL
 const welcomePreference = 'portfolio-win98-welcome'
+const systemApps = [
+  { id: 'about', label: 'My Computer', icon: 'computer_explorer_32' },
+  { id: 'projects', label: 'My Documents', icon: 'directory_open_file_mydocs_32' },
+  { id: 'internet', label: 'Internet Explorer', icon: 'ie_32' },
+  { id: 'contact', label: 'Outlook Express', icon: 'outlook_express_32' },
+  { id: 'welcome', label: 'Welcome', icon: 'windows_32' },
+]
+const shortcuts = [...systemApps, ...projectApps]
+const apps = Object.fromEntries(shortcuts.map(app => [app.id, app]))
 
 function showWelcome() {
   try {
@@ -13,23 +25,9 @@ function showWelcome() {
     return true
   }
 }
-const apps = {
-  about: { label: 'About', file: 'Welcome', icon: 'windows_32' },
-  projects: { label: 'Projects', file: 'Projects', icon: 'directory_open_file_mydocs_32' },
-  contact: { label: 'Contact', file: 'Contact', icon: 'outlook_express_32' },
-}
-const appIds = Object.keys(apps)
-const shortcuts = [
-  { label: 'My Computer', icon: 'computer_explorer_32', app: 'projects' },
-  { label: 'My Documents', icon: 'directory_open_file_mydocs_32', app: 'projects' },
-  { label: 'Internet Explorer', icon: 'ie_32', href: base },
-  { label: 'Outlook Express', icon: 'outlook_express_32', app: 'contact' },
-  { label: 'Welcome', icon: 'windows_32', app: 'about' },
-  { label: 'Notepad', icon: 'notepad_32', app: 'about' },
-]
 
-function Icon({ name, size = 16 }) {
-  return <img src={base + 'win98-icons/' + name + '.png'} alt="" width={size} height={size} draggable={false} />
+function Icon({ name, url, size = 16 }) {
+  return <img src={url || base + 'win98-icons/' + name + '.png'} alt="" width={size} height={size} draggable={false} />
 }
 
 function Clock() {
@@ -43,68 +41,33 @@ function Clock() {
   </time>
 }
 
-function Desktop() {
-  const [app, setApp] = useState(() => showWelcome() ? 'about' : null)
-  const [visible, setVisible] = useState(true)
+function AppWindow({ entry, index, active, workspace, openApp, activate, minimize, close, startup, setStartup }) {
+  const { id, minimized } = entry
+  const { label, icon, iconUrl } = apps[id]
   const [expanded, setExpanded] = useState(false)
-  const [start, setStart] = useState(false)
-  const [startup, setStartup] = useState(app === 'about')
-  const [selected, setSelected] = useState(null)
-  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [position, setPosition] = useState(() => {
+    const offset = Math.min(72, Math.max(0, (workspace.current?.clientWidth ?? 0) - 755), (index % 7) * 18)
+    return { x: offset, y: offset }
+  })
   const drag = useRef(null)
-  const workspace = useRef(null)
   const heading = useRef(null)
-  const startButton = useRef(null)
-  const startArea = useRef(null)
-  const firstStartItem = useRef(null)
-  const focusWindow = useRef(false)
+  const windowRef = useRef(null)
 
   useEffect(() => {
-    if (visible && focusWindow.current) {
-      heading.current?.focus()
-      focusWindow.current = false
-    }
-  }, [app, visible])
-
-  useEffect(() => {
-    if (!start) return
-    firstStartItem.current?.focus()
-    function dismiss(event) {
-      if (!startArea.current?.contains(event.target)) setStart(false)
-    }
-    document.addEventListener('pointerdown', dismiss)
-    return () => document.removeEventListener('pointerdown', dismiss)
-  }, [start])
-
-  function openApp(id) {
-    if (id === app && visible) heading.current?.focus()
-    else focusWindow.current = true
-    setApp(id)
-    setVisible(true)
-    setStart(false)
-  }
-
-  function hideWindow(close) {
-    setVisible(false)
-    if (close) {
-      setApp(null)
-      setExpanded(false)
-      setPosition({ x: 0, y: 0 })
-    }
-    document.getElementById(close ? 'win98-shortcut-' + shortcuts.findIndex(item => item.app === app) : 'win98-task')?.focus()
-  }
+    if (active && !windowRef.current?.contains(document.activeElement)) heading.current?.focus({ preventScroll: true })
+  }, [active])
 
   function startDrag(event) {
     if (event.button !== 0 || expanded || event.target.closest('button') || matchMedia('(max-width: 640px)').matches) return
-    const windowBounds = event.currentTarget.parentElement.getBoundingClientRect()
-    const desktopBounds = workspace.current.getBoundingClientRect()
+    const bounds = windowRef.current.getBoundingClientRect()
+    const desktop = workspace.current.getBoundingClientRect()
     drag.current = {
       pointerX: event.clientX - position.x,
       pointerY: event.clientY - position.y,
-      minX: position.x - windowBounds.left + desktopBounds.left,
-      minY: position.y - windowBounds.top + desktopBounds.top,
-      maxX: position.x + desktopBounds.right - windowBounds.right,
-      maxY: position.y + desktopBounds.bottom - windowBounds.bottom,
+      minX: position.x - bounds.left + desktop.left,
+      minY: position.y - bounds.top + desktop.top,
+      maxX: position.x + desktop.right - bounds.right,
+      maxY: position.y + desktop.bottom - bounds.bottom,
     }
     event.currentTarget.setPointerCapture(event.pointerId)
   }
@@ -118,62 +81,114 @@ function Desktop() {
     })
   }
 
+  const welcome = id === 'welcome'
+  return (
+    <section ref={windowRef} className={'win98-window' + (expanded ? ' win98-expanded' : '')}
+      hidden={minimized} data-active={active}
+      style={{ '--window-x': position.x + 'px', '--window-y': position.y + 'px', zIndex: index + 1 }}
+      aria-labelledby={'win98-title-' + id} onPointerDown={() => activate(id)} onFocus={() => activate(id)}>
+      <header className="win98-titlebar" onPointerDown={startDrag} onPointerMove={moveWindow}
+        onLostPointerCapture={() => { drag.current = null }}
+        onDoubleClick={event => { if (!event.target.closest('button')) setExpanded(value => !value) }}>
+        <Icon name={icon} url={iconUrl} />
+        <span tabIndex={-1} ref={heading} id={'win98-title-' + id}>{label}</span>
+        <div className="win98-window-controls">
+          <button type="button" aria-label="Minimize window" onClick={() => minimize(id)}><i className="win98-minimize" /></button>
+          <button type="button" aria-label={expanded ? 'Restore window size' : 'Maximize window'} onClick={() => setExpanded(value => !value)}><i className={expanded ? 'win98-restore' : 'win98-maximize'} /></button>
+          <button type="button" aria-label="Close window" onClick={() => close(id)}><i className="win98-close" /></button>
+        </div>
+      </header>
+      {welcome && <div className="win98-banner"><Icon name="windows_32" size={32} />Welcome to Abhishek's portfolio</div>}
+      <div className="win98-window-body">
+        {id === 'internet' ? <InternetExplorer openApp={openApp} /> :
+          id === 'projects' || id.startsWith('project-') ? <ProjectContent app={id} openApp={openApp} /> :
+          <PortfolioContent app={id} openApp={openApp} />}
+      </div>
+      {welcome && <footer className="win98-status">
+        <label><input type="checkbox" checked={startup} onChange={event => setStartup(event.target.checked)} /> Show Welcome at startup</label>
+        <button type="button" onClick={() => close(id)}>Close</button>
+      </footer>}
+    </section>
+  )
+}
+
+function Desktop() {
+  const [booting, setBooting] = useState(true)
+  const finishBoot = useCallback(() => setBooting(false), [])
+  const [startup, setStartup] = useState(showWelcome)
+  const [windows, setWindows] = useState(() => showWelcome() ? [{ id: 'welcome', minimized: false }] : [])
+  const [hiddenDesktop, setHiddenDesktop] = useState(false)
+  const [start, setStart] = useState(false)
+  const [selected, setSelected] = useState(null)
+  const workspace = useRef(null)
+  const startButton = useRef(null)
+  const startArea = useRef(null)
+  const firstStartItem = useRef(null)
+  const active = hiddenDesktop ? undefined : windows.findLast(entry => !entry.minimized)?.id
+
+  useEffect(() => {
+    if (!start) return
+    firstStartItem.current?.focus()
+    function dismiss(event) {
+      if (!startArea.current?.contains(event.target)) setStart(false)
+    }
+    document.addEventListener('pointerdown', dismiss)
+    return () => document.removeEventListener('pointerdown', dismiss)
+  }, [start])
+
+  function changeStartup(checked) {
+    setStartup(checked)
+    try {
+      localStorage.setItem(welcomePreference, checked ? 'on' : 'off')
+    } catch {
+      // Sandboxed previews still update the preference for this session.
+    }
+  }
+
+  function activate(id) {
+    setWindows(entries => {
+      if (entries.at(-1)?.id === id && !entries.at(-1).minimized) return entries
+      return [...entries.filter(entry => entry.id !== id), { id, minimized: false }]
+    })
+  }
+
+  function openApp(id) {
+    if (!Object.hasOwn(apps, id)) return
+    activate(id)
+    setHiddenDesktop(false)
+    setStart(false)
+  }
+
+  function minimize(id) {
+    setWindows(entries => entries.map(entry => entry.id === id ? { ...entry, minimized: true } : entry))
+    document.getElementById('win98-task-' + id)?.focus()
+  }
+
+  function close(id) {
+    setWindows(entries => entries.filter(entry => entry.id !== id))
+    document.getElementById('win98-shortcut-' + id)?.focus()
+  }
+
+  if (booting) return <BootSequence onComplete={finishBoot} />
+
   return (
     <div className="win98-desktop">
       <div className="win98-workspace" ref={workspace}>
         <nav className="win98-shortcuts" aria-label="Desktop shortcuts">
-          {shortcuts.map(({ label, icon, app: target, href }, index) => href ? (
-            <a key={label} href={href} aria-label="Expedition" title="Open the expedition portfolio"><Icon name={icon} size={32} /><span>{label}</span></a>
-          ) : (
-            <button key={label} id={'win98-shortcut-' + index} type="button" aria-pressed={selected === label}
+          {shortcuts.map(({ id, label, icon, iconUrl }) => (
+            <button key={id} id={'win98-shortcut-' + id} type="button" aria-pressed={selected === id}
               onClick={event => {
-                setSelected(label)
-                if (event.detail === 0 || matchMedia('(pointer: coarse)').matches) openApp(target)
-              }} onDoubleClick={() => openApp(target)}>
-              <Icon name={icon} size={32} /><span>{label}</span>
+                setSelected(id)
+                if (id.startsWith('project-') || !event.detail || matchMedia('(pointer: coarse)').matches) openApp(id)
+              }} onDoubleClick={() => openApp(id)}>
+              <Icon name={icon} url={iconUrl} size={32} /><span>{label}</span>
             </button>
           ))}
         </nav>
-        <main className="win98-main">
-          {app && visible && (
-            <section className={'win98-window' + (expanded ? ' win98-expanded' : '')}
-              style={{ '--window-x': position.x + 'px', '--window-y': position.y + 'px' }} aria-labelledby="win98-title">
-              <header className="win98-titlebar" onPointerDown={startDrag} onPointerMove={moveWindow}
-                onLostPointerCapture={() => { drag.current = null }}
-                onDoubleClick={event => { if (!event.target.closest('button')) setExpanded(value => !value) }}>
-                <Icon name={apps[app].icon} />
-                <span tabIndex={-1} ref={heading} id="win98-title">{apps[app].file}</span>
-                <div className="win98-window-controls">
-                  <button type="button" aria-label="Minimize window" onClick={() => hideWindow(false)}><i className="win98-minimize" /></button>
-                  <button type="button" aria-label={expanded ? 'Restore window size' : 'Maximize window'} onClick={() => setExpanded(value => !value)}><i className={expanded ? 'win98-restore' : 'win98-maximize'} /></button>
-                  <button type="button" aria-label="Close window" onClick={() => hideWindow(true)}><i className="win98-close" /></button>
-                </div>
-              </header>
-              <div className="win98-banner"><Icon name="windows_32" size={32} />Welcome to Abhishek's portfolio</div>
-              <div className="win98-window-layout">
-                <nav className="win98-window-nav" aria-label="Portfolio sections">
-                  {appIds.map(id => (
-                    <button key={id} type="button" aria-current={id === app ? 'page' : undefined} onClick={() => openApp(id)}>
-                      <Icon name={apps[id].icon} /><span>{apps[id].label}</span>
-                    </button>
-                  ))}
-                </nav>
-                <div className="win98-window-body" key={app}><PortfolioContent app={app} openApp={openApp} /></div>
-              </div>
-              <footer className="win98-status">
-                <label><input type="checkbox" checked={startup} onChange={event => {
-                  const checked = event.target.checked
-                  setStartup(checked)
-                  try {
-                    localStorage.setItem(welcomePreference, checked ? 'on' : 'off')
-                  } catch {
-                    // Sandboxed previews can still change the preference for this session.
-                  }
-                }} /> Show Welcome at startup</label>
-                <button type="button" onClick={() => hideWindow(true)}>Close</button>
-              </footer>
-            </section>
-          )}
+        <main className="win98-main" hidden={hiddenDesktop}>
+          {windows.toSorted((a, b) => a.id.localeCompare(b.id)).map(entry => <AppWindow key={entry.id} entry={entry} index={windows.indexOf(entry)}
+            active={entry.id === active} workspace={workspace} openApp={openApp} activate={activate}
+            minimize={minimize} close={close} startup={startup} setStartup={changeStartup} />)}
         </main>
       </div>
       <footer className="win98-taskbar">
@@ -191,19 +206,21 @@ function Desktop() {
           <nav id="win98-launcher" className="win98-launcher" aria-label="Start menu" hidden={!start}>
             <span className="win98-launcher-brand" aria-hidden="true"><b>Windows</b>98</span>
             <div>
-              {appIds.map((id, index) => <button key={id} type="button" ref={index === 0 ? firstStartItem : undefined} onClick={() => openApp(id)}><Icon name={apps[id].icon} size={24} />{apps[id].label}</button>)}
+              {systemApps.map(({ id, icon, label }, index) => <button key={id} type="button" ref={index === 0 ? firstStartItem : undefined} onClick={() => openApp(id)}><Icon name={icon} size={24} />{label}</button>)}
               <a href={base}><Icon name="ie_32" size={24} />Expedition</a>
             </div>
           </nav>
         </div>
         <div className="win98-quicklaunch" aria-label="Quick Launch">
-          <a href={base} aria-label="Open expedition" title="Open expedition"><Icon name="ie_16" /></a>
-          <button type="button" aria-label="Show desktop" title="Show desktop" onClick={() => {
-            if (app && visible) hideWindow(false)
-            else if (app) openApp(app)
-          }}><Icon name="desktop_16" /></button>
+          <button type="button" aria-label="Open Internet Explorer" title="Internet Explorer" onClick={() => openApp('internet')}><Icon name="ie_16" /></button>
+          <button type="button" aria-label="Show desktop" title="Show desktop" onClick={() => setHiddenDesktop(value => !value)}><Icon name="desktop_16" /></button>
         </div>
-        {app && <button id="win98-task" type="button" aria-pressed={visible} onClick={() => visible ? hideWindow(false) : openApp(app)}><Icon name={apps[app].icon} />{apps[app].file}</button>}
+        <div className="win98-tasks" aria-label="Open windows">
+          {windows.map(({ id }) => <button key={id} id={'win98-task-' + id} type="button" aria-pressed={id === active}
+            onClick={() => id === active ? minimize(id) : openApp(id)}>
+            <Icon name={apps[id].icon} url={apps[id].iconUrl} /><span>{apps[id].label}</span>
+          </button>)}
+        </div>
         <div className="win98-tray"><Icon name="sched_task_16" /><Icon name="loudspeaker_rays_16" /><Clock /></div>
       </footer>
     </div>
