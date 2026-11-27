@@ -7,4 +7,9 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   base: process.env.SITE_BASE || '/',
   plugins: [react()],
+  build: {
+    rollupOptions: {
+      input: ['index.html', 'win98/index.html'],
+    },
+  },
 })

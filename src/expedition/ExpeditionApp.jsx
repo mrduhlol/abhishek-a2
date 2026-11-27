@@ -315,6 +315,7 @@ export default function ExpeditionApp() {
           a<span>.</span>
         </button>
         <nav aria-label="Expedition controls">
+          <a href={`${BASE}win98/`}>Retro desktop</a>
           <button
             onClick={async () => {
               if (sound) {

@@ -1,0 +1,179 @@
+﻿:root {
+  font: 14px Tahoma, Verdana, sans-serif;
+  color: #21233b;
+  background: #164c53;
+  --chrome: #dbd9d2;
+  --raised: inset 1px 1px #fff, inset -1px -1px #23273e, inset 2px 2px #eeeae0, inset -2px -2px #858692;
+  --sunken: inset 1px 1px #777a8d, inset -1px -1px #fff;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { font: inherit; color: inherit; cursor: pointer; }
+a { color: #433484; text-underline-offset: 0.2em; }
+a:hover { color: #274e76; }
+:focus-visible { outline: 2px dashed currentColor; outline-offset: 3px; }
+::selection { background: #4a3a7d; color: #fff; }
+.win98-desktop {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-height: 100svh;
+  min-height: 100dvh;
+  background: radial-gradient(ellipse at 65% 8%, #2e7377, transparent 68%), #164c53;
+}
+.win98-workspace {
+  display: grid;
+  grid-template-columns: 106px minmax(0, 1fr);
+  padding: clamp(18px, 3.4vw, 54px);
+  gap: clamp(12px, 3vw, 44px);
+}
+.win98-shortcuts {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+  padding-top: 8px;
+}
+.win98-shortcuts > * {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  border: 1px solid transparent;
+  background: none;
+  padding: 8px 3px;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  font-size: 13px;
+}
+.win98-shortcuts svg { width: 40px; height: 40px; filter: drop-shadow(0 2px 2px #122c3d80); }
+.win98-shortcuts > :is(:hover, :focus-visible) { background: #183a59; color: #fff; border-color: #9abfbe; }
+.win98-main { min-width: 0; display: grid; align-items: center; }
+.win98-window {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  width: min(100%, 870px);
+  min-width: 0;
+  max-height: max(500px, calc(100dvh - 150px));
+  justify-self: center;
+  margin-inline: 0 min(8vw, 88px);
+  padding: 4px;
+  background: var(--chrome);
+  box-shadow: var(--raised), 0 18px 55px #102b4066;
+}
+.win98-expanded { width: 100%; margin-inline: 0; align-self: stretch; }
+.win98-titlebar, .win98-window-nav, .win98-status, .win98-taskbar { display: flex; align-items: center; }
+.win98-titlebar {
+  gap: 8px;
+  min-height: 33px;
+  padding: 4px 5px 4px 8px;
+  color: #fff;
+  background: linear-gradient(95deg, #352766, #51569a 75%, #416c8b);
+  font-weight: 700;
+}
+.win98-titlebar > svg { width: 20px; height: 20px; }
+.win98-window-controls { display: flex; gap: 3px; margin-left: auto; }
+.win98-window-controls button, .win98-taskbar button, .win98-content-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  background: var(--chrome);
+  color: #21233b;
+  box-shadow: var(--raised);
+}
+.win98-window-controls button { width: 25px; height: 24px; }
+.win98-window-controls button:focus-visible { outline: 2px dashed #fff; outline-offset: 2px; }
+.win98-window-controls i { position: relative; width: 10px; height: 10px; }
+.win98-minimize { border-bottom: 2px solid; }
+.win98-maximize, .win98-restore { border: 1px solid; border-top: 2px solid; }
+.win98-restore { transform: scale(.8) translate(-2px, 2px); background: var(--chrome); }
+.win98-restore::before { content: ''; position: absolute; inset: -5px -5px 3px 3px; border: 1px solid; border-top-width: 2px; }
+.win98-close::before, .win98-close::after { content: ''; position: absolute; top: 4px; left: -1px; width: 12px; height: 2px; background: currentColor; transform: rotate(45deg); }
+.win98-close::after { transform: rotate(-45deg); }
+.win98-window-nav { gap: 3px; padding: 4px 0; }
+.win98-window-nav button { border: 0; background: transparent; padding: 7px 12px; }
+.win98-window-nav button:is(:hover, [aria-current]) { background: #e9e6df; box-shadow: var(--sunken); }
+.win98-window-body {
+  overflow: auto;
+  overscroll-behavior: contain;
+  background: #f8f5ea;
+  border: 1px solid #858692;
+  scrollbar-color: #8277a5 #ebe6db;
+}
+.win98-status { gap: 4px; margin-top: 4px; color: #45445a; font-size: 12px; }
+.win98-status span { padding: 5px 8px; box-shadow: var(--sunken); }
+.win98-status span:first-child { flex: 1; }
+.win98-content { padding: clamp(20px, 4vw, 48px); }
+.win98-content h1 { margin: 0 0 14px; font: 700 clamp(2rem, 5vw, 4rem)/1.02 Georgia, serif; letter-spacing: -.035em; }
+.win98-content p { font-size: 1.12rem; line-height: 1.65; margin: 0 0 1em; max-width: 64ch; }
+.win98-about { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: clamp(20px, 4vw, 44px); align-items: center; min-height: 385px; }
+.win98-portrait {
+  align-self: stretch;
+  display: grid;
+  align-items: end;
+  min-height: 260px;
+  background: radial-gradient(ellipse at 68% 20%, #e9dfb2, transparent 65%), #a8bdb2;
+  border: 1px solid #777a8d;
+  overflow: hidden;
+}
+.win98-portrait img { width: 100%; height: 100%; max-height: 340px; object-fit: contain; object-position: bottom; display: block; }
+.win98-content-actions, .win98-profile-links, .win98-project-links { display: flex; gap: 12px; flex-wrap: wrap; }
+.win98-content-actions { margin-block: 22px 15px; }
+.win98-content-actions button { padding: 10px 13px; min-height: 40px; }
+.win98-content-actions button:first-child { font-weight: 700; background: #dcd4ef; }
+.win98-content .win98-profile-links { margin-bottom: 0; }
+.win98-project-list, .win98-contact-links { list-style: none; padding: 0; margin: 0; }
+.win98-project { border-top: 1px solid #bab6c1; padding: 16px 0; }
+.win98-project h2 { font-size: 1.3rem; margin: 0 0 6px; }
+.win98-project p { margin-bottom: 6px; }
+.win98-project .win98-project-tech { color: #544d68; font-size: .95rem; }
+.win98-contact-links { display: grid; gap: 14px; overflow-wrap: anywhere; }
+.win98-taskbar {
+  position: sticky;
+  bottom: 0;
+  gap: 6px;
+  min-height: 49px;
+  padding: 6px max(8px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+  background: var(--chrome);
+  box-shadow: inset 0 2px #fff;
+}
+.win98-taskbar svg { width: 21px; height: 21px; }
+.win98-taskbar button { min-height: 34px; padding: 5px 12px; }
+.win98-taskbar button:is([aria-pressed="true"], [aria-expanded="true"]), .win98-window-controls button:active, .win98-content-actions button:active { box-shadow: var(--sunken); background: #eeeae0; }
+.win98-taskbar button:hover, .win98-content-actions button:hover { background: #e8e2ef; }
+.win98-start { font-weight: 700; }
+.win98-start-area { position: relative; }
+.win98-clock { margin-left: auto; box-shadow: var(--sunken); padding: 8px 10px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.win98-launcher { position: absolute; bottom: calc(100% + 6px); left: 0; width: 190px; padding: 5px; background: var(--chrome); box-shadow: var(--raised), 0 6px 24px #102b4066; }
+.win98-launcher :is(button, a) {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 10px;
+  background: transparent;
+  box-shadow: none;
+  color: #21233b;
+  text-decoration: none;
+}
+.win98-launcher :is(button, a):hover, .win98-launcher :is(button, a):focus-visible {
+  color: #fff;
+  background: #352766;
+  outline-offset: -3px;
+}
+@media (max-width: 850px) {
+  .win98-window { margin-inline: 0; }
+}
+@media (max-width: 680px) {
+  .win98-workspace { grid-template-columns: 1fr; grid-template-rows: auto 1fr; padding: 10px; }
+  .win98-main { align-items: start; }
+  .win98-shortcuts { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; padding: 0; }
+  .win98-shortcuts svg { width: 32px; height: 32px; }
+  .win98-window { max-height: none; }
+  .win98-about { grid-template-columns: 1fr; }
+  .win98-portrait { min-height: 180px; }
+  .win98-portrait img { max-height: 235px; }
+  .win98-window-controls button { width: 30px; height: 30px; }
+}

@@ -1,0 +1,32 @@
+import { expect, test } from '@playwright/test'
+
+test('the retro desktop is reachable and its windows can be reopened', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('link', { name: 'Retro desktop' }).click()
+  await expect(page).toHaveURL(/\/win98\/$/)
+  await page.reload()
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Hi, I’m Abhishek.')
+
+  await page.getByRole('button', { name: 'Browse projects' }).click()
+  await expect(page.getByRole('link', { name: 'View Orbit source on GitHub' }))
+    .toHaveAttribute('href', 'https://github.com/mrduhlol/Orbit')
+  await page.getByRole('button', { name: 'Maximize window' }).click()
+  await expect(page.getByRole('button', { name: 'Restore window size' })).toBeVisible()
+  await page.getByRole('button', { name: 'Minimize window' }).click()
+  await expect(page.getByRole('heading', { level: 1 })).toHaveCount(0)
+  await page.locator('#win98-task').click()
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Projects')
+  await page.getByRole('button', { name: 'Close window' }).click()
+  await expect(page.locator('#win98-task')).toHaveCount(0)
+
+  await page.setViewportSize({ width: 375, height: 812 })
+  const start = page.getByRole('button', { name: 'Start' })
+  await start.click()
+  await page.keyboard.press('Escape')
+  await expect(start).toBeFocused()
+  await start.click()
+  await page.getByRole('navigation', { name: 'Start menu' }).getByRole('button', { name: 'Contact' }).click()
+  await expect(page.getByRole('link', { name: 'abhishek.a2534@gmail.com' }))
+    .toHaveAttribute('href', 'mailto:abhishek.a2534@gmail.com')
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(375)
+})
