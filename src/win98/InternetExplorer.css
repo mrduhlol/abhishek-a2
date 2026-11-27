@@ -31,7 +31,7 @@
 }
 
 .win98-ie-toolbar button { min-width: 56px; }
-.win98-ie-toolbar button:disabled { color: #515151; cursor: default; }
+.win98-ie-toolbar button:disabled { color: #515151; }
 .win98-ie-toolbar button:active:not(:disabled),
 .win98-ie-search button:active { box-shadow: inset 1px 1px #555, inset -1px -1px #fff; }
 

@@ -4,6 +4,7 @@ test('Windows 98 boots into a portfolio with independent windows and project sea
   await page.goto('/win98/', { waitUntil: 'domcontentloaded' })
   const desktop = page.getByRole('navigation', { name: 'Desktop shortcuts' })
   await expect(desktop).toBeVisible({ timeout: 30_000 })
+  await expect(desktop.getByRole('button', { name: 'DocuType' })).toHaveCSS('cursor', /win98-icons\/pointer\.png/)
 
   const welcome = page.getByRole('region', { name: 'Welcome', exact: true })
   await expect(welcome.getByRole('heading', { name: 'Welcome' })).toBeVisible()
@@ -56,6 +57,7 @@ test('Windows 98 boots into a portfolio with independent windows and project sea
   await page.setViewportSize({ width: 375, height: 812 })
   const start = page.getByRole('button', { name: 'Start', exact: true })
   await start.click()
+  await expect(page.getByRole('navigation', { name: 'Start menu' }).getByText('windows.a', { exact: true })).toBeVisible()
   await page.keyboard.press('Escape')
   await expect(start).toBeFocused()
   await start.click()

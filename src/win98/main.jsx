@@ -204,7 +204,7 @@ function Desktop() {
             <Icon name="windows_16" /> Start
           </button>
           <nav id="win98-launcher" className="win98-launcher" aria-label="Start menu" hidden={!start}>
-            <span className="win98-launcher-brand" aria-hidden="true"><b>Windows</b>98</span>
+            <span className="win98-launcher-brand"><b>windows.a</b></span>
             <div>
               {systemApps.map(({ id, icon, label }, index) => <button key={id} type="button" ref={index === 0 ? firstStartItem : undefined} onClick={() => openApp(id)}><Icon name={icon} size={24} />{label}</button>)}
               <a href={base}><Icon name="ie_32" size={24} />Expedition</a>

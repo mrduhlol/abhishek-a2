@@ -9,7 +9,10 @@
 * { box-sizing: border-box; }
 body { margin: 0; }
 button, a { -webkit-tap-highlight-color: transparent; }
-button { font: inherit; color: inherit; cursor: pointer; }
+button { font: inherit; color: inherit; }
+:is(.win98-desktop, .win98-boot), :is(.win98-desktop, .win98-boot) * {
+  cursor: url('/win98-icons/pointer.png') 0 0, default;
+}
 a { color: #0000a0; }
 :focus-visible { outline: 1px dotted currentColor; outline-offset: 2px; }
 ::selection { background: #000080; color: #fff; }
