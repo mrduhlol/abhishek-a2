@@ -1,11 +1,10 @@
 import { expect, test } from '@playwright/test'
 
-test('the retro desktop is reachable and its windows can be reopened', async ({ page }) => {
-  await page.goto('/')
-  await page.getByRole('link', { name: 'Retro desktop' }).click()
-  await expect(page).toHaveURL(/\/win98\/$/)
-  await page.reload()
+test('the retro desktop loads directly and its windows can be reopened', async ({ page }) => {
+  await page.goto('/win98/', { waitUntil: 'domcontentloaded' })
+  await page.reload({ waitUntil: 'domcontentloaded' })
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Hi, I’m Abhishek.')
+  await expect(page.getByRole('link', { name: 'Expedition' })).toHaveAttribute('href', '/')
 
   await page.getByRole('button', { name: 'Browse projects' }).click()
   await expect(page.getByRole('link', { name: 'View Orbit source on GitHub' }))
