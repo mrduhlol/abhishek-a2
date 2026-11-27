@@ -1,17 +1,13 @@
 import { PROJECTS } from "../data/projects.js";
-import logoManifest from "../data/project-logos.json";
 import "./project-content.css";
 
 const baseUrl = import.meta.env.BASE_URL;
 
-export const projectApps = PROJECTS.map(({ id, name }) => {
-  const logo = logoManifest.projects[id];
-  return {
-    id: `project-${id}`,
-    label: name,
-    iconUrl: `${baseUrl}${logo ? `expedition/logos/${logo}` : "win98-icons/sched_task_16.png"}`,
-  };
-});
+export const projectApps = PROJECTS.map(({ id, name }) => ({
+  id: `project-${id}`,
+  label: name,
+  iconUrl: `${baseUrl}win98-project-icons/${id}.png`,
+}));
 
 const screenshots = {
   "github-widgets": {

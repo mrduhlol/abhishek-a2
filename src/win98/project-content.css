@@ -23,6 +23,7 @@
 }
 
 .win98-project-shortcuts img {
+  image-rendering: pixelated;
   object-fit: contain;
 }
 
