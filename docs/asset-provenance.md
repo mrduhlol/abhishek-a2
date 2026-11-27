@@ -5,3 +5,7 @@
 - `public/audio/here-we-go-again.mp3`: supplied by the user for the first-scroll line; 2.76 seconds. Opt-in playback, not background music.
 - `public/fonts/`: Barlow Condensed 800, Manrope 400/600, Kalam 400, DM Mono 400, downloaded from Google Fonts' official fonts.gstatic.com distribution. Local hosting avoids third-party runtime requests. Font license files accompany these distributions.
 - Terrain, character and town artwork: authored code-native Three.js geometry and SVG for this project, not externally sourced imagery.
+
+## Windows 98 desktop icons
+
+The PNGs in public/win98-icons come from https://win98.si/icons/. Abhishek confirmed permission to reproduce the reference design.
