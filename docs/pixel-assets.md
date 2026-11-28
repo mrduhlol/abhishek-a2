@@ -1,0 +1,11 @@
+# Pixel adventure art and sources
+
+The user supplied a pixel village reference (attachment `ccc49be6-1d2a-4c86-a1da-cee67a1c5f77-84a7cf7f-a30d-4628-8f85-a87d16fe5a6c.png`) as art direction. The original attachment is not shipped as a site asset.
+
+`public/pixel/town.png` and `terrain-atlas.png` were generated with the built-in image-generation tool on 2026-10-23, using that attachment as a style reference. Each PNG embeds the exact generation prompt in its metadata. Read it with `impeccable embed-prompt <file> --read`. The town is a 2:1 background; the atlas has two columns and four rows of 3:2 backgrounds. Reading order is mountain, night forest, meadow, desert, water coast, crystal cave, volcano, and an unused village variation. The runtime samples the first seven cells with nearest filtering. These are painted 2.5D environments; they are not volumetric meshes or dynamically lit terrain. Characters, vehicles, obstacles, logos, movement, and interaction targets are independent runtime elements.
+
+The teenage hero, mixed-age residents and vehicles are original code-authored pixel sprites in `src/pixel/actors.js` and `vehicles.js`. Free OpenCode DeepSeek produced the initial painters; Codex completed and verified them after the free-provider usage limit. GLM and Beam produced initial procedural scenery. Those backgrounds were visually rejected as too schematic, then replaced by the reference-guided assets. Their abandoned implementations are not shipped. Beam's town resident descriptors remain in `town.js`.
+
+Existing portrait, six project marks and audio retain their recorded origins in `docs/expedition-character-assets.md`, `docs/expedition-logos.md`, `docs/expedition-audio-assets.md`, and the corresponding public attribution files. The old 3D adventurer is no longer used by the pixel runtime. Orbit still uses its name because no original icon was verified. The original supplied intro recording remains unchanged.
+
+The truck draws the same hero into its cab window, clipped by the window frame; the boat overlays the seated hero above the hull. Pixel hand contact uses the sprite hand anchor, not the retired 3D skeleton measurement. Scene diagnostic attributes describe the current sprite state only.

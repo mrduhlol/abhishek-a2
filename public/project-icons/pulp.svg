@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Pulp icon">
+  <rect x="1" y="1" width="126" height="126" rx="28" fill="#080808" stroke="#2b2b2b" stroke-width="2"/>
+  <path d="M32 97V37h13v7c5-6 11-9 19-9 16 0 27 12 27 29S80 93 64 93c-8 0-14-3-19-8v12H32zm13-33c0 10 6 17 16 17s16-7 16-17-6-17-16-17-16 7-16 17z" fill="#f2f2f2"/>
+  <circle cx="100" cy="93" r="7" fill="#d5fa7d"/>
+</svg>
